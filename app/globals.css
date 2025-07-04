@@ -12,6 +12,29 @@ body {
   }
 }
 
+@layer components {
+  .modal-nav-item {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  .modal-nav-item:hover {
+    @apply transform scale-[1.02];
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@layer base {
+  mark {
+    @apply bg-yellow-200 text-yellow-900 px-0.5 rounded-sm;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -1,0 +1,79 @@
+{
+  "title": "Industry Work",
+  "subtitle": "Professional Experience",
+  "description": "Professional experience and career highlights",
+  "url": "/industry-work",
+  "sections": [
+    {
+      "title": "Overview",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Professional experience in software engineering, with focus on web development and system architecture."
+        }
+      ]
+    },
+    {
+      "title": "Technical Skills",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Core competencies developed through professional experience:"
+        }
+      ],
+      "subsections": [
+        {
+          "title": "Frontend Development",
+          "content": [
+            {
+              "type": "list",
+              "items": [
+                "React and Next.js applications",
+                "TypeScript and modern JavaScript",
+                "CSS frameworks and responsive design",
+                "State management and component architecture"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Backend Development",
+          "content": [
+            {
+              "type": "list",
+              "items": [
+                "RESTful API design and implementation",
+                "Database design and optimization",
+                "Authentication and security",
+                "Performance optimization and caching"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "DevOps and Tools",
+          "content": [
+            {
+              "type": "list",
+              "items": [
+                "CI/CD pipeline setup and maintenance",
+                "Docker containerization",
+                "Cloud deployment and management",
+                "Monitoring and logging systems"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Project Highlights",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Key projects and achievements in professional settings, including system migrations, feature implementations, and process improvements."
+        }
+      ]
+    }
+  ]
+}

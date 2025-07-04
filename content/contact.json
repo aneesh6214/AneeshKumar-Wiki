@@ -1,0 +1,50 @@
+{
+  "title": "Contact",
+  "subtitle": "Get in Touch",
+  "description": "Contact information and professional links",
+  "url": "/contact",
+  "sections": [
+    {
+      "title": "Professional Contact",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For professional inquiries, collaborations, or discussions about software engineering topics:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Email: [professional.email@example.com](mailto:professional.email@example.com)",
+            "LinkedIn: [linkedin.com/in/aneeshkumar](https://linkedin.com/in/aneeshkumar)",
+            "GitHub: [github.com/aneeshkumar](https://github.com/aneeshkumar)"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Social Media",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Connect on social platforms for updates and casual discussions:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Twitter: [@aneeshkumar](https://twitter.com/aneeshkumar)",
+            "Personal Blog: [blog.aneeshkumar.dev](https://blog.aneeshkumar.dev)"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Response Time",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I typically respond to professional inquiries within 24-48 hours. For urgent matters, please indicate the priority in your subject line."
+        }
+      ]
+    }
+  ]
+}

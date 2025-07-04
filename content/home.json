@@ -1,0 +1,44 @@
+{
+  "title": "Aneesh Kumar",
+  "subtitle": "Software Engineer",
+  "description": "Personal knowledge base and portfolio",
+  "url": "/",
+  "disambiguation": "This article is about the software engineer. For his technical blog, see [Aneesh Kumar (blog)](/blog).",
+  "infobox": {
+    "image": "/profile-photo.jpg",
+    "imageCaption": "Aneesh Kumar in 2024",
+    "fields": [
+      { "label": "Occupation", "value": "Software Engineer" },
+      { "label": "Known for", "value": "Web Development, System Architecture" }
+    ]
+  },
+  "sections": [
+    {
+      "title": "Overview",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Aneesh Kumar is a software engineer specializing in web development and system architecture."
+        }
+      ]
+    },
+    {
+      "title": "TODO",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Current projects and goals include:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Expanding knowledge in machine learning and AI",
+            "Building a comprehensive personal knowledge base",
+            "Contributing to developer community through blogging",
+            "Exploring new frameworks and technologies"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "title": "Projects",
+  "subtitle": "Portfolio and Work",
+  "description": "Collection of personal and professional projects",
+  "url": "/projects",
+  "sections": [
+    {
+      "title": "Overview",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "This page contains a collection of projects that showcase various technical skills and interests. Projects range from web applications to system tools and experimental implementations."
+        }
+      ]
+    },
+    {
+      "title": "Web Applications",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Full-stack web applications built with modern technologies."
+        }
+      ],
+      "subsections": [
+        {
+          "title": "Personal Knowledge Base",
+          "content": [
+            {
+              "type": "paragraph",
+              "text": "A Wikipedia-style personal website built with Next.js and TypeScript. Features include:"
+            },
+            {
+              "type": "list",
+              "items": [
+                "Dynamic content management with JSON-based structure",
+                "Real-time search functionality",
+                "Responsive design with Tailwind CSS",
+                "Server-side rendering for optimal performance"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Tools and Utilities",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Command-line tools and utilities for development productivity."
+        }
+      ]
+    },
+    {
+      "title": "Experimental Projects",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Proof-of-concept implementations and technology explorations."
+        }
+      ]
+    }
+  ]
+}
