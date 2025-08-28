@@ -8,7 +8,7 @@ export const homeContent: JSONContent = {
   disambiguation: "This article is about the software engineer. For his technical blog, see [Aneesh Kumar (blog)](/blog).",
   infobox: {
     image: "/profile-photo.jpg",
-    imageCaption: "Aneesh Kumar in 2024",
+    imageCaption: "Aneesh Kumar in 2025",
     fields: [
       { label: "Born", value: "Aneesh Kumar\nJune 21, 2004 (age 21)\nSan Francisco, California, U.S." },
       { label: "Location", value: "San Francisco Bay Area" },
