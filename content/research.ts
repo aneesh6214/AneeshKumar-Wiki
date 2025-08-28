@@ -12,11 +12,11 @@ export const researchContent: JSONContent = {
       content: [
         {
           type: ContentType.PARAGRAPH,
-          text: "Research on understanding and predicting emergent capabilities in machine learning models through sparse feature analysis and interpretability techniques."
+          text: "Research on understanding and predicting emergent capabilities in machine learning models through sparse feature analysis and interpretability techniques. This is Aneesh's current work. It is in the experimentation phase."
         }
       ],
       image: {
-        src: "/placeholder.jpg",
+        src: "/Algoverse-paper.png",
         alt: "Sparse feature visualization",
         caption: "Feature analysis and model interpretation",
         position: ImagePosition.RIGHT
@@ -27,7 +27,7 @@ export const researchContent: JSONContent = {
       content: [
         {
           type: ContentType.PARAGRAPH,
-          text: "Comprehensive analysis of biological timescale synaptic plasticity mechanisms and their implications for neural computation and learning."
+          text: "Comprehensive analysis of biological timescale synaptic plasticity (BTSP) mechanisms and their implications for neural computation and learning. This covers what BTSP is, how it works mechanistically, a computational model of BTSP, and potential integrations with foundation models. "
         }
       ],
       image: {

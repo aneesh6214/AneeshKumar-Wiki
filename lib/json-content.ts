@@ -5,7 +5,8 @@ export enum ContentType {
   HEADING = 'heading',
   QUOTE = 'quote',
   SKILLS_GRID = 'skillsGrid',
-  CONTACT_INFO = 'contactInfo'
+  CONTACT_INFO = 'contactInfo',
+  LINK = 'link'
 }
 
 export enum ImagePosition {
@@ -29,6 +30,9 @@ export interface ContentBlock {
     url: string
     username: string
   }>
+  url?: string
+  linkText?: string
+  linkType?: 'github' | 'external' | 'demo'
 }
 
 export interface ContentSection {

@@ -22,7 +22,7 @@ export const homeContent: JSONContent = {
       content: [
         {
           type: ContentType.PARAGRAPH,
-          text: "Aneesh Kumar is an AI researcher & software engineer."
+          text: "Aneesh Kumar is an AI researcher and engineer whose work involves independent research and agent design. His projects range from exploring emergence in AI systems and theory work to concrete computer science work. Aneesh is particularly interested in the intersection of philosophy and AI.\nHe is the founder and president of the Artificial Intelligence club at San Francisco State University. He is currently a Platform Engineering Intern at Quantifind. "
         }
       ]
     }
