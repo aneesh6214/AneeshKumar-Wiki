@@ -1,5 +1,6 @@
 import React from "react";
 import { JSONContent } from "@/lib/json-content";
+import SpotifyNowPlaying from "@/components/SpotifyNowPlaying";
 
 export const homeContent: JSONContent = {
   title: "Aneesh Kumar",
@@ -51,6 +52,14 @@ export const homeContent: JSONContent = {
           <strong>Platform Engineering Intern</strong> at
           [Quantifind](https://quantifind.com), where he contributes to the
           scalable infrastructure that supports AI-driven solutions.
+        </>
+      ),
+    },
+    {
+      title: "",
+      description: (
+        <>
+          <SpotifyNowPlaying />
         </>
       ),
     },
