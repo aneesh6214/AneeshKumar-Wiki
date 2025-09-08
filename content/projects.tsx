@@ -19,16 +19,22 @@ export const projectsContent: JSONContent = {
       },
       description: (
         <>
-          This project explores the emergence of high-level structured identity
-          in LLMs, coming about through persistent memory and human interaction.
-          An AI agent was put on twitter to interact in real-time, exploring the
-          convergence of the AI agent towards a cohesive identity.
+          This project explores the emergence of structured identity in [large
+          language models](https://en.wikipedia.org/wiki/Large_language_model),
+          developed through persistent memory and ongoing human interaction. An
+          AI agent was deployed on [Twitter](https://twitter.com) to interact in
+          real time, providing a live experiment in how an artificial identity
+          can cohere through continuous engagement with people online.
           <br />
           <br />
-          More technically, this is a multi-phase LLM agent with real-time
-          perception and long term memory, maintaining continuity and internal
-          reasoning. This was built primarily using Mixtral-7B-Instruct and
-          LangChain.
+          From a technical perspective, the system is a multi-phase agent
+          combining real-time perception with long-term memory to maintain
+          continuity and internal reasoning. It was built using
+          [Mixtral-7B-Instruct](https://mistral.ai/news/mixtral-of-experts/) and
+          [LangChain](https://www.langchain.com/), with an architecture designed
+          to track experiences, reflect, and adapt over time. This work
+          highlights how identity in AI systems can emerge not only from
+          internal mechanisms but also from external, social contexts.
         </>
       ),
     },
@@ -37,10 +43,20 @@ export const projectsContent: JSONContent = {
       githubUrl: "https://github.com/aneesh6214/Browser-MCP-Automation",
       description: (
         <>
-          Aneesh built out MCP tools to enable the Dex AI agent software to
-          interact with the browser in real time. The agent interacted with the
-          web through websockets and called tools via an exposed MCP server
-          developed using FastMCP with Python.
+          Aneesh developed tools for the [Model Context Protocol
+          (MCP)](https://modelcontextprotocol.io/) to allow the
+          Dex AI agent software to interact with a
+          browser in real time. By exposing tools through a custom
+          [FastMCP](https://pypi.org/project/fastmcp/) server built in Python,
+          the agent could communicate via WebSockets and perform actions
+          dynamically.
+          <br />
+          <br />
+          This system enabled Dex to go beyond static reasoning by engaging
+          directly with the web environment—navigating pages, clicking, and
+          retrieving information as part of its reasoning process. It
+          demonstrated how MCP tooling can extend AI agents into richer,
+          interactive workflows.
         </>
       ),
     },
@@ -50,9 +66,19 @@ export const projectsContent: JSONContent = {
       description: (
         <>
           Aneesh built a supervised deep learning model to predict win/loss
-          outcomes from League of Legends match statistics and historical data.
-          The model achieved 82% accuracy, trained using tensorflow on a dataset
-          of over 200,000 matches.
+          outcomes in [League of
+          Legends](https://en.wikipedia.org/wiki/League_of_Legends) based on
+          match statistics and historical gameplay data. Using
+          [TensorFlow](https://www.tensorflow.org/), the model was trained on a
+          dataset of more than 200,000 matches and achieved 82% accuracy on
+          held-out test data.
+          <br />
+          <br />
+          The project involved preprocessing structured match data, designing a
+          neural network architecture for binary classification, and tuning
+          hyperparameters for performance. It highlighted the predictive
+          potential of gameplay statistics and provided insight into how machine
+          learning can model competitive dynamics in esports.
         </>
       ),
     },
@@ -61,10 +87,18 @@ export const projectsContent: JSONContent = {
       githubUrl: "https://github.com/aneesh6214",
       description: (
         <>
-          SoFreakingCratic is a comparative experiment of different types of
-          memory systems for multi-agent systems. Memory systems explored
-          include: Episodic memory, Semantic memory, Procedural memory, Working
-          memory, and Distributed memory.
+          SoFreakingCratic is an experiment comparing different memory systems
+          in [multi-agent
+          systems](https://en.wikipedia.org/wiki/Multi-agent_system). The
+          project implemented and tested a range of memory types, including
+          episodic, semantic, procedural, working, and distributed memory.
+          <br />
+          <br />
+          By running controlled comparisons, the project explored how each
+          memory system affects an agent’s ability to collaborate, reason, and
+          adapt over time. While conceptual in focus, the work demonstrates how
+          varying architectures can produce distinct behaviors in multi-agent
+          frameworks.
         </>
       ),
     },
@@ -73,8 +107,18 @@ export const projectsContent: JSONContent = {
       githubUrl: "https://github.com/aneesh6214",
       description: (
         <>
-          Aneesh introduces a new metric for urban planning, scoring 3d
-          environments based on wheelchair accessibility.
+          WheelScore introduces a new metric for [urban
+          planning](https://en.wikipedia.org/wiki/Urban_planning), designed to
+          evaluate 3D environments in terms of [wheelchair
+          accessibility](https://en.wikipedia.org/wiki/Wheelchair_accessibility).
+          The system analyzes simulated architectural spaces and assigns scores
+          that reflect ease of navigation for wheelchair users.
+          <br />
+          <br />
+          The project highlights accessibility as a measurable and technical
+          design factor, providing a framework that could assist planners,
+          architects, and engineers in ensuring equitable mobility within built
+          environments.
         </>
       ),
     },
