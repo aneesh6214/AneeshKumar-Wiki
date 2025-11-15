@@ -6,7 +6,36 @@ export const projectsContent: JSONContent = {
   subtitle: "Portfolio and Work",
   description: "Collection of personal and professional projects",
   url: "/projects",
+  disambiguation: "This article covers the personal projects of Aneesh Kumar.",
   sections: [
+    {
+      title: "AI Paper Review Website",
+      websiteUrl: "https://www.mypapergrader.com/",
+      githubUrl: "https://github.com/aneesh6214/Paper-Reviewer",
+      image: {
+        src: "/mypapergrader.png",
+        alt: "mypapergrader",
+        caption:
+          "Home Page",
+        position: ImagePosition.RIGHT,
+      },
+      description: (
+        <>
+          <>
+  <strong>PaperGrader</strong> is a web application that aims to provide 
+  automated academic paper reviews using 
+  [large language models](https://en.wikipedia.org/wiki/Large_language_model). 
+  The platform allows users to upload research papers, which are then processed through 
+  multiple model inference steps to generate structured feedback and formatting assistance. 
+  The system leverages an expert reviewing model, 
+ [Llama-OpenReviewer-8B](https://arxiv.org/abs/2412.11948), to produce evaluations resembling those from peer reviewers. 
+  The application is currently under development and is collecting email sign-ups from interested 
+  users for future updates and early access.
+</>
+
+        </>
+      ),
+    },
     {
       title: "The Emergent Machine",
       githubUrl: "https://github.com/aneesh6214/The-Emergent-Machine",
@@ -27,7 +56,7 @@ export const projectsContent: JSONContent = {
           can cohere through continuous engagement with people online.
           <br />
           <br />
-          From a technical perspective, the system is a multi-phase agent
+          The system involves a multi-phase agent
           combining real-time perception with long-term memory to maintain
           continuity and internal reasoning. It was built using
           [Mixtral-7B-Instruct](https://mistral.ai/news/mixtral-of-experts/) and
@@ -35,6 +64,11 @@ export const projectsContent: JSONContent = {
           to track experiences, reflect, and adapt over time. This work
           highlights how identity in AI systems can emerge not only from
           internal mechanisms but also from external, social contexts.
+          <br />
+          <br />
+          Kumar notes his primary purpose was not realistic or humanlike capability, but to observe
+          how with minimal machinery, behaviors like identity, preference, and self-reference can emerge. 
+          It was an experiment involving AI technologies as well as exploring Theory of Mind.
         </>
       ),
     },
@@ -61,7 +95,7 @@ export const projectsContent: JSONContent = {
       ),
     },
     {
-      title: "League of Legends Match Outcome Predictor",
+      title: "League of Legends Machine Learning Model",
       githubUrl: "https://github.com/aneesh6214/lol-game-predicter",
       description: (
         <>
@@ -70,7 +104,7 @@ export const projectsContent: JSONContent = {
           Legends](https://en.wikipedia.org/wiki/League_of_Legends) based on
           match statistics and historical gameplay data. Using
           [TensorFlow](https://www.tensorflow.org/), the model was trained on a
-          dataset of more than 200,000 matches and achieved 82% accuracy on
+          dataset of more than 500,000 matches and achieved 87% accuracy on
           held-out test data.
           <br />
           <br />

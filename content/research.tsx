@@ -10,46 +10,48 @@ export const researchContent: JSONContent = {
     "This article covers the research work of [Aneesh Kumar](/). For his industry experience, see [Aneesh Kumar (Industry Work)](/industry-work).",
   sections: [
     {
-      title: "Predicting Emergent Capabilities Using Sparse Features",
+      title: "Paper: Predicting Emergent Capabilities Using Sparse Features",
+      date: "Fall 2025",
       description: (
         <>
-          Aneesh Kumar is currently leading research on predicting the emergence
-          of novel capabilities in <strong>large language models (LLMs)</strong>
-          . This ongoing work investigates how abrupt, non-linear improvements
-          in task performance—often termed <em>emergent behaviors</em>—can be
-          anticipated rather than only observed post hoc. The project explores
-          the role of <strong>sparse features</strong> and their coactivation
-          patterns, constructing graphs from model checkpoints to identify
-          structural signals that may precede emergent performance jumps.
+          Aneesh Kumar co-authored <em>Exploring Sparse Feature Topology as a Predictor for Emergence</em>,
+          a paper accepted to the [AAAI XAI4Science 2026 Workshop](https://xai4science.github.io/)
+          and soon to appear on [OpenReview](https://openreview.net/). The study investigates whether
+          “emergent” capabilities in
+          [transformer-based models](https://en.wikipedia.org/wiki/Transformer_(machine_learning_model))
+          can be predicted before they occur by analyzing internal representations rather than
+          measuring them post hoc.
           <br />
           <br />
-          Still in development, this research aims to establish a
-          mechanistically grounded, pre-hoc framework for studying emergence.
-          The approach builds on prior work in sparse attention and{" "}
-          <em>grokking</em>, but emphasizes predictive indicators rather than
-          retrospective analysis. Kumar and collaborators are preparing a
-          [NeurIPS](https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems)-style
-          proposal that positions sparse feature coactivation as a promising
-          direction for understanding and forecasting emergent phenomena in
-          large-scale neural networks.
+          The authors train sparse autoencoders on model activations at each checkpoint of a
+          two-layer transformer trained on a modular addition task, constructing co-activation
+          graphs to track metrics such as density, clustering, and modularity. Across eight
+          initialization seeds, they test for lead–lag correlations between graph-metric changes
+          and subsequent accuracy shifts. The results find no statistically significant predictive
+          relationship, suggesting that global topological measures of sparse features do not
+          forecast emergent behavior and that potential pre-hoc indicators may reside in finer-grained,
+          task-specific network structures.
         </>
+
       ),
       image: {
-        src: "/Algoverse-paper.png",
+        src: "/predicting_emergence.png",
         alt: "Sparse feature visualization",
-        caption: "Emergence in LLMs from Neural Scaling Laws",
+        caption: "SAE-based Graphs for Emergence Prediction",
         position: ImagePosition.RIGHT,
+        link: "https://drive.google.com/file/d/125hRUSI4SOv8I-OLyzysT12cKY8yUay2/view?usp=sharing",
       },
     },
     {
       title:
-        "Biological Timescale Synaptic Plasticity (BTSP) Independent Research",
+        "Report: Biological Timescale Synaptic Plasticity",
+        date: "Spring 2025",
       description: (
         <>
-          Aneesh Kumar authored a comprehensive analysis of{" "}
-          <strong>Behavioral Time-Scale Synaptic Plasticity (BTSP)</strong>, a
+          Aneesh Kumar authored a comprehensive review of{" "}
+          [Behavioral Time-Scale Synaptic Plasticity] (https://www.nature.com/articles/s41467-024-55563-6) (BTSP), a
           neural mechanism that enables memory formation over multi-second
-          intervals. His work provides a clear overview of BTSP’s biological
+          intervals, authored by Yujie Wu and Wolfgang Maass (2025). His work provides a clear overview of BTSP’s biological
           foundations in the
           [hippocampus](https://en.wikipedia.org/wiki/Hippocampus), explaining
           how plateau potentials in [CA1 pyramidal
@@ -83,7 +85,7 @@ export const researchContent: JSONContent = {
       image: {
         src: "/btsp-preview.png",
         alt: "BTSP writeup preview",
-        caption: "BTSP Writeup",
+        caption: "Report: Biological Timescale Synaptic Plasticity",
         position: ImagePosition.LEFT,
         link: "https://drive.google.com/file/d/1dOQOKhdXwFE195OMDPaQB8ppldkzHcSZ/view",
       },

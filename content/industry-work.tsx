@@ -18,7 +18,7 @@ export const industryWorkContent: JSONContent = {
           As a <strong>Platform Engineering Intern at Quantifind</strong>,
           Aneesh Kumar contributes to building and maintaining the core
           infrastructure that underpins [Quantifind](https://en.wikipedia.org/wiki/Quantifind)'s AI systems. His work focuses on
-          integrating APIs, managing data processing pipelines, and ensuring
+          large-scale API integration, managing data processing pipelines, and ensuring
           that large-scale AI services run efficiently and reliably. This role
           combines practical engineering with a deep curiosity about how systems
           operate at scale.
@@ -28,16 +28,15 @@ export const industryWorkContent: JSONContent = {
             have." —Aneesh Kumar
           </Quote>
           Aneesh began his internship in Summer 2025 and was invited to continue
-          through the Fall semester alongside his academic commitments. The
-          experience has provided him with both technical depth in scalable
-          infrastructure and insight into how platform engineering shapes the
-          performance and impact of AI applications.
+          part-time alongside his undergraduate studies. Working on production systems gave 
+          him a clearer sense of how infrastructure supports every layer of AI development, from 
+          experimentation to deployment, and how thoughtful engineering enables real-world impact.
         </>
       ),
       image: {
         src: "/quantifind-logo.png",
         alt: "Quantifind logo",
-        caption: "Quantifind - Risk Analytics and Consumer Insights",
+        caption: "The Risk Intelligence Company",
         position: ImagePosition.LEFT,
       },
     },
@@ -54,16 +53,12 @@ export const industryWorkContent: JSONContent = {
           on communication and collaboration.
           <br />
           <br />
-          One project he is particularly proud of is a full-stack module with a
+          His primary project was a full-stack module with a
           chatbot to fetch and analyze user data from natural language. He was
           the
-          <strong> lead developer</strong> with his two teammates. They'd spend
-          days scribbling on the whiteboards, iterating on the design. They
-          developed an efficient AI inference pipeline to achieve their project
-          objective with their limited compute resources.
-          <br />
-          <br />
-          To conclude the internship, they pitched the idea to the team of
+          <strong> lead developer</strong> on a team of three, developing an 
+          efficient AI inference pipeline to achieve their project
+          objective within a strict compute budget. Concluding the internship, they pitched the idea to the team of
           <strong> 50+ engineers from 8+ time zones</strong>. During the course
           of the internship, he also earned a certification as an
           <em>
@@ -72,10 +67,7 @@ export const industryWorkContent: JSONContent = {
             Professional](https://www.linkedin.com/in/aneesh6214/overlay/1718754842103/single-media-viewer/?profileId=ACoAAEAq4kQBGCRNPnthzAkHVfXIZHHy40dMA8Y)
           </em>{" "}
           (and a few more on cloud infrastructure), expanding on his technical
-          knowledge. Despite the skills, the most invaluable thing he gained was
-          the friendships and connections he made during his time at Oracle. The
-          people he met and the experiences he had will stay with him for the
-          rest of his life.
+          knowledge.
         </>
       ),
       technologies:
@@ -83,7 +75,7 @@ export const industryWorkContent: JSONContent = {
       image: {
         src: "/oracle-logo.png",
         alt: "Oracle software development",
-        caption: "Enterprise software development environment",
+        caption: "Cloud Platform & Applications",
         position: ImagePosition.RIGHT,
       },
     },

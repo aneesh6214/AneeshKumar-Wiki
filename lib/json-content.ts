@@ -11,6 +11,7 @@ export interface ContentSection {
   description: React.ReactNode;
   technologies?: string;
   githubUrl?: string;
+  websiteUrl?: string;
   image?: {
     src: string;
     alt: string;

@@ -32,28 +32,24 @@ export const homeContent: JSONContent = {
       title: "Overview",
       description: (
         <>
-          <strong>Aneesh Kumar</strong> is an AI researcher and engineer whose
-          work spans independent research, interpretability, and agent design.
-          His projects range from studying [emergent
-          behaviors](https://en.wikipedia.org/wiki/Emergent_behavior) in [large
-          language models](https://en.wikipedia.org/wiki/Large_language_model)
-          and theoretical questions about intelligence to building practical
-          systems in computer science and engineering. He is especially
-          interested in the intersection of
-          [philosophy](https://en.wikipedia.org/wiki/Philosophy_of_artificial_intelligence)
-          and AI, exploring how ideas about reasoning, memory, and learning can
-          inform the design of artificial systems.
+          Aneesh Kumar is a San Francisco based computer scientist and platform engineer at{" "}
+          [Quantifind](https://quantifind.com), developing infrastructure for high-scale{" "}
+          [Artificial Intelligence](https://en.wikipedia.org/wiki/Artificial_intelligence) inference and data operations.
+          He also pursues early-stage research in artificial intelligence, with early research on emergent{" "}
+          behaviors led to a paper and poster presentation at the [AAAI](https://en.wikipedia.org/wiki/AAAI_Conference_on_Artificial_Intelligence) [XAI4Science Workshop](https://xai4science.github.io/).
+          He also works on independent software and AI projects, developing both practical systems
+          to conceptual experiments.
           <br />
           <br />
-          He is the founder and president of the [Artificial Intelligence
-          Club](https://ai-at-sfsu.vercel.app/home) at{" "}
-          <strong>San Francisco State University</strong>, where he leads
-          initiatives to engage students with machine learning, symbolic AI, and
-          agent systems. Alongside his academic pursuits, Aneesh is a{" "}
-          <strong>Platform Engineering Intern</strong> at
-          [Quantifind](https://quantifind.com), where he contributes to the
-          scalable infrastructure that supports AI-driven solutions.
+          Outside of professional work, Kumar founded and serves as president of the{" "}
+          [Artificial Intelligence Club](https://ai-at-sfsu.vercel.app/home) at{" "}
+          [San Francisco State University](https://www.sfsu.edu),
+          organizing weekly meetings and discussions on foundational and emerging AI topics.
+          He also creates educational YouTube videos introducing core ideas in artificial intelligence.
+          He maintains a broader personal interest in how AI systems reason, represent information,
+          and relate to human cognition and broader [Theory of mind](https://en.wikipedia.org/wiki/Theory_of_mind).
         </>
+
       ),
     },
     {
