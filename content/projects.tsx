@@ -43,8 +43,8 @@ export const projectsContent: JSONContent = {
         src: "/emergent-machine-preview.png",
         alt: "The Emergent Machine project preview showing AI agent interactions",
         caption:
-          "Real-time AI agent identity emergence through Twitter interactions",
-        position: ImagePosition.RIGHT,
+          "Exploring the Emergence of Identity in LLM-based Agents",
+        position: ImagePosition.LEFT,
       },
       description: (
         <>
