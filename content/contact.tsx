@@ -56,12 +56,12 @@ export const contactContent: JSONContent = {
               <dt className="font-semibold text-sm text-gray-900">Twitter</dt>
               <dd>
                 <a
-                  href="https://twitter.com/aneesh6214"
+                  href="https://twitter.com/aang6214"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:underline"
                 >
-                  @aneesh6214
+                  @aang6214
                 </a>
               </dd>
             </div>
