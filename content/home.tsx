@@ -36,7 +36,7 @@ export const homeContent: JSONContent = {
           [Quantifind](https://quantifind.com), developing infrastructure for high-scale{" "}
           [Artificial Intelligence](https://en.wikipedia.org/wiki/Artificial_intelligence) inference and data operations.
           He also pursues early-stage research in artificial intelligence, with early research on emergent{" "}
-          behaviors led to a paper and poster presentation at the [AAAI](https://en.wikipedia.org/wiki/AAAI_Conference_on_Artificial_Intelligence) [XAI4Science Workshop](https://xai4science.github.io/).
+          behaviors presented at the 2026 [AAAI](https://en.wikipedia.org/wiki/AAAI_Conference_on_Artificial_Intelligence) [XAI4Science Workshop](https://xai4science.github.io/).
           He also works on independent software and AI projects, developing both practical systems
           to conceptual experiments.
           <br />
