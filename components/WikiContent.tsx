@@ -195,7 +195,7 @@ export { Quote };
 
 export default function WikiContent({ content }: WikiContentProps) {
   return (
-    <div className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6">
+    <div className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6 pt-3">
       {/* Article Content */}
       <div className="flex-1 lg:w-2/3 lg:pr-3">
         <div>

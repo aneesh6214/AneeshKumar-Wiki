@@ -4,6 +4,7 @@ import {
   extractSections,
   JSONContent,
 } from "./json-content";
+import { getAllBlogPosts } from "./blog-content";
 
 export interface SearchableContent {
   id: string;
@@ -22,6 +23,7 @@ export interface SearchResult extends SearchableContent {
 
 // Cache for content data
 let contentCache: Record<string, JSONContent> | null = null;
+let blogPostsCache: Awaited<ReturnType<typeof getAllBlogPosts>> | null = null;
 
 export async function getSearchableContent(): Promise<SearchableContent[]> {
   // Use cache if available
@@ -32,6 +34,9 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
   const searchableItems: SearchableContent[] = [];
 
   for (const [slug, content] of Object.entries(contentCache)) {
+    // Skip blog page - we'll add individual blog posts separately
+    if (slug === "blog") continue;
+
     const searchableText = extractSearchableText(content);
 
     // Main page content
@@ -56,6 +61,31 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
       });
     });
   }
+
+  // Add blog posts as individual searchable items
+  if (!blogPostsCache) {
+    blogPostsCache = await getAllBlogPosts();
+  }
+
+  blogPostsCache.forEach((post) => {
+    const content = post.searchableContent || `${post.title} ${post.topics.join(" ")}`;
+    searchableItems.push({
+      id: `blog-${post.slug}`,
+      title: post.title,
+      url: `/blog/${post.slug}`,
+      content: content,
+      preview: createPreview(content),
+    });
+  });
+
+  // Also add the blog listing page
+  searchableItems.push({
+    id: "blog-main",
+    title: "Blog",
+    url: "/blog",
+    content: "Blog technical articles project insights software engineering artificial intelligence research",
+    preview: "Technical articles, project insights, and thoughts on software engineering and AI.",
+  });
 
   return searchableItems;
 }

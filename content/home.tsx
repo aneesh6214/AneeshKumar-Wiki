@@ -9,7 +9,7 @@ export const homeContent: JSONContent = {
   description: "Personal knowledge base and portfolio",
   url: "/",
   disambiguation:
-    "This article is about the software engineer. For his technical blog, see [Aneesh Kumar (blog)](/blog). ",
+    "This article is about the software engineer. For his technical blog, see [Aneesh Kumar (Blog)](/blog). ",
   infobox: {
     image: "/profile-photo.jpg",
     imageCaption: "Aneesh Kumar in 2025",
