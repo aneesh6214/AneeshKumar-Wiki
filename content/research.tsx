@@ -15,8 +15,8 @@ export const researchContent: JSONContent = {
       description: (
         <>
           Aneesh Kumar co-authored <em>Exploring Sparse Feature Topology as a Predictor for Emergence</em>,
-          a paper accepted to the [AAAI XAI4Science 2026 Workshop](https://xai4science.github.io/)
-          and soon to appear on [OpenReview](https://openreview.net/). The study investigates whether
+          a paper accepted to the [AAAI XAI4Science 2026 Workshop](https://xai4science.github.io/), now
+          publicly available on [OpenReview](https://openreview.net/forum?id=12xpM8a6YK&noteId=12xpM8a6YK). The study investigates whether
           “emergent” capabilities in
           [transformer-based models](https://en.wikipedia.org/wiki/Transformer_(machine_learning_model))
           can be predicted before they occur by analyzing internal representations rather than
