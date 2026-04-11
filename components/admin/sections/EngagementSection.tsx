@@ -1,6 +1,6 @@
 import SectionHeading from "@/components/admin/SectionHeading";
 import WikiFigure from "@/components/admin/WikiFigure";
-import { ScrollDepthChart } from "@/components/admin/charts/Charts";
+import ScrollDepthChart from "@/components/admin/charts/ScrollDepthChart";
 import type { ScrollDepthData, TopPage } from "@/lib/admin/queries";
 import { formatDuration } from "@/lib/admin/format";
 import Footnote from "./Footnote";

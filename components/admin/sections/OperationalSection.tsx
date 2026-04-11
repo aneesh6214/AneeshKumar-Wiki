@@ -1,6 +1,6 @@
 import SectionHeading from "@/components/admin/SectionHeading";
 import WikiFigure from "@/components/admin/WikiFigure";
-import { PerformanceLineChart } from "@/components/admin/charts/Charts";
+import PerformanceLineChart from "@/components/admin/charts/PerformanceLineChart";
 import type { PerfPoint, JsErrorRow } from "@/lib/admin/queries";
 
 interface Props {

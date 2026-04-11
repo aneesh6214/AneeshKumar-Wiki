@@ -1,9 +1,7 @@
 import SectionHeading from "@/components/admin/SectionHeading";
 import WikiFigure from "@/components/admin/WikiFigure";
-import {
-  PageviewsLineChart,
-  VisitorsVsSessionsBarChart,
-} from "@/components/admin/charts/Charts";
+import PageviewsLineChart from "@/components/admin/charts/PageviewsLineChart";
+import VisitorsVsSessionsBarChart from "@/components/admin/charts/VisitorsVsSessionsBarChart";
 import type { AdminSummary, DailyPoint } from "@/lib/admin/queries";
 import type { TimeWindow } from "@/lib/admin/window";
 import { formatNumber } from "@/lib/admin/format";

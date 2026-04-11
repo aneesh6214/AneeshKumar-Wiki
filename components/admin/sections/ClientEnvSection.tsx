@@ -1,6 +1,6 @@
 import SectionHeading from "@/components/admin/SectionHeading";
 import WikiFigure from "@/components/admin/WikiFigure";
-import { CategoryDonut } from "@/components/admin/charts/Charts";
+import CategoryDonut from "@/components/admin/charts/CategoryDonut";
 import type { SlicePoint } from "@/lib/admin/queries";
 
 interface Props {
