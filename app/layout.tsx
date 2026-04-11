@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
+import BeaconProvider from "@/components/BeaconProvider";
 
 export const metadata: Metadata = {
   title: "Aneesh Kumar - Personal Website",
@@ -21,6 +22,7 @@ export default function RootLayout({
           <Header />
           {children}
         </div>
+        <BeaconProvider />
       </body>
     </html>
   );
