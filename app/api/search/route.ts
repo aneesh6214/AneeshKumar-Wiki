@@ -3,6 +3,7 @@ import {
   searchJSONContent,
   getJSONNavigationSuggestions,
 } from "@/lib/search-json";
+import { errorResponse } from "@/lib/api-errors";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -25,6 +26,6 @@ export async function GET(request: NextRequest) {
     }
   } catch (error) {
     console.error("Search API error:", error);
-    return NextResponse.json({ error: "Search failed" }, { status: 500 });
+    return errorResponse("search_failed", "Search failed", 500);
   }
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { env } from '@/lib/env';
+import { errorResponse } from '@/lib/api-errors';
 
 const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 
@@ -85,9 +86,6 @@ export async function GET() {
 
   } catch (error) {
     console.error('YouTube API error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch YouTube data' },
-      { status: 500 }
-    );
+    return errorResponse('youtube_fetch_failed', 'Failed to fetch YouTube data', 500);
   }
 }

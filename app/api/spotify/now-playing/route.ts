@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { env } from '@/lib/env';
+import { errorResponse } from '@/lib/api-errors';
 
 const SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token';
 const SPOTIFY_RECENTLY_PLAYED_URL = 'https://api.spotify.com/v1/me/player/recently-played?limit=1';
@@ -66,9 +67,6 @@ export async function GET() {
 
   } catch (error) {
     console.error('Spotify API error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch Spotify data' },
-      { status: 500 }
-    );
+    return errorResponse('spotify_fetch_failed', 'Failed to fetch Spotify data', 500);
   }
 }
