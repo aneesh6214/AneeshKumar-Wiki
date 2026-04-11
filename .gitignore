@@ -29,6 +29,9 @@ next-env.d.ts
 # docs
 /docs/
 
+# guides (local coding standards, not shipped)
+/guides/
+
 # Supabase local runtime
 supabase/.branches
 supabase/.temp

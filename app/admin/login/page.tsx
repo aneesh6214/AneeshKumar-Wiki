@@ -61,9 +61,6 @@ export default async function AdminLoginPage({ searchParams }: Props) {
                 className="w-full px-3 py-1.5 border border-[#a2a9b1] rounded-none bg-white text-sm focus:outline-none focus:border-[#3366cc]"
                 autoFocus
               />
-              <p className="text-xs text-gray-600 mt-1">
-                Set via the <code className="bg-white px-1 border border-[#eaecf0] text-xs">ADMIN_PASSWORD</code> environment variable.
-              </p>
             </div>
 
             <div className="mb-4">
