@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { navigationItems } from "@/lib/navigation";
 import { SearchResult } from "@/lib/search-json";
+import { sendBeacon } from "@/lib/beacon";
 
 export default function SearchNavigation() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -43,29 +44,11 @@ export default function SearchNavigation() {
   const commitSearch = (query: string, destination: string) => {
     const q = query.trim();
     if (q.length >= 2) {
-      try {
-        const body = JSON.stringify({
-          type: "search",
-          path: window.location.pathname,
-          payload: { query: q, destination },
-        });
-        const ok =
-          typeof navigator.sendBeacon === "function" &&
-          navigator.sendBeacon(
-            "/api/beacon",
-            new Blob([body], { type: "application/json" })
-          );
-        if (!ok) {
-          void fetch("/api/beacon", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body,
-            keepalive: true,
-          });
-        }
-      } catch {
-        /* best effort */
-      }
+      sendBeacon({
+        type: "search",
+        path: window.location.pathname,
+        payload: { query: q, destination },
+      });
     }
     window.location.href = destination;
   };

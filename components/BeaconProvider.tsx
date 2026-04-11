@@ -4,27 +4,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { onTTFB, onLCP } from "web-vitals";
-
-function send(type: string, path: string, payload: Record<string, unknown>) {
-  try {
-    const body = JSON.stringify({ type, path, payload });
-    // sendBeacon is best-effort and returns false if it can't queue the
-    // request (e.g. DNT, strict privacy mode). We don't retry.
-    const ok =
-      typeof navigator.sendBeacon === "function" &&
-      navigator.sendBeacon("/api/beacon", new Blob([body], { type: "application/json" }));
-    if (!ok) {
-      void fetch("/api/beacon", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-        keepalive: true,
-      });
-    }
-  } catch {
-    /* swallow: beacons are best-effort */
-  }
-}
+import { sendBeacon } from "@/lib/beacon";
 
 export default function BeaconProvider() {
   const pathname = usePathname();
@@ -60,9 +40,13 @@ export default function BeaconProvider() {
         visibleMs += performance.now() - visibleSince;
         visibleSince = null;
       }
-      send("engagement", pathname, {
-        max_scroll_pct: maxScrollPct,
-        visible_ms: Math.round(visibleMs),
+      sendBeacon({
+        type: "engagement",
+        path: pathname,
+        payload: {
+          max_scroll_pct: maxScrollPct,
+          visible_ms: Math.round(visibleMs),
+        },
       });
     };
 
@@ -92,7 +76,11 @@ export default function BeaconProvider() {
         return;
       }
       if (url.hostname === window.location.hostname) return;
-      send("outbound", pathname, { url: url.toString() });
+      sendBeacon({
+        type: "outbound",
+        path: pathname,
+        payload: { url: url.toString() },
+      });
     };
     document.addEventListener("click", onClick, { capture: true });
     return () => document.removeEventListener("click", onClick, { capture: true });
@@ -102,21 +90,29 @@ export default function BeaconProvider() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const onError = (e: ErrorEvent) => {
-      send("error", pathname, {
-        message: e.message,
-        source: e.filename,
-        line: e.lineno,
-        col: e.colno,
+      sendBeacon({
+        type: "error",
+        path: pathname,
+        payload: {
+          message: e.message,
+          source: e.filename,
+          line: e.lineno,
+          col: e.colno,
+        },
       });
     };
     const onRejection = (e: PromiseRejectionEvent) => {
       const reason = e.reason;
-      send("error", pathname, {
-        message:
-          reason && typeof reason === "object" && "message" in reason
-            ? String((reason as { message: unknown }).message)
-            : String(reason),
-        kind: "unhandledrejection",
+      sendBeacon({
+        type: "error",
+        path: pathname,
+        payload: {
+          message:
+            reason && typeof reason === "object" && "message" in reason
+              ? String((reason as { message: unknown }).message)
+              : String(reason),
+          kind: "unhandledrejection",
+        },
       });
     };
     window.addEventListener("error", onError);
@@ -130,8 +126,20 @@ export default function BeaconProvider() {
   // Web Vitals (TTFB + LCP)
   useEffect(() => {
     if (typeof window === "undefined") return;
-    onTTFB((m) => send("vitals", pathname, { name: "TTFB", value_ms: Math.round(m.value) }));
-    onLCP((m) => send("vitals", pathname, { name: "LCP", value_ms: Math.round(m.value) }));
+    onTTFB((m) =>
+      sendBeacon({
+        type: "vitals",
+        path: pathname,
+        payload: { name: "TTFB", value_ms: Math.round(m.value) },
+      })
+    );
+    onLCP((m) =>
+      sendBeacon({
+        type: "vitals",
+        path: pathname,
+        payload: { name: "LCP", value_ms: Math.round(m.value) },
+      })
+    );
   }, [pathname]);
 
   return null;
