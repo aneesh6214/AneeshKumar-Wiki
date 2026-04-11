@@ -10,6 +10,16 @@ export default function Infobox({ summary, windowLabel }: InfoboxProps) {
   const rows: { label: string; value: string }[] = [
     { label: "Type", value: "Personal portfolio" },
     { label: "Launched", value: summary.launched },
+    {
+      label: "Tracking since",
+      value: summary.firstHit
+        ? new Date(summary.firstHit).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
+        : "—",
+    },
     { label: "Window", value: windowLabel },
     { label: "Pageviews", value: formatNumber(summary.totalPageviews) },
     { label: "Unique visitors", value: formatNumber(summary.uniqueVisitors) },

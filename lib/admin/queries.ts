@@ -32,17 +32,28 @@ export interface AdminSummary {
   peakReferrer: string | null;
   launched: string;
   lastRefresh: string;
+  firstHit: string | null;
 }
 
 export async function getSummary(window: TimeWindow): Promise<AdminSummary> {
   const sb = getSupabase();
-  const { data, error } = await sb.rpc("admin_summary", {
-    p_start: window.start ? window.start.toISOString() : null,
-    p_end: window.end.toISOString(),
-    p_gap_seconds: SESSION_GAP_MS / 1000,
-  });
-  if (error) throw error;
-  const row = data?.[0] ?? null;
+  const [summaryRes, firstHitRes] = await Promise.all([
+    sb.rpc("admin_summary", {
+      p_start: window.start ? window.start.toISOString() : null,
+      p_end: window.end.toISOString(),
+      p_gap_seconds: SESSION_GAP_MS / 1000,
+    }),
+    sb
+      .from("server_hits")
+      .select("created_at")
+      .eq("is_bot", false)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle(),
+  ]);
+  if (summaryRes.error) throw summaryRes.error;
+  const row = summaryRes.data?.[0] ?? null;
+  const firstHit = firstHitRes.data?.created_at ?? null;
 
   return {
     windowDays: window.days,
@@ -63,6 +74,7 @@ export async function getSummary(window: TimeWindow): Promise<AdminSummary> {
     peakReferrer: row?.peak_referrer ?? null,
     launched: "January 2024",
     lastRefresh: new Date().toISOString(),
+    firstHit,
   };
 }
 

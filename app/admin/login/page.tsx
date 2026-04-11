@@ -31,13 +31,6 @@ export default async function AdminLoginPage({ searchParams }: Props) {
             <Link href="/" className="text-blue-600 hover:underline">Home</Link>.
           </div>
 
-          <p className="leading-7 mb-6">
-            Enter the administrator password to view the observability dashboard
-            for <strong>aneeshkumar.com</strong>. Authentication is handled by a
-            signed session cookie with a one-hour sliding expiry. No username is
-            required.
-          </p>
-
           {hasError && (
             <div className="border border-[#b32424] bg-[#fee7e6] text-[#b32424] px-4 py-3 mb-4 text-sm">
               <strong>Incorrect password.</strong> Please try again.
