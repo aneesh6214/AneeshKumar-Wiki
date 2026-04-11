@@ -201,7 +201,7 @@ export default function SearchNavigation() {
               </>
             ) : searchValue.trim() ? (
               <div className="p-4 text-center text-gray-500 text-sm">
-                No results found for "{searchValue}"
+                No results found for &ldquo;{searchValue}&rdquo;
               </div>
             ) : null}
           </div>

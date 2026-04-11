@@ -133,8 +133,8 @@ export function ScrollDepthChart({ data, labels }: ScrollChartProps) {
 
 interface PerfPoint {
   date: string;
-  ttfb: number;
-  lcp: number;
+  ttfb: number | null;
+  lcp: number | null;
 }
 
 export function PerformanceLineChart({ data }: { data: PerfPoint[] }) {

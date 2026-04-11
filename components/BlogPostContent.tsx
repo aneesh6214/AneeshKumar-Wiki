@@ -18,7 +18,7 @@ function ParsedContent({ children }: { children: React.ReactNode }) {
       return parseText(node);
     }
 
-    if (React.isValidElement(node)) {
+    if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
       const newChildren =
         React.Children.map(node.props.children, transformNode) || [];
       return React.cloneElement(node, node.props, ...newChildren);

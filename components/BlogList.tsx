@@ -116,7 +116,7 @@ export default function BlogList({ posts }: BlogListProps) {
             {filters.searchQuery && (
               <span>
                 {" "}
-                matching "<strong>{filters.searchQuery}</strong>"
+                matching &ldquo;<strong>{filters.searchQuery}</strong>&rdquo;
               </span>
             )}
             {filters.selectedTopics.length > 0 && (
