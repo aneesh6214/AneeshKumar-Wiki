@@ -203,3 +203,114 @@ async function getCategoryShare(window: TimeWindow, column: "device" | "browser"
 export const getDevices = (w: TimeWindow) => getCategoryShare(w, "device");
 export const getBrowsers = (w: TimeWindow) => getCategoryShare(w, "browser");
 export const getOperatingSystems = (w: TimeWindow) => getCategoryShare(w, "os");
+
+// ---------- Searches ----------
+
+export interface SearchRow { query: string; count: number; }
+
+export async function getTopSearches(window: TimeWindow, limit = 10): Promise<SearchRow[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_top_searches", {
+    p_start: window.start ? window.start.toISOString() : null,
+    p_end: window.end.toISOString(),
+    p_limit: limit,
+  });
+  if (error) throw error;
+  return (data ?? []) as SearchRow[];
+}
+
+// ---------- Outbound ----------
+
+export interface OutboundRow { url: string; clicks: number; }
+
+export async function getTopOutbound(window: TimeWindow, limit = 10): Promise<OutboundRow[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_top_outbound", {
+    p_start: window.start ? window.start.toISOString() : null,
+    p_end: window.end.toISOString(),
+    p_limit: limit,
+  });
+  if (error) throw error;
+  return (data ?? []) as OutboundRow[];
+}
+
+// ---------- Scroll depth for top 3 pages ----------
+
+export interface ScrollPoint {
+  bucket: string;
+  [k: string]: string | number;
+}
+
+export interface ScrollDepthData {
+  points: ScrollPoint[];
+  pageLabels: { p1?: string; p2?: string; p3?: string };
+}
+
+export async function getScrollDepth(window: TimeWindow): Promise<ScrollDepthData> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_scroll_depth_top_pages", {
+    p_start: window.start ? window.start.toISOString() : null,
+    p_end: window.end.toISOString(),
+  });
+  if (error) throw error;
+  const rows = (data ?? []) as {
+    bucket: string; page_key: string; page_path: string; page_rank: number; percent: number | null;
+  }[];
+
+  const labels: ScrollDepthData["pageLabels"] = {};
+  const byBucket = new Map<string, ScrollPoint>();
+  for (const r of rows) {
+    labels[r.page_key as "p1" | "p2" | "p3"] = r.page_path;
+    let point = byBucket.get(r.bucket);
+    if (!point) {
+      point = { bucket: r.bucket };
+      byBucket.set(r.bucket, point);
+    }
+    point[r.page_key] = Number(r.percent ?? 0);
+  }
+  const order = ["25%", "50%", "75%", "100%"];
+  const points = order
+    .map((b) => byBucket.get(b))
+    .filter((p): p is ScrollPoint => p !== undefined);
+
+  return { points, pageLabels: labels };
+}
+
+// ---------- Performance ----------
+
+export interface PerfPoint { date: string; ttfb: number | null; lcp: number | null; }
+
+export async function getPerformance(window: TimeWindow): Promise<PerfPoint[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_performance", {
+    p_start: window.start ? window.start.toISOString() : null,
+    p_end: window.end.toISOString(),
+  });
+  if (error) throw error;
+  return (data ?? []).map((r: { day: string; ttfb: string | null; lcp: string | null }) => ({
+    date: new Date(r.day).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    ttfb: r.ttfb === null ? null : Math.round(Number(r.ttfb)),
+    lcp:  r.lcp  === null ? null : Math.round(Number(r.lcp)),
+  }));
+}
+
+// ---------- JS errors ----------
+
+export interface JsErrorRow { time: string; path: string; message: string; }
+
+export async function getJsErrors(window: TimeWindow, limit = 50): Promise<JsErrorRow[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_js_errors", {
+    p_start: window.start ? window.start.toISOString() : null,
+    p_end: window.end.toISOString(),
+    p_limit: limit,
+  });
+  if (error) throw error;
+  return (data ?? []).map((r: { at: string; path: string; message: string }) => ({
+    time: new Date(r.at).toLocaleString("en-US", {
+      month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false,
+    }),
+    path: r.path,
+    message: r.message ?? "",
+  }));
+}

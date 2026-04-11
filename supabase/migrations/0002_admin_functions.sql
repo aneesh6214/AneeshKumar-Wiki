@@ -293,3 +293,151 @@ begin
     order by value desc
   $f$, p_column, p_column) using p_start, p_end;
 end $$;
+
+------------------------------------------------------------
+-- admin_top_searches
+------------------------------------------------------------
+create or replace function admin_top_searches(
+  p_start timestamptz,
+  p_end   timestamptz,
+  p_limit int
+) returns table (
+  query text,
+  count bigint
+) language sql stable as $$
+  select lower(payload->>'query') as query, count(*)::bigint
+  from client_events
+  where event_type = 'search'
+    and payload ? 'query'
+    and created_at <= p_end
+    and (p_start is null or created_at >= p_start)
+  group by 1
+  order by 2 desc
+  limit p_limit
+$$;
+
+------------------------------------------------------------
+-- admin_top_outbound
+------------------------------------------------------------
+create or replace function admin_top_outbound(
+  p_start timestamptz,
+  p_end   timestamptz,
+  p_limit int
+) returns table (
+  url    text,
+  clicks bigint
+) language sql stable as $$
+  select payload->>'url' as url, count(*)::bigint
+  from client_events
+  where event_type = 'outbound'
+    and payload ? 'url'
+    and created_at <= p_end
+    and (p_start is null or created_at >= p_start)
+  group by 1
+  order by 2 desc
+  limit p_limit
+$$;
+
+------------------------------------------------------------
+-- admin_scroll_depth_top_pages
+------------------------------------------------------------
+create or replace function admin_scroll_depth_top_pages(
+  p_start timestamptz,
+  p_end   timestamptz
+) returns table (
+  bucket      text,
+  page_key    text,
+  page_path   text,
+  page_rank   int,
+  percent     numeric
+) language sql stable as $$
+  with top_paths as (
+    select path, count(*)::bigint as views,
+           row_number() over (order by count(*) desc) as rn
+    from server_hits
+    where is_bot = false
+      and created_at <= p_end
+      and (p_start is null or created_at >= p_start)
+    group by path
+    order by views desc
+    limit 3
+  ),
+  eng as (
+    select path, (payload->>'max_scroll_pct')::numeric as pct
+    from client_events
+    where event_type = 'engagement'
+      and payload ? 'max_scroll_pct'
+      and created_at <= p_end
+      and (p_start is null or created_at >= p_start)
+  ),
+  buckets as (
+    select unnest(array['25%','50%','75%','100%']) as bucket,
+           unnest(array[25, 50, 75, 100])           as threshold
+  )
+  select
+    b.bucket,
+    ('p' || t.rn)::text        as page_key,
+    t.path                     as page_path,
+    t.rn::int                  as page_rank,
+    round(
+      100.0 * (
+        select count(*)::numeric
+          from eng e
+          where e.path = t.path and e.pct >= b.threshold
+      ) / nullif((select count(*)::numeric from eng e where e.path = t.path), 0),
+      0
+    ) as percent
+  from top_paths t
+  cross join buckets b
+  order by t.rn, b.threshold
+$$;
+
+------------------------------------------------------------
+-- admin_performance
+------------------------------------------------------------
+create or replace function admin_performance(
+  p_start timestamptz,
+  p_end   timestamptz
+) returns table (
+  day  date,
+  ttfb numeric,
+  lcp  numeric
+) language sql stable as $$
+  select
+    date_trunc('day', created_at)::date as day,
+    percentile_cont(0.5) within group (
+      order by (payload->>'value_ms')::numeric
+    ) filter (where payload->>'name' = 'TTFB') as ttfb,
+    percentile_cont(0.5) within group (
+      order by (payload->>'value_ms')::numeric
+    ) filter (where payload->>'name' = 'LCP') as lcp
+  from client_events
+  where event_type = 'vitals'
+    and created_at <= p_end
+    and (p_start is null or created_at >= p_start)
+  group by 1
+  order by 1
+$$;
+
+------------------------------------------------------------
+-- admin_js_errors
+------------------------------------------------------------
+create or replace function admin_js_errors(
+  p_start timestamptz,
+  p_end   timestamptz,
+  p_limit int
+) returns table (
+  at      timestamptz,
+  path    text,
+  message text
+) language sql stable as $$
+  select created_at as at,
+         path,
+         payload->>'message' as message
+  from client_events
+  where event_type = 'error'
+    and created_at <= p_end
+    and (p_start is null or created_at >= p_start)
+  order by created_at desc
+  limit p_limit
+$$;
