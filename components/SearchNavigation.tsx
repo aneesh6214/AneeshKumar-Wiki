@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { navigationItems } from "@/lib/navigation";
 import { SearchResult } from "@/lib/search-json";
+import { sendBeacon } from "@/lib/beacon";
 
 export default function SearchNavigation() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -40,6 +41,18 @@ export default function SearchNavigation() {
     return () => clearTimeout(timeoutId);
   }, [searchValue]);
 
+  const commitSearch = (query: string, destination: string) => {
+    const q = query.trim();
+    if (q.length >= 2) {
+      sendBeacon({
+        type: "search",
+        path: window.location.pathname,
+        payload: { query: q, destination },
+      });
+    }
+    window.location.href = destination;
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isSearchFocused) return;
 
@@ -60,12 +73,10 @@ export default function SearchNavigation() {
         e.preventDefault();
         if (selectedIndex >= 0 && displayItems[selectedIndex]) {
           const item = displayItems[selectedIndex];
-          if (item.section) {
-            // Scroll to section if it exists
-            window.location.href = `${item.url}#${item.section.toLowerCase().replace(/\s+/g, "-")}`;
-          } else {
-            window.location.href = item.url;
-          }
+          const destination = item.section
+            ? `${item.url}#${item.section.toLowerCase().replace(/\s+/g, "-")}`
+            : item.url;
+          commitSearch(searchValue, destination);
         }
         break;
       case "Escape":
@@ -120,11 +131,10 @@ export default function SearchNavigation() {
                             : "hover:bg-gray-50 border border-transparent"
                         }`}
                         onClick={() => {
-                          if (item.section) {
-                            window.location.href = `${item.url}#${item.section.toLowerCase().replace(/\s+/g, "-")}`;
-                          } else {
-                            window.location.href = item.url;
-                          }
+                          const destination = item.section
+                            ? `${item.url}#${item.section.toLowerCase().replace(/\s+/g, "-")}`
+                            : item.url;
+                          commitSearch(searchValue, destination);
                         }}
                       >
                         <div className="flex items-start justify-between">
@@ -174,7 +184,7 @@ export default function SearchNavigation() {
               </>
             ) : searchValue.trim() ? (
               <div className="p-4 text-center text-gray-500 text-sm">
-                No results found for "{searchValue}"
+                No results found for &ldquo;{searchValue}&rdquo;
               </div>
             ) : null}
           </div>

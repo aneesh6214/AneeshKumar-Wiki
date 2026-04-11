@@ -15,7 +15,7 @@ function ParsedContent({ children }: { children: React.ReactNode }) {
       return parseJSXText(node);
     }
 
-    if (React.isValidElement(node)) {
+    if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
       const newChildren =
         React.Children.map(node.props.children, transformNode) || [];
       return React.cloneElement(node, node.props, ...newChildren);
@@ -260,7 +260,7 @@ function WikiSection({
   section: ContentSection;
   level: number;
 }) {
-  const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+  const HeadingTag = `h${level}` as React.ElementType;
   const id = section.title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")

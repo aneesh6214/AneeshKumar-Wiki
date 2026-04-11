@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
+import BeaconProvider from "@/components/BeaconProvider";
 
 export const metadata: Metadata = {
   title: "Aneesh Kumar - Personal Website",
   description:
     "Personal website of Aneesh Kumar, Software Engineer and AI researcher",
-  generator: "v0.dev",
 };
 
 export default function RootLayout({
@@ -21,6 +21,7 @@ export default function RootLayout({
           <Header />
           {children}
         </div>
+        <BeaconProvider />
       </body>
     </html>
   );
