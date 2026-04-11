@@ -441,3 +441,75 @@ create or replace function admin_js_errors(
   order by created_at desc
   limit p_limit
 $$;
+
+------------------------------------------------------------
+-- admin_live_visitors
+------------------------------------------------------------
+create or replace function admin_live_visitors()
+returns table (
+  visitor_id    text,
+  country       text,
+  path          text,
+  device        text,
+  since_seconds int
+) language sql stable as $$
+  with latest as (
+    select distinct on (visitor_id)
+      visitor_id, country, path, device, created_at
+    from server_hits
+    where is_bot = false
+      and created_at >= now() - interval '5 minutes'
+    order by visitor_id, created_at desc
+  )
+  select
+    visitor_id,
+    country,
+    path,
+    device,
+    extract(epoch from (now() - created_at))::int as since_seconds
+  from latest
+  order by since_seconds asc
+$$;
+
+------------------------------------------------------------
+-- admin_raw_events
+------------------------------------------------------------
+create or replace function admin_raw_events(p_limit int)
+returns table (
+  at          timestamptz,
+  source      text,
+  visitor_id  text,
+  path        text,
+  extras      jsonb
+) language sql stable as $$
+  (
+    select created_at as at,
+           'server_hit' as source,
+           visitor_id,
+           path,
+           jsonb_build_object(
+             'country', country,
+             'device',  device,
+             'browser', browser,
+             'os',      os,
+             'referrer_bucket', referrer_bucket
+           ) as extras
+    from server_hits
+    where is_bot = false
+    order by created_at desc
+    limit p_limit
+  )
+  union all
+  (
+    select created_at as at,
+           event_type as source,
+           visitor_id,
+           path,
+           payload as extras
+    from client_events
+    order by created_at desc
+    limit p_limit
+  )
+  order by at desc
+  limit p_limit
+$$;

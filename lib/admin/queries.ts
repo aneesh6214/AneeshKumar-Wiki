@@ -314,3 +314,55 @@ export async function getJsErrors(window: TimeWindow, limit = 50): Promise<JsErr
     message: r.message ?? "",
   }));
 }
+
+// ---------- Live visitors ----------
+
+export interface LiveVisitor {
+  vidShort: string;
+  country: string | null;
+  path: string;
+  device: string | null;
+  since: string;
+}
+
+export async function getLiveVisitors(): Promise<LiveVisitor[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_live_visitors");
+  if (error) throw error;
+  return (data ?? []).map((r: { visitor_id: string; country: string | null; path: string; device: string | null; since_seconds: number }) => ({
+    vidShort: r.visitor_id.slice(0, 4) + "..." + r.visitor_id.slice(-3),
+    country: r.country,
+    path: r.path,
+    device: r.device,
+    since: formatMmSs(r.since_seconds),
+  }));
+}
+
+function formatMmSs(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+// ---------- Raw events ----------
+
+export interface RawEvent {
+  at: string;
+  source: string;
+  vidShort: string;
+  path: string | null;
+  extras: Record<string, unknown>;
+}
+
+export async function getRawEvents(limit = 100): Promise<RawEvent[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_raw_events", { p_limit: limit });
+  if (error) throw error;
+  return (data ?? []).map((r: { at: string; source: string; visitor_id: string; path: string | null; extras: Record<string, unknown> }) => ({
+    at: new Date(r.at).toLocaleTimeString("en-US", { hour12: false }),
+    source: r.source,
+    vidShort: r.visitor_id.slice(0, 4) + "..." + r.visitor_id.slice(-3),
+    path: r.path,
+    extras: r.extras ?? {},
+  }));
+}
