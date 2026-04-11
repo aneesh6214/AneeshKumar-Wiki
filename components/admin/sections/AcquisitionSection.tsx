@@ -1,8 +1,6 @@
 import SectionHeading from "@/components/admin/SectionHeading";
-import {
-  ReferrersTable,
-  CountriesTable,
-} from "@/components/admin/tables/Tables";
+import ReferrersTable from "@/components/admin/tables/ReferrersTable";
+import CountriesTable from "@/components/admin/tables/CountriesTable";
 import type { TopReferrer, CountryRow } from "@/lib/admin/queries";
 import Footnote from "./Footnote";
 

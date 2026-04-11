@@ -1,9 +1,7 @@
 import SectionHeading from "@/components/admin/SectionHeading";
-import {
-  TopPagesTable,
-  OutboundLinksTable,
-  SearchQueriesTable,
-} from "@/components/admin/tables/Tables";
+import TopPagesTable from "@/components/admin/tables/TopPagesTable";
+import OutboundLinksTable from "@/components/admin/tables/OutboundLinksTable";
+import SearchQueriesTable from "@/components/admin/tables/SearchQueriesTable";
 import type {
   TopPage,
   OutboundRow,
