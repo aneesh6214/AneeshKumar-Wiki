@@ -89,12 +89,26 @@ export function VisitorsVsSessionsBarChart({ data }: { data: DailyPoint[] }) {
 
 interface ScrollPoint {
   bucket: string;
-  manifesto: number;
-  research: number;
-  home: number;
+  [k: string]: string | number;
 }
 
-export function ScrollDepthChart({ data }: { data: ScrollPoint[] }) {
+interface ScrollChartProps {
+  data: ScrollPoint[];
+  labels: { p1?: string; p2?: string; p3?: string };
+}
+
+const SCROLL_COLORS = [WIKI_BLUE, WIKI_GREEN, WIKI_GRAY];
+
+function prettyPath(path: string): string {
+  if (path === "/") return "Home";
+  return path.split("/").filter(Boolean).join(" / ");
+}
+
+export function ScrollDepthChart({ data, labels }: ScrollChartProps) {
+  const series = (["p1", "p2", "p3"] as const)
+    .filter((k) => labels[k])
+    .map((k, i) => ({ key: k, name: prettyPath(labels[k]!), fill: SCROLL_COLORS[i] }));
+
   return (
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={data} margin={{ top: 8, right: 12, bottom: 4, left: -8 }}>
@@ -109,9 +123,9 @@ export function ScrollDepthChart({ data }: { data: ScrollPoint[] }) {
             color: TEXT,
           }}
         />
-        <Bar dataKey="manifesto" fill={WIKI_BLUE} name="Manifesto" />
-        <Bar dataKey="research" fill={WIKI_GREEN} name="Research" />
-        <Bar dataKey="home" fill={WIKI_GRAY} name="Home" />
+        {series.map((s) => (
+          <Bar key={s.key} dataKey={s.key} fill={s.fill} name={s.name} />
+        ))}
       </BarChart>
     </ResponsiveContainer>
   );
