@@ -2,20 +2,20 @@
 
 import Link from "next/link";
 import WikiTable, { WikiColumn } from "@/components/admin/WikiTable";
-import {
-  formatNumber,
-  formatPercent,
-  formatDuration,
-  topPages,
-  topReferrers,
-  topSearches,
-  topOutbound,
-  countries,
-} from "@/lib/admin/mock-data";
+import { formatNumber, formatPercent, formatDuration } from "@/lib/admin/format";
+import type {
+  TopPage,
+  TopReferrer,
+  CountryRow,
+  SearchRow,
+  OutboundRow,
+} from "@/lib/admin/queries";
 
-type PageRow = (typeof topPages)[number] & { rank: number };
+// ---------- Top Pages ----------
 
-const pageColsRanked: WikiColumn<PageRow>[] = [
+type PageRow = TopPage & { rank: number };
+
+const pageCols: WikiColumn<PageRow>[] = [
   {
     key: "rank",
     label: "#",
@@ -54,7 +54,7 @@ const pageColsRanked: WikiColumn<PageRow>[] = [
     align: "right",
     sortable: true,
     sortValue: (r) => r.avgScroll,
-    render: (r) => `${r.avgScroll}%`,
+    render: (r) => (r.avgScroll > 0 ? `${r.avgScroll}%` : "—"),
   },
   {
     key: "time",
@@ -62,24 +62,32 @@ const pageColsRanked: WikiColumn<PageRow>[] = [
     align: "right",
     sortable: true,
     sortValue: (r) => r.avgTimeSec,
-    render: (r) => formatDuration(r.avgTimeSec),
+    render: (r) => (r.avgTimeSec > 0 ? formatDuration(r.avgTimeSec) : "—"),
   },
 ];
 
-export function TopPagesTable() {
-  const ranked: PageRow[] = topPages.map((p, i) => ({ ...p, rank: i + 1 }));
+export function TopPagesTable({ data }: { data: TopPage[] }) {
+  if (data.length === 0) {
+    return (
+      <p className="text-sm italic text-gray-600 my-4">
+        No pageviews in this window yet.
+      </p>
+    );
+  }
+  const ranked: PageRow[] = data.map((p, i) => ({ ...p, rank: i + 1 }));
   return (
     <WikiTable
-      columns={pageColsRanked}
+      columns={pageCols}
       data={ranked}
-      caption="Table 1. Top pages by views over the last 30 days, with engagement metrics. Click a column header to sort."
+      caption="Table 1. Top pages by views in the current window, with engagement metrics. Click a column header to sort."
       defaultSort={{ key: "views", direction: "desc" }}
     />
   );
 }
 
-type RefRow = (typeof topReferrers)[number];
-const refCols: WikiColumn<RefRow>[] = [
+// ---------- Referrers ----------
+
+const refCols: WikiColumn<TopReferrer>[] = [
   {
     key: "source",
     label: "Source",
@@ -112,18 +120,26 @@ const refCols: WikiColumn<RefRow>[] = [
   },
 ];
 
-export function ReferrersTable() {
+export function ReferrersTable({ data }: { data: TopReferrer[] }) {
+  if (data.length === 0) {
+    return (
+      <p className="text-sm italic text-gray-600 my-4">
+        No referrer data in this window yet.
+      </p>
+    );
+  }
   return (
     <WikiTable
       columns={refCols}
-      data={topReferrers}
+      data={data}
       caption="Table 4. Top referrer sources grouped into buckets (search / direct / social / other). Direct is inflated by browsers that strip referrer headers."
       defaultSort={{ key: "visits", direction: "desc" }}
     />
   );
 }
 
-type SearchRow = (typeof topSearches)[number];
+// ---------- Searches ----------
+
 const searchCols: WikiColumn<SearchRow>[] = [
   {
     key: "query",
@@ -144,18 +160,26 @@ const searchCols: WikiColumn<SearchRow>[] = [
   },
 ];
 
-export function SearchQueriesTable() {
+export function SearchQueriesTable({ data }: { data: SearchRow[] }) {
+  if (data.length === 0) {
+    return (
+      <p className="text-sm italic text-gray-600 my-4">
+        No on-site searches in this window yet.
+      </p>
+    );
+  }
   return (
     <WikiTable
       columns={searchCols}
-      data={topSearches}
-      caption="Table 3. On-site search queries, last 30 days."
+      data={data}
+      caption="Table 3. On-site search queries in the current window."
       defaultSort={{ key: "count", direction: "desc" }}
     />
   );
 }
 
-type OutboundRow = (typeof topOutbound)[number];
+// ---------- Outbound ----------
+
 const outboundCols: WikiColumn<OutboundRow>[] = [
   {
     key: "url",
@@ -183,18 +207,26 @@ const outboundCols: WikiColumn<OutboundRow>[] = [
   },
 ];
 
-export function OutboundLinksTable() {
+export function OutboundLinksTable({ data }: { data: OutboundRow[] }) {
+  if (data.length === 0) {
+    return (
+      <p className="text-sm italic text-gray-600 my-4">
+        No outbound clicks in this window yet.
+      </p>
+    );
+  }
   return (
     <WikiTable
       columns={outboundCols}
-      data={topOutbound}
-      caption="Table 2. External links clicked from any page, last 30 days."
+      data={data}
+      caption="Table 2. External links clicked from any page in the current window."
       defaultSort={{ key: "clicks", direction: "desc" }}
     />
   );
 }
 
-type CountryRow = (typeof countries)[number];
+// ---------- Countries ----------
+
 const countryCols: WikiColumn<CountryRow>[] = [
   {
     key: "country",
@@ -221,12 +253,19 @@ const countryCols: WikiColumn<CountryRow>[] = [
   },
 ];
 
-export function CountriesTable() {
+export function CountriesTable({ data }: { data: CountryRow[] }) {
+  if (data.length === 0) {
+    return (
+      <p className="text-sm italic text-gray-600 my-4">
+        No geolocation data yet. Country is only recorded for requests served by Vercel&apos;s edge network; local-dev requests do not populate this field.
+      </p>
+    );
+  }
   return (
     <WikiTable
       columns={countryCols}
-      data={countries}
-      caption="Table 5. Visits by country, last 30 days."
+      data={data}
+      caption="Table 5. Visits by country in the current window."
       defaultSort={{ key: "visits", direction: "desc" }}
     />
   );
