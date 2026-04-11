@@ -15,6 +15,7 @@ const BROWSER_ALLOWLIST = new Set([
 ]);
 
 const OS_MAP: Record<string, string> = {
+  "macOS": "macOS",
   "Mac OS": "macOS",
   "iOS": "iOS",
   "Windows": "Windows",
