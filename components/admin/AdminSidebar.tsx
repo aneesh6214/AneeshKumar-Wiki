@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { sidebarWindows } from "@/lib/admin/mock-data";
+
+const SIDEBAR_WINDOWS = [
+  { label: "Last 24 hours", value: "24h" },
+  { label: "Last 7 days", value: "7d" },
+  { label: "Last 30 days", value: "30d" },
+  { label: "Last 90 days", value: "90d" },
+  { label: "Last year", value: "1y" },
+  { label: "All time", value: "all" },
+] as const;
 
 interface AdminSidebarProps {
   currentWindow?: string;
@@ -15,7 +23,7 @@ export default function AdminSidebar({ currentWindow = "30d" }: AdminSidebarProp
         </div>
 
         <nav className="flex flex-wrap gap-x-4 gap-y-1 md:flex-col md:space-y-1 text-sm">
-          {sidebarWindows.map((w) => {
+          {SIDEBAR_WINDOWS.map((w) => {
             const isActive = w.value === currentWindow;
             return (
               <div key={w.value} className="py-1">

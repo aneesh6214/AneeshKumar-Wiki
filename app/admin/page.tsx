@@ -19,20 +19,26 @@ import {
   ReferrersTable,
   CountriesTable,
 } from "@/components/admin/tables/Tables";
+import RefreshButton from "@/components/admin/RefreshButton";
+import { parseWindow, type WindowValue } from "@/lib/admin/window";
 import {
-  summary,
-  dailyPageviews,
-  topPages,
-  devices,
-  browsers,
-  operatingSystems,
-  scrollDepth,
-  performance,
-  jsErrors,
-  formatNumber,
-  formatPercent,
-  formatDuration,
-} from "@/lib/admin/mock-data";
+  getSummary,
+  getDailyPageviews,
+  getTopPages,
+  getTopReferrers,
+  getTopSearches,
+  getTopOutbound,
+  getTopCountries,
+  getDevices,
+  getBrowsers,
+  getOperatingSystems,
+  getScrollDepth,
+  getPerformance,
+  getJsErrors,
+} from "@/lib/admin/queries";
+import { formatNumber, formatPercent, formatDuration } from "@/lib/admin/format";
+
+export const dynamic = "force-dynamic";
 
 function FN({ n }: { n: number }) {
   return (
@@ -48,13 +54,54 @@ function FN({ n }: { n: number }) {
   );
 }
 
-export default function AdminDashboardPage() {
+interface Props {
+  searchParams: Promise<{ window?: string }>;
+}
+
+export default async function AdminDashboardPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const window = parseWindow(params.window);
+
+  const [
+    summary,
+    daily,
+    topPages,
+    referrers,
+    searches,
+    outbound,
+    countries,
+    devices,
+    browsers,
+    os,
+    scroll,
+    perf,
+    errors,
+  ] = await Promise.all([
+    getSummary(window),
+    getDailyPageviews(window),
+    getTopPages(window),
+    getTopReferrers(window),
+    getTopSearches(window),
+    getTopOutbound(window),
+    getTopCountries(window),
+    getDevices(window),
+    getBrowsers(window),
+    getOperatingSystems(window),
+    getScrollDepth(window),
+    getPerformance(window),
+    getJsErrors(window),
+  ]);
+
+  const hasAnyHits = summary.totalPageviews > 0;
+  const dailyAvg = summary.windowDays
+    ? Math.round(summary.totalPageviews / summary.windowDays)
+    : summary.totalPageviews;
+
   return (
-    <AdminPageLayout currentWindow="30d">
+    <AdminPageLayout currentWindow={window.value as WindowValue}>
       <AdminArticleHeader title="aneeshkumar.com" activeTab="dashboard" />
 
       <article className="px-4 sm:px-6 py-4 text-[#202122] max-w-none">
-        {/* Disambiguation-style hat note */}
         <div className="text-sm italic text-gray-600 mb-4 pl-6 border-l-2 border-[#eaecf0]">
           This is the administrator&apos;s private observability dashboard for
           the website. For the public article, see{" "}
@@ -64,38 +111,82 @@ export default function AdminDashboardPage() {
           .
         </div>
 
-        {/* Infobox floats right inside the article */}
-        <Infobox />
+        <Infobox summary={summary} windowLabel={window.label} />
 
-        {/* Lead paragraphs */}
         <div className="text-[15px] leading-7 space-y-4">
-          <p>
-            <strong>aneeshkumar.com</strong> is a personal portfolio website
-            launched in {summary.launched}. Over the last{" "}
-            <strong>{summary.windowDays} days</strong> it has received{" "}
-            <strong>{formatNumber(summary.totalPageviews)} pageviews</strong>{" "}
-            from an estimated{" "}
-            <strong>
-              {formatNumber(summary.uniqueVisitors)} unique visitors
-            </strong>
-            <FN n={1} />, with traffic peaking on{" "}
-            <strong>{summary.peakDate}</strong> at{" "}
-            {formatNumber(summary.peakViews)} views following a referral from{" "}
-            {summary.peakReferrer}.<FN n={2} /> Its most-read page is{" "}
-            <em>{summary.topPageTitle}</em>, accounting for{" "}
-            <strong>{formatPercent(summary.topPageShare, 1)}</strong> of all
-            traffic.
-          </p>
-          <p>
-            Visitors are predominantly based in the {summary.topCountry} (
-            {formatPercent(summary.topCountryShare, 0)}) and access the site
-            primarily via desktop browsers (
-            {formatPercent(summary.desktopShare, 0)}).<FN n={3} /> Around{" "}
-            {formatPercent(summary.returningVisitorRate, 0)} of sessions
-            originate from returning visitors. The site tracks no personally
-            identifiable information beyond country-level geolocation.
-            <FN n={4} />
-          </p>
+          {hasAnyHits ? (
+            <>
+              <p>
+                <strong>aneeshkumar.com</strong> is a personal portfolio website
+                launched in {summary.launched}. Over the{" "}
+                <strong>{window.label.toLowerCase()}</strong> it has received{" "}
+                <strong>
+                  {formatNumber(summary.totalPageviews)} pageviews
+                </strong>{" "}
+                from an estimated{" "}
+                <strong>
+                  {formatNumber(summary.uniqueVisitors)} unique visitors
+                </strong>
+                <FN n={1} />
+                {summary.peakDate && summary.peakViews !== null && (
+                  <>
+                    , with traffic peaking on{" "}
+                    <strong>
+                      {new Date(summary.peakDate).toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </strong>{" "}
+                    at {formatNumber(summary.peakViews)} views
+                    {summary.peakReferrer ? (
+                      <> following referrals from {summary.peakReferrer}</>
+                    ) : null}
+                    .<FN n={2} />
+                  </>
+                )}
+                {summary.topPage && summary.topPageShare !== null && (
+                  <>
+                    {" "}
+                    Its most-read page is <em>{summary.topPageTitle}</em>,
+                    accounting for{" "}
+                    <strong>
+                      {formatPercent(summary.topPageShare, 1)}
+                    </strong>{" "}
+                    of all traffic.
+                  </>
+                )}
+              </p>
+              <p>
+                {summary.topCountry && summary.topCountryShare !== null ? (
+                  <>
+                    Visitors are predominantly based in {summary.topCountry} (
+                    {formatPercent(summary.topCountryShare, 0)}) and access the
+                    site primarily via desktop browsers (
+                    {formatPercent(summary.desktopShare, 0)}).<FN n={3} />{" "}
+                  </>
+                ) : (
+                  <>
+                    Device mix is currently{" "}
+                    {formatPercent(summary.desktopShare, 0)} desktop.
+                    <FN n={3} />{" "}
+                  </>
+                )}
+                {summary.returningVisitorRate !== null && (
+                  <>
+                    Around {formatPercent(summary.returningVisitorRate, 0)} of
+                    sessions originate from returning visitors.{" "}
+                  </>
+                )}
+                The site tracks no personally identifiable information beyond
+                country-level geolocation.<FN n={4} />
+              </p>
+            </>
+          ) : (
+            <p className="italic text-gray-600">
+              No pageviews have been recorded yet in this window. Once traffic
+              arrives, this page will populate automatically.
+            </p>
+          )}
         </div>
 
         <TableOfContents />
@@ -104,14 +195,19 @@ export default function AdminDashboardPage() {
         <SectionHeading id="traffic" num="1">
           Traffic
         </SectionHeading>
-        <p className="leading-7 mb-4">
-          The site received{" "}
-          <strong>{formatNumber(summary.totalPageviews)}</strong> pageviews
-          across <strong>{formatNumber(summary.sessions)}</strong> sessions in
-          the last {summary.windowDays} days. Daily traffic averages roughly{" "}
-          {Math.round(summary.totalPageviews / summary.windowDays)} views and
-          exhibits a clear inflection around {summary.peakDate} (see Figure 1).
-        </p>
+        {hasAnyHits ? (
+          <p className="leading-7 mb-4">
+            The site received{" "}
+            <strong>{formatNumber(summary.totalPageviews)}</strong> pageviews
+            across <strong>{formatNumber(summary.sessions)}</strong> sessions
+            in {window.label.toLowerCase()}. Daily traffic averages roughly{" "}
+            {dailyAvg} views.
+          </p>
+        ) : (
+          <p className="leading-7 mb-4 italic text-gray-600">
+            Awaiting first pageview.
+          </p>
+        )}
 
         <SectionHeading
           id="pageviews-over-time"
@@ -121,12 +217,16 @@ export default function AdminDashboardPage() {
         >
           Pageviews over time
         </SectionHeading>
-        <WikiFigure
-          number={1}
-          caption="Daily pageviews over the last 30 days. The spike on April 3 corresponds to a Hacker News referral."
-        >
-          <PageviewsLineChart data={dailyPageviews} />
-        </WikiFigure>
+        {daily.length > 0 ? (
+          <WikiFigure
+            number={1}
+            caption="Daily pageviews in the current window."
+          >
+            <PageviewsLineChart data={daily} />
+          </WikiFigure>
+        ) : (
+          <p className="italic text-gray-600 my-4">No data yet.</p>
+        )}
 
         <SectionHeading
           id="visitors-and-sessions"
@@ -136,12 +236,16 @@ export default function AdminDashboardPage() {
         >
           Visitors and sessions
         </SectionHeading>
-        <WikiFigure
-          number={2}
-          caption="Unique visitors vs. pageviews per day. The gap between the two series approximates average pages per session."
-        >
-          <VisitorsVsSessionsBarChart data={dailyPageviews} />
-        </WikiFigure>
+        {daily.length > 0 ? (
+          <WikiFigure
+            number={2}
+            caption="Unique visitors vs. pageviews per day. The gap between the two series approximates average pages per session."
+          >
+            <VisitorsVsSessionsBarChart data={daily} />
+          </WikiFigure>
+        ) : (
+          <p className="italic text-gray-600 my-4">No data yet.</p>
+        )}
 
         {/* 2. Content */}
         <SectionHeading id="content" num="2">
@@ -157,7 +261,7 @@ export default function AdminDashboardPage() {
         <SectionHeading id="most-read-pages" num="2.1" level={3}>
           Most-read pages
         </SectionHeading>
-        <TopPagesTable />
+        <TopPagesTable data={topPages} />
 
         <SectionHeading id="outbound-links" num="2.2" level={3}>
           Outbound links
@@ -166,7 +270,7 @@ export default function AdminDashboardPage() {
           Outbound clicks indicate which external resources visitors chose to
           follow after arriving.
         </p>
-        <OutboundLinksTable />
+        <OutboundLinksTable data={outbound} />
 
         <SectionHeading id="search-queries" num="2.3" level={3}>
           Search queries
@@ -176,7 +280,7 @@ export default function AdminDashboardPage() {
           appearing often without a clear matching page is a signal that
           content may be missing or poorly indexed.
         </p>
-        <SearchQueriesTable />
+        <SearchQueriesTable data={searches} />
 
         {/* 3. Engagement */}
         <SectionHeading id="engagement" num="3">
@@ -192,29 +296,37 @@ export default function AdminDashboardPage() {
         <SectionHeading id="scroll-depth" num="3.1" level={3}>
           Scroll depth
         </SectionHeading>
-        <WikiFigure
-          number={3}
-          caption="Percentage of sessions reaching each scroll depth bucket, for the three most-read pages. The manifesto and research pages both retain attention well past the 75% mark."
-        >
-          <ScrollDepthChart data={scrollDepth} />
-        </WikiFigure>
+        {scroll.points.length > 0 ? (
+          <WikiFigure
+            number={3}
+            caption="Percentage of sessions reaching each scroll depth bucket, for the three most-read pages in the current window."
+          >
+            <ScrollDepthChart data={scroll.points} labels={scroll.pageLabels} />
+          </WikiFigure>
+        ) : (
+          <p className="italic text-gray-600 my-4">No engagement data yet.</p>
+        )}
 
         <SectionHeading id="time-on-page" num="3.2" level={3}>
           Time on page
         </SectionHeading>
-        <p className="leading-7 mb-2">
-          Average time visible, per page, derived from{" "}
-          <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
-            visibilitychange
-          </code>{" "}
-          +{" "}
-          <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
-            pagehide
-          </code>{" "}
-          events. The longest average session is on the manifesto at{" "}
-          {formatDuration(topPages[0].avgTimeSec)}, nearly three times the home
-          page average of {formatDuration(topPages[1].avgTimeSec)}.
-        </p>
+        {topPages.length > 0 && topPages[0].avgTimeSec > 0 ? (
+          <p className="leading-7 mb-2">
+            Average time visible, per page, derived from{" "}
+            <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
+              visibilitychange
+            </code>{" "}
+            +{" "}
+            <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
+              pagehide
+            </code>{" "}
+            events. The longest average session is on{" "}
+            <em>{topPages[0].title}</em> at{" "}
+            {formatDuration(topPages[0].avgTimeSec)}.
+          </p>
+        ) : (
+          <p className="italic text-gray-600 my-4">No engagement data yet.</p>
+        )}
 
         {/* 4. Acquisition */}
         <SectionHeading id="acquisition" num="4">
@@ -224,7 +336,7 @@ export default function AdminDashboardPage() {
         <SectionHeading id="referrers" num="4.1" level={3}>
           Referrers
         </SectionHeading>
-        <ReferrersTable />
+        <ReferrersTable data={referrers} />
 
         <SectionHeading id="geography" num="4.2" level={3}>
           Geography
@@ -234,7 +346,7 @@ export default function AdminDashboardPage() {
           City-level data is available but not shown here to reduce surface
           area.<FN n={7} />
         </p>
-        <CountriesTable />
+        <CountriesTable data={countries} />
 
         {/* 5. Client environment */}
         <SectionHeading id="client-environment" num="5">
@@ -245,20 +357,23 @@ export default function AdminDashboardPage() {
           Device, browser, and operating system
         </SectionHeading>
         <p className="leading-7 mb-4">
-          User-agent strings parsed server-side in middleware. Desktop and
-          macOS dominate, consistent with a technical readership.
+          User-agent strings parsed server-side in middleware.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <WikiFigure number={4} caption="Device type breakdown.">
-            <CategoryDonut data={devices} />
-          </WikiFigure>
-          <WikiFigure number={5} caption="Browser share.">
-            <CategoryDonut data={browsers} />
-          </WikiFigure>
-          <WikiFigure number={6} caption="Operating system share.">
-            <CategoryDonut data={operatingSystems} />
-          </WikiFigure>
-        </div>
+        {devices.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <WikiFigure number={4} caption="Device type breakdown.">
+              <CategoryDonut data={devices} />
+            </WikiFigure>
+            <WikiFigure number={5} caption="Browser share.">
+              <CategoryDonut data={browsers} />
+            </WikiFigure>
+            <WikiFigure number={6} caption="Operating system share.">
+              <CategoryDonut data={os} />
+            </WikiFigure>
+          </div>
+        ) : (
+          <p className="italic text-gray-600 my-4">No data yet.</p>
+        )}
 
         {/* 6. Operational */}
         <SectionHeading id="operational" num="6">
@@ -268,12 +383,16 @@ export default function AdminDashboardPage() {
         <SectionHeading id="performance" num="6.1" level={3}>
           Performance
         </SectionHeading>
-        <WikiFigure
-          number={7}
-          caption="Time to first byte (TTFB) and largest contentful paint (LCP), median, sampled every 5 days."
-        >
-          <PerformanceLineChart data={performance} />
-        </WikiFigure>
+        {perf.length > 0 ? (
+          <WikiFigure
+            number={7}
+            caption="Median time-to-first-byte (TTFB) and largest contentful paint (LCP), sampled per day."
+          >
+            <PerformanceLineChart data={perf} />
+          </WikiFigure>
+        ) : (
+          <p className="italic text-gray-600 my-4">No Web Vitals samples yet.</p>
+        )}
 
         <SectionHeading id="javascript-errors" num="6.2" level={3}>
           JavaScript errors
@@ -289,38 +408,44 @@ export default function AdminDashboardPage() {
           </code>
           .
         </p>
-        <div className="my-4 overflow-x-auto">
-          <table className="border-collapse border border-[#a2a9b1] bg-white text-sm w-full">
-            <thead>
-              <tr className="bg-[#eaecf0]">
-                <th className="border border-[#a2a9b1] px-3 py-1.5 text-left font-bold">
-                  Time
-                </th>
-                <th className="border border-[#a2a9b1] px-3 py-1.5 text-left font-bold">
-                  Path
-                </th>
-                <th className="border border-[#a2a9b1] px-3 py-1.5 text-left font-bold">
-                  Message
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {jsErrors.map((e, i) => (
-                <tr key={i} className="hover:bg-[#f8f9fa]">
-                  <td className="border border-[#a2a9b1] px-3 py-1.5 font-mono text-xs">
-                    {e.time}
-                  </td>
-                  <td className="border border-[#a2a9b1] px-3 py-1.5 font-mono text-xs">
-                    {e.path}
-                  </td>
-                  <td className="border border-[#a2a9b1] px-3 py-1.5 text-xs">
-                    {e.message}
-                  </td>
+        {errors.length > 0 ? (
+          <div className="my-4 overflow-x-auto">
+            <table className="border-collapse border border-[#a2a9b1] bg-white text-sm w-full">
+              <thead>
+                <tr className="bg-[#eaecf0]">
+                  <th className="border border-[#a2a9b1] px-3 py-1.5 text-left font-bold">
+                    Time
+                  </th>
+                  <th className="border border-[#a2a9b1] px-3 py-1.5 text-left font-bold">
+                    Path
+                  </th>
+                  <th className="border border-[#a2a9b1] px-3 py-1.5 text-left font-bold">
+                    Message
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {errors.map((e, i) => (
+                  <tr key={i} className="hover:bg-[#f8f9fa]">
+                    <td className="border border-[#a2a9b1] px-3 py-1.5 font-mono text-xs">
+                      {e.time}
+                    </td>
+                    <td className="border border-[#a2a9b1] px-3 py-1.5 font-mono text-xs">
+                      {e.path}
+                    </td>
+                    <td className="border border-[#a2a9b1] px-3 py-1.5 text-xs">
+                      {e.message}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="italic text-gray-600 my-4">
+            No errors reported in this window.
+          </p>
+        )}
 
         {/* 7. Methodology */}
         <SectionHeading id="methodology" num="7" editable={false}>
@@ -339,18 +464,18 @@ export default function AdminDashboardPage() {
             client_events
           </code>{" "}
           table. The two tables are never reconciled: pageview counts come
-          exclusively from the server path, engagement metrics come exclusively
-          from the client path. Each table answers the questions it can answer
-          with confidence.
+          exclusively from the server path, engagement metrics come
+          exclusively from the client path. Each table answers the questions
+          it can answer with confidence.
         </p>
         <p className="leading-7 mb-3">
           All writes occur after the HTTP response is flushed via{" "}
           <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
             event.waitUntil
           </code>
-          , so analytics collection adds no observable latency to the site. RSC
-          prefetch requests are filtered in middleware and do not count toward
-          pageview totals.
+          , so analytics collection adds no observable latency to the site.
+          RSC prefetch requests are filtered in middleware and do not count
+          toward pageview totals.
         </p>
         <p className="leading-7 mb-3">
           No raw IP addresses are stored. Geolocation is sourced from the
@@ -389,19 +514,13 @@ export default function AdminDashboardPage() {
             </Link>
           </li>
           <li>
-            <Link
-              href="/admin/raw"
-              className="text-blue-600 hover:underline"
-            >
+            <Link href="/admin/raw" className="text-blue-600 hover:underline">
               Raw event stream
             </Link>{" "}
             — the underlying events, unaggregated
           </li>
           <li>
-            <Link
-              href="/admin/live"
-              className="text-blue-600 hover:underline"
-            >
+            <Link href="/admin/live" className="text-blue-600 hover:underline">
               Live view
             </Link>{" "}
             — rolling 5-minute window
@@ -433,9 +552,9 @@ export default function AdminDashboardPage() {
             <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
               document.referrer
             </code>{" "}
-            bucketed into search / direct / social / other, and is best-effort:
-            browsers that strip referrer headers (including Safari with link
-            tracking protection) default to <em>direct</em>.
+            bucketed into search / direct / social / other, and is
+            best-effort: browsers that strip referrer headers (including
+            Safari with link tracking protection) default to <em>direct</em>.
           </li>
           <li id="ref-3">
             <a href="#fn-3" className="text-blue-600 hover:underline">
@@ -466,11 +585,7 @@ export default function AdminDashboardPage() {
             <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
               client_events
             </code>{" "}
-            (for scroll and time), joined on{" "}
-            <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
-              visitor_id
-            </code>{" "}
-            and path.
+            (for scroll and time), reported independently.
           </li>
           <li id="ref-6">
             <a href="#fn-6" className="text-blue-600 hover:underline">
@@ -490,37 +605,24 @@ export default function AdminDashboardPage() {
             <a href="#fn-7" className="text-blue-600 hover:underline">
               7. ^
             </a>{" "}
-            Geolocation is provided by the hosting provider&apos;s edge network
-            and persisted without any intermediate third-party service.
+            Geolocation is provided by the hosting provider&apos;s edge
+            network and persisted without any intermediate third-party
+            service.
           </li>
         </ol>
 
-        {/* Categories footer bar */}
-        <div className="mt-12 pt-2 border-t border-[#a2a9b1] text-xs text-[#202122]">
-          <span className="font-normal">Categories</span>
-          <span className="text-gray-400 mx-1">:</span>
-          <a href="#" className="text-blue-600 hover:underline">
-            Live dashboards
-          </a>
-          <span className="text-gray-400 mx-1">|</span>
-          <a href="#" className="text-blue-600 hover:underline">
-            Personal websites
-          </a>
-          <span className="text-gray-400 mx-1">|</span>
-          <a href="#" className="text-blue-600 hover:underline">
-            Data as of April 2026
-          </a>
-          <span className="text-gray-400 mx-1">|</span>
-          <a href="#" className="text-blue-600 hover:underline">
-            Monitored properties
-          </a>
-        </div>
-
-        <div className="mt-4 text-xs text-gray-600 italic">
-          This dashboard was last refreshed at {summary.lastRefresh}.{" "}
-          <a href="#" className="text-blue-600 hover:underline not-italic">
-            [update]
-          </a>
+        <div className="mt-12 pt-2 border-t border-[#a2a9b1] text-xs text-gray-600 italic">
+          This dashboard was last refreshed at{" "}
+          {new Date(summary.lastRefresh).toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+            timeZone: "UTC",
+          })}{" "}
+          UTC. <RefreshButton />
         </div>
       </article>
     </AdminPageLayout>
