@@ -48,12 +48,11 @@ export default function AdminSidebar({ currentWindow = "30d" }: AdminSidebarProp
               >
                 Live view
               </Link>
-              <Link
-                href="/admin/login"
-                className="block text-blue-600 hover:underline"
-              >
-                Log out
-              </Link>
+              <form action="/api/admin/logout" method="post" className="inline">
+                <button type="submit" className="text-blue-600 hover:underline">
+                  Log out
+                </button>
+              </form>
             </div>
           </div>
 
