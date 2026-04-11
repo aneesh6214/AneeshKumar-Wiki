@@ -200,3 +200,96 @@ create or replace function admin_top_pages(
   left join engagement_by_path e using (path)
   order by v.views desc
 $$;
+
+------------------------------------------------------------
+-- admin_top_referrers
+------------------------------------------------------------
+create or replace function admin_top_referrers(
+  p_start timestamptz,
+  p_end   timestamptz,
+  p_limit int
+) returns table (
+  source  text,
+  bucket  text,
+  visits  bigint,
+  share   numeric
+) language sql stable as $$
+  with hits as (
+    select referrer_source, referrer_bucket
+      from server_hits
+      where is_bot = false
+        and created_at <= p_end
+        and (p_start is null or created_at >= p_start)
+  ),
+  total as (select count(*)::numeric as t from hits)
+  select
+    coalesce(referrer_source, '(direct)') as source,
+    coalesce(referrer_bucket, 'direct')    as bucket,
+    count(*)::bigint as visits,
+    count(*)::numeric / nullif((select t from total), 0) as share
+  from hits
+  group by 1, 2
+  order by visits desc
+  limit p_limit
+$$;
+
+------------------------------------------------------------
+-- admin_top_countries
+------------------------------------------------------------
+create or replace function admin_top_countries(
+  p_start timestamptz,
+  p_end   timestamptz,
+  p_limit int
+) returns table (
+  country text,
+  visits  bigint,
+  share   numeric
+) language sql stable as $$
+  with hits as (
+    select country
+      from server_hits
+      where is_bot = false
+        and country is not null
+        and created_at <= p_end
+        and (p_start is null or created_at >= p_start)
+  ),
+  total as (select count(*)::numeric as t from hits)
+  select country, count(*)::bigint as visits,
+         count(*)::numeric / nullif((select t from total), 0) as share
+  from hits
+  group by country
+  order by visits desc
+  limit p_limit
+$$;
+
+------------------------------------------------------------
+-- admin_category_share (devices / browsers / os)
+------------------------------------------------------------
+create or replace function admin_category_share(
+  p_start  timestamptz,
+  p_end    timestamptz,
+  p_column text
+) returns table (
+  name  text,
+  value numeric
+) language plpgsql stable as $$
+begin
+  if p_column not in ('device', 'browser', 'os') then
+    raise exception 'invalid column: %', p_column;
+  end if;
+  return query execute format($f$
+    with hits as (
+      select %I as cat from server_hits
+      where is_bot = false
+        and %I is not null
+        and created_at <= $2
+        and ($1 is null or created_at >= $1)
+    ),
+    total as (select count(*)::numeric as t from hits)
+    select cat as name,
+           round(100.0 * count(*)::numeric / nullif((select t from total), 0), 1) as value
+    from hits
+    group by cat
+    order by value desc
+  $f$, p_column, p_column) using p_start, p_end;
+end $$;

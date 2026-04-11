@@ -130,3 +130,76 @@ export async function getTopPages(window: TimeWindow, limit = 10): Promise<TopPa
     })
   );
 }
+
+// ---------- Referrers ----------
+
+export interface TopReferrer {
+  source: string;
+  bucket: "search" | "direct" | "social" | "other";
+  visits: number;
+  share: number;
+}
+
+export async function getTopReferrers(window: TimeWindow, limit = 10): Promise<TopReferrer[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_top_referrers", {
+    p_start: window.start ? window.start.toISOString() : null,
+    p_end: window.end.toISOString(),
+    p_limit: limit,
+  });
+  if (error) throw error;
+  return (data ?? []).map((r: { source: string; bucket: string; visits: number; share: number }) => ({
+    source: r.source,
+    bucket: r.bucket as TopReferrer["bucket"],
+    visits: r.visits,
+    share: Number(r.share ?? 0),
+  }));
+}
+
+// ---------- Countries ----------
+
+export interface CountryRow {
+  country: string;
+  visits: number;
+  share: number;
+}
+
+export async function getTopCountries(window: TimeWindow, limit = 10): Promise<CountryRow[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_top_countries", {
+    p_start: window.start ? window.start.toISOString() : null,
+    p_end: window.end.toISOString(),
+    p_limit: limit,
+  });
+  if (error) throw error;
+  return (data ?? []).map((r: { country: string; visits: number; share: number }) => ({
+    country: r.country,
+    visits: r.visits,
+    share: Number(r.share ?? 0),
+  }));
+}
+
+// ---------- Categories (device/browser/os) ----------
+
+export interface SlicePoint {
+  name: string;
+  value: number;
+}
+
+async function getCategoryShare(window: TimeWindow, column: "device" | "browser" | "os"): Promise<SlicePoint[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb.rpc("admin_category_share", {
+    p_start: window.start ? window.start.toISOString() : null,
+    p_end: window.end.toISOString(),
+    p_column: column,
+  });
+  if (error) throw error;
+  return (data ?? []).map((r: { name: string; value: number }) => ({
+    name: r.name,
+    value: Number(r.value ?? 0),
+  }));
+}
+
+export const getDevices = (w: TimeWindow) => getCategoryShare(w, "device");
+export const getBrowsers = (w: TimeWindow) => getCategoryShare(w, "browser");
+export const getOperatingSystems = (w: TimeWindow) => getCategoryShare(w, "os");
