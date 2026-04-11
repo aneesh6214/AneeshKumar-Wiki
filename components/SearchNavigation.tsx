@@ -40,6 +40,36 @@ export default function SearchNavigation() {
     return () => clearTimeout(timeoutId);
   }, [searchValue]);
 
+  const commitSearch = (query: string, destination: string) => {
+    const q = query.trim();
+    if (q.length >= 2) {
+      try {
+        const body = JSON.stringify({
+          type: "search",
+          path: window.location.pathname,
+          payload: { query: q, destination },
+        });
+        const ok =
+          typeof navigator.sendBeacon === "function" &&
+          navigator.sendBeacon(
+            "/api/beacon",
+            new Blob([body], { type: "application/json" })
+          );
+        if (!ok) {
+          void fetch("/api/beacon", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body,
+            keepalive: true,
+          });
+        }
+      } catch {
+        /* best effort */
+      }
+    }
+    window.location.href = destination;
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isSearchFocused) return;
 
@@ -60,12 +90,10 @@ export default function SearchNavigation() {
         e.preventDefault();
         if (selectedIndex >= 0 && displayItems[selectedIndex]) {
           const item = displayItems[selectedIndex];
-          if (item.section) {
-            // Scroll to section if it exists
-            window.location.href = `${item.url}#${item.section.toLowerCase().replace(/\s+/g, "-")}`;
-          } else {
-            window.location.href = item.url;
-          }
+          const destination = item.section
+            ? `${item.url}#${item.section.toLowerCase().replace(/\s+/g, "-")}`
+            : item.url;
+          commitSearch(searchValue, destination);
         }
         break;
       case "Escape":
@@ -120,11 +148,10 @@ export default function SearchNavigation() {
                             : "hover:bg-gray-50 border border-transparent"
                         }`}
                         onClick={() => {
-                          if (item.section) {
-                            window.location.href = `${item.url}#${item.section.toLowerCase().replace(/\s+/g, "-")}`;
-                          } else {
-                            window.location.href = item.url;
-                          }
+                          const destination = item.section
+                            ? `${item.url}#${item.section.toLowerCase().replace(/\s+/g, "-")}`
+                            : item.url;
+                          commitSearch(searchValue, destination);
                         }}
                       >
                         <div className="flex items-start justify-between">
