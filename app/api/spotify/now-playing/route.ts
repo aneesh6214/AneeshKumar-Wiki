@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
+import { env } from '@/lib/env';
 
 const SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token';
 const SPOTIFY_RECENTLY_PLAYED_URL = 'https://api.spotify.com/v1/me/player/recently-played?limit=1';
 
 async function getAccessToken() {
-  const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN;
-  const client_id = process.env.SPOTIFY_CLIENT_ID;
-  const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+  const refresh_token = env.SPOTIFY_REFRESH_TOKEN;
+  const client_id = env.SPOTIFY_CLIENT_ID;
+  const client_secret = env.SPOTIFY_CLIENT_SECRET;
 
   if (!refresh_token || !client_id || !client_secret) {
     throw new Error('Missing Spotify credentials in environment variables');

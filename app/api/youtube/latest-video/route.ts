@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { env } from '@/lib/env';
 
 const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 
 export async function GET() {
   try {
-    const apiKey = process.env.YOUTUBE_API_KEY;
-    const channelId = process.env.YOUTUBE_CHANNEL_ID;
+    const apiKey = env.YOUTUBE_API_KEY;
+    const channelId = env.YOUTUBE_CHANNEL_ID;
 
     if (!apiKey || !channelId) {
       console.error('YouTube credentials check:', { 
