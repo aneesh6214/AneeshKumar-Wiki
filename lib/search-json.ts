@@ -90,6 +90,10 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
   return searchableItems;
 }
 
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function createPreview(content: string, maxLength: number = 150): string {
   const preview = content.replace(/\n/g, " ").trim();
   if (preview.length <= maxLength) {
@@ -138,7 +142,7 @@ export async function searchJSONContent(
     // Search in content
     searchTerms.forEach((term) => {
       const contentLower = item.content.toLowerCase();
-      const matches = (contentLower.match(new RegExp(term, "g")) || []).length;
+      const matches = (contentLower.match(new RegExp(escapeRegExp(term), "g")) || []).length;
       if (matches > 0) {
         score += matches * 2;
         if (!matchedTerms.includes(term)) {
@@ -164,7 +168,7 @@ export async function searchJSONContent(
       // Create highlighted preview
       let highlightedPreview = item.preview;
       matchedTerms.forEach((term) => {
-        const regex = new RegExp(`(${term})`, "gi");
+        const regex = new RegExp(`(${escapeRegExp(term)})`, "gi");
         highlightedPreview = highlightedPreview.replace(
           regex,
           "<mark>$1</mark>",
