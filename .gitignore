@@ -28,3 +28,7 @@ next-env.d.ts
 
 # docs
 /docs/
+
+# Supabase local runtime
+supabase/.branches
+supabase/.temp
