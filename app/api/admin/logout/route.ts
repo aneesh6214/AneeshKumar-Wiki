@@ -1,4 +1,3 @@
-// app/api/admin/logout/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_COOKIE } from "@/lib/auth/session";
 

@@ -49,7 +49,7 @@ export const researchContent: JSONContent = {
       description: (
         <>
           Aneesh Kumar authored a comprehensive review of{" "}
-          [Behavioral Time-Scale Synaptic Plasticity] (https://www.nature.com/articles/s41467-024-55563-6) (BTSP), a
+          [Behavioral Time-Scale Synaptic Plasticity](https://www.nature.com/articles/s41467-024-55563-6) (BTSP), a
           neural mechanism that enables memory formation over multi-second
           intervals, authored by Yujie Wu and Wolfgang Maass (2025). His work provides a clear overview of BTSP’s biological
           foundations in the

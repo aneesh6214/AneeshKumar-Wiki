@@ -8,7 +8,6 @@ import {
 } from "@/lib/json-content";
 import { AiOutlineGlobal } from "react-icons/ai";
 
-// Component to parse JSX content with embedded markdown-style links
 function ParsedContent({ children }: { children: React.ReactNode }) {
   const transformNode = (node: React.ReactNode): React.ReactNode => {
     if (typeof node === "string") {
@@ -27,7 +26,6 @@ function ParsedContent({ children }: { children: React.ReactNode }) {
   return transformNode(children);
 }
 
-// Quote component for styled quotes
 function Quote({ children }: { children: React.ReactNode }) {
   return (
     <blockquote className="border-l-4 border-blue-300 pl-4 py-2 my-4 bg-blue-50 italic text-gray-700 rounded-r">
@@ -36,11 +34,9 @@ function Quote({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Parser function for JSX-like tags and Wikipedia-style links in text
 function parseJSXText(text: string): React.ReactNode {
   if (!text) return text;
 
-  // First handle Wikipedia-style links [text](url)
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const linkParts = text.split(linkRegex);
 
@@ -50,12 +46,10 @@ function parseJSXText(text: string): React.ReactNode {
     const part = linkParts[i];
 
     if (i % 3 === 0) {
-      // Regular text that may contain JSX tags
       if (part) {
         processedElements.push(parseJSXTags(part, `text-${i}`));
       }
     } else if (i % 3 === 1) {
-      // Link text
       const linkText = part;
       const linkUrl = linkParts[i + 1];
       processedElements.push(
@@ -68,7 +62,6 @@ function parseJSXText(text: string): React.ReactNode {
         </Link>,
       );
     }
-    // Skip URL parts (i % 3 === 2) as they're handled above
   }
 
   return processedElements.length === 1
@@ -76,11 +69,9 @@ function parseJSXText(text: string): React.ReactNode {
     : processedElements;
 }
 
-// Helper function to parse JSX tags within text
 function parseJSXTags(text: string, keyPrefix: string): React.ReactNode {
   if (!text) return text;
 
-  // Split by JSX tags while preserving the tags
   const parts = text.split(/(<\/?(?:strong|em|br)\s*\/?>)/g);
 
   const elements: React.ReactNode[] = [];
@@ -90,7 +81,6 @@ function parseJSXTags(text: string, keyPrefix: string): React.ReactNode {
     const part = parts[currentIndex];
 
     if (part === "<strong>") {
-      // Find the closing tag
       let content = "";
       let nextIndex = currentIndex + 1;
       while (nextIndex < parts.length && parts[nextIndex] !== "</strong>") {
@@ -102,9 +92,8 @@ function parseJSXTags(text: string, keyPrefix: string): React.ReactNode {
           {parseJSXTags(content, `${keyPrefix}-nested-${currentIndex}`)}
         </strong>,
       );
-      currentIndex = nextIndex + 1; // Skip the closing tag
+      currentIndex = nextIndex + 1;
     } else if (part === "<em>") {
-      // Find the closing tag
       let content = "";
       let nextIndex = currentIndex + 1;
       while (nextIndex < parts.length && parts[nextIndex] !== "</em>") {
@@ -116,12 +105,11 @@ function parseJSXTags(text: string, keyPrefix: string): React.ReactNode {
           {parseJSXTags(content, `${keyPrefix}-nested-${currentIndex}`)}
         </em>,
       );
-      currentIndex = nextIndex + 1; // Skip the closing tag
+      currentIndex = nextIndex + 1;
     } else if (part === "<br>" || part === "<br />") {
       elements.push(<br key={`${keyPrefix}-br-${currentIndex}`} />);
       currentIndex++;
     } else if (part === "</strong>" || part === "</em>") {
-      // Skip closing tags as they're handled above
       currentIndex++;
     } else if (part) {
       elements.push(part);
@@ -190,23 +178,19 @@ interface WikiContentProps {
   content: JSONContent;
 }
 
-// Export Quote for use in content files
 export { Quote };
 
 export default function WikiContent({ content }: WikiContentProps) {
   return (
     <div className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6 pt-3">
-      {/* Article Content */}
       <div className="flex-1 lg:w-2/3 lg:pr-3">
         <div>
-          {/* Disambiguation */}
           {content.disambiguation && (
             <p className="text-xs italic mb-2 text-gray-600">
               <DisambiguationText text={content.disambiguation} />
             </p>
           )}
 
-          {/* Article sections */}
           <div className="max-w-none">
             {content.sections.map((section, index) => (
               <WikiSection key={index} section={section} level={2} />
@@ -215,7 +199,6 @@ export default function WikiContent({ content }: WikiContentProps) {
         </div>
       </div>
 
-      {/* Right Sidebar - Info Box */}
       {content.infobox && (
         <div className="lg:w-1/3 lg:pl-3">
           <WikiInfobox infobox={content.infobox} title={content.title} />
@@ -226,7 +209,6 @@ export default function WikiContent({ content }: WikiContentProps) {
 }
 
 function DisambiguationText({ text }: { text: string }) {
-  // Simple link parsing for disambiguation text
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts = text.split(linkRegex);
 
@@ -265,13 +247,6 @@ function WikiSection({
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-
-  const headingClass =
-    level === 2
-      ? "text-xl font-bold mb-2 border-b border-gray-300 pb-1"
-      : level === 3
-        ? "text-base font-semibold mb-2 border-b border-gray-200 pb-1"
-        : "text-sm font-medium mb-1";
 
   return (
     <div className="mb-4 first:mt-0">
@@ -334,12 +309,10 @@ function WikiSection({
           className={`flex gap-4 ${section.image.position === ImagePosition.LEFT ? "flex-row-reverse" : "flex-row"}`}
         >
           <div className="flex-1 space-y-2">
-            {/* Description with JSX formatting */}
             <div className="text-gray-900 leading-relaxed text-sm">
               <ParsedContent>{section.description}</ParsedContent>
             </div>
 
-            {/* Technologies */}
             {section.technologies && (
               <div className="mt-3">
                 <strong className="text-sm text-gray-900">
@@ -357,12 +330,10 @@ function WikiSection({
         </div>
       ) : (
         <div className="space-y-2">
-          {/* Description with JSX formatting */}
           <div className="text-gray-900 leading-relaxed text-sm">
             <ParsedContent>{section.description}</ParsedContent>
           </div>
 
-          {/* Technologies */}
           {section.technologies && (
             <div className="mt-3">
               <strong className="text-sm text-gray-900">Technologies: </strong>
@@ -399,7 +370,7 @@ function WikiInfobox({ infobox, title }: { infobox: Infobox; title: string }) {
       {infobox.image && (
         <div className="mb-4">
           <img
-            src="/profile-photo.png"
+            src={infobox.image}
             alt={infobox.imageCaption || title}
             className="w-full aspect-square object-cover border border-gray-300 rounded"
           />
@@ -431,7 +402,6 @@ function WikiInfobox({ infobox, title }: { infobox: Infobox; title: string }) {
 }
 
 function InfoboxValue({ value }: { value: string }) {
-  // Simple link parsing for infobox values
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts = value.split(linkRegex);
 
@@ -439,7 +409,6 @@ function InfoboxValue({ value }: { value: string }) {
     <>
       {parts.map((part, index) => {
         if (index % 3 === 0) {
-          // Handle newlines by splitting and adding <br> tags, then parse JSX formatting
           return part.split("\n").map((line, lineIndex, lines) => (
             <span key={`${index}-${lineIndex}`}>
               {parseJSXText(line)}

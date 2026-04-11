@@ -23,7 +23,6 @@ function TopicBadge({ topic }: { topic: BlogTopic }) {
 export default function BlogList({ posts }: BlogListProps) {
   const [filters, setFilters] = useState<BlogFilterState>(initialFilterState);
 
-  // Get all unique topics from posts
   const availableTopics = useMemo(() => {
     const topicsSet = new Set<BlogTopic>();
     posts.forEach((post) => {
@@ -32,7 +31,6 @@ export default function BlogList({ posts }: BlogListProps) {
     return Array.from(topicsSet).sort();
   }, [posts]);
 
-  // Get date range from posts
   const dateRange = useMemo(() => {
     if (posts.length === 0) {
       const now = new Date();
@@ -45,11 +43,9 @@ export default function BlogList({ posts }: BlogListProps) {
     };
   }, [posts]);
 
-  // Filter and sort posts
   const filteredPosts = useMemo(() => {
     let result = [...posts];
 
-    // Filter by search query
     if (filters.searchQuery) {
       const query = filters.searchQuery.toLowerCase();
       result = result.filter((post) =>
@@ -57,14 +53,12 @@ export default function BlogList({ posts }: BlogListProps) {
       );
     }
 
-    // Filter by topics
     if (filters.selectedTopics.length > 0) {
       result = result.filter((post) =>
         filters.selectedTopics.some((topic) => post.topics.includes(topic))
       );
     }
 
-    // Filter by date range
     if (filters.dateFrom) {
       const fromDate = new Date(filters.dateFrom);
       result = result.filter((post) => new Date(post.date) >= fromDate);
@@ -74,7 +68,6 @@ export default function BlogList({ posts }: BlogListProps) {
       result = result.filter((post) => new Date(post.date) <= toDate);
     }
 
-    // Sort by date (newest first)
     result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return result;
@@ -88,7 +81,6 @@ export default function BlogList({ posts }: BlogListProps) {
 
   return (
     <>
-      {/* Header with Article tab and Filter button */}
       <div className="px-4 sm:px-6">
         <div className="flex items-center justify-between border-b border-gray-300">
           <button className="pb-2 border-b-2 border-black font-medium">
@@ -101,7 +93,6 @@ export default function BlogList({ posts }: BlogListProps) {
           />
         </div>
 
-        {/* Article description */}
         <p className="text-xs italic mt-3 mb-4 text-gray-600">
           This is the blog of <Link href="/" className="text-blue-600 hover:underline">Aneesh Kumar</Link>. For general information, visit the{" "}
           <Link href="/" className="text-blue-600 hover:underline">Home Page</Link>.
@@ -109,7 +100,6 @@ export default function BlogList({ posts }: BlogListProps) {
       </div>
 
       <div className="px-4 sm:px-6">
-        {/* Active filters summary */}
         {hasActiveFilters && (
           <div className="text-sm text-gray-600 mb-4">
             Showing {filteredPosts.length} of {posts.length} posts
@@ -125,7 +115,6 @@ export default function BlogList({ posts }: BlogListProps) {
           </div>
         )}
 
-        {/* Blog Posts Table */}
         <div className="border border-gray-300 rounded overflow-hidden">
           <table className="w-full text-sm">
             <thead>
@@ -154,11 +143,9 @@ export default function BlogList({ posts }: BlogListProps) {
                     >
                       {post.title}
                     </Link>
-                    {/* Mobile: show date below title */}
                     <div className="text-xs text-gray-500 mt-1 sm:hidden">
                       {post.date}
                     </div>
-                    {/* Mobile: show topics below */}
                     <div className="flex flex-wrap gap-1 mt-2 md:hidden">
                       {post.topics.map((topic) => (
                         <TopicBadge key={topic} topic={topic} />

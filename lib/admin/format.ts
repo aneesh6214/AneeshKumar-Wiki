@@ -1,6 +1,3 @@
-// lib/admin/format.ts
-// Presentation helpers for admin metrics.
-
 export function formatNumber(n: number): string {
   return n.toLocaleString("en-US");
 }

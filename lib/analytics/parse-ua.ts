@@ -1,4 +1,3 @@
-// lib/analytics/parse-ua.ts
 // Wraps ua-parser-js and maps its output onto the small vocabulary we
 // display on the admin dashboard (Desktop/Mobile/Tablet, named browsers,
 // named OSes). Anything unrecognised becomes "Other".

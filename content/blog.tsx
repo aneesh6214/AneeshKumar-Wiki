@@ -6,7 +6,6 @@ export const blogPosts: BlogContent = {
   posts: [manifestoPost],
 };
 
-// JSONContent export for search functionality
 export const blogContent: JSONContent = {
   title: "Blog",
   subtitle: "Technical Writing and Thoughts",
@@ -15,7 +14,6 @@ export const blogContent: JSONContent = {
   sections: blogPosts.posts.map((post) => ({
     title: post.title,
     date: post.date,
-    // Use searchableContent for search, with fallback to topics
     description: post.searchableContent || `${post.topics.join(", ")} - ${post.date}`,
   })),
 };

@@ -11,7 +11,7 @@ export const homeContent: JSONContent = {
   disambiguation:
     "This article is about the software engineer. For his technical blog, see [Aneesh Kumar (Blog)](/blog). ",
   infobox: {
-    image: "/profile-photo.jpg",
+    image: "/profile-photo.png",
     imageCaption: "Aneesh Kumar in 2025",
     fields: [
       {

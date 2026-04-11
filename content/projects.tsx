@@ -21,18 +21,15 @@ export const projectsContent: JSONContent = {
       },
       description: (
         <>
-          <>
-  <strong>PaperGrader</strong> is a web application that aims to provide 
-  automated academic paper reviews using 
-  [large language models](https://en.wikipedia.org/wiki/Large_language_model). 
-  The platform allows users to upload research papers, which are then processed through 
-  multiple model inference steps to generate structured feedback and formatting assistance. 
-  The system leverages an expert reviewing model, 
- [Llama-OpenReviewer-8B](https://arxiv.org/abs/2412.11948), to produce evaluations resembling those from peer reviewers. 
-  The application is currently under development and is collecting email sign-ups from interested 
-  users for future updates and early access.
-</>
-
+          <strong>PaperGrader</strong> is a web application that aims to provide
+          automated academic paper reviews using
+          {" "}[large language models](https://en.wikipedia.org/wiki/Large_language_model).
+          The platform allows users to upload research papers, which are then processed through
+          multiple model inference steps to generate structured feedback and formatting assistance.
+          The system leverages an expert reviewing model,
+          {" "}[Llama-OpenReviewer-8B](https://arxiv.org/abs/2412.11948), to produce evaluations resembling those from peer reviewers.
+          The application is currently under development and is collecting email sign-ups from interested
+          users for future updates and early access.
         </>
       ),
     },

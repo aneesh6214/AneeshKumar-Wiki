@@ -1,4 +1,3 @@
-// lib/analytics/referrer.ts
 // Bucketise a raw document.referrer value. Matches the taxonomy shown on
 // the admin dashboard: search / social / direct / other.
 

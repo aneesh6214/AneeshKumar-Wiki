@@ -4,24 +4,15 @@ import { getRawEvents } from "@/lib/admin/queries";
 
 export const dynamic = "force-dynamic";
 
-function colorFor(source: string): string {
-  switch (source) {
-    case "server_hit":
-      return "text-[#3366cc]";
-    case "engagement":
-      return "text-[#14866d]";
-    case "outbound":
-      return "text-[#7e57c2]";
-    case "search":
-      return "text-[#b37d00]";
-    case "error":
-      return "text-[#b32424]";
-    case "vitals":
-      return "text-[#888]";
-    default:
-      return "text-[#202122]";
-  }
-}
+const SOURCE_COLORS: Record<string, string> = {
+  server_hit: "text-[#3366cc]",
+  engagement: "text-[#14866d]",
+  outbound: "text-[#7e57c2]",
+  search: "text-[#b37d00]",
+  error: "text-[#b32424]",
+  vitals: "text-[#888]",
+};
+const DEFAULT_SOURCE_COLOR = "text-[#202122]";
 
 function renderExtras(extras: Record<string, unknown>): string {
   const parts: string[] = [];
@@ -61,7 +52,7 @@ export default async function AdminRawPage() {
                   className="flex gap-3 hover:bg-[#f8f9fa] px-1 py-0.5"
                 >
                   <span className="text-gray-500 shrink-0">{e.at}</span>
-                  <span className={`shrink-0 w-32 ${colorFor(e.source)}`}>
+                  <span className={`shrink-0 w-32 ${SOURCE_COLORS[e.source] ?? DEFAULT_SOURCE_COLOR}`}>
                     {e.source}
                   </span>
                   <span className="text-gray-500 shrink-0 w-20">

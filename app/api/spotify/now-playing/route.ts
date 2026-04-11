@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
-import { env } from '@/lib/env';
-import { errorResponse } from '@/lib/api-errors';
+import { NextResponse } from "next/server";
+import { env } from "@/lib/env";
+import { errorResponse } from "@/lib/api-errors";
 
-const SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token';
-const SPOTIFY_RECENTLY_PLAYED_URL = 'https://api.spotify.com/v1/me/player/recently-played?limit=1';
+const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
+const SPOTIFY_RECENTLY_PLAYED_URL = "https://api.spotify.com/v1/me/player/recently-played?limit=1";
 
 async function getAccessToken() {
   const refresh_token = env.SPOTIFY_REFRESH_TOKEN;
@@ -11,24 +11,24 @@ async function getAccessToken() {
   const client_secret = env.SPOTIFY_CLIENT_SECRET;
 
   if (!refresh_token || !client_id || !client_secret) {
-    throw new Error('Missing Spotify credentials in environment variables');
+    throw new Error("Missing Spotify credentials in environment variables");
   }
 
   const response = await fetch(SPOTIFY_TOKEN_URL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${Buffer.from(`${client_id}:${client_secret}`).toString('base64')}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": `Basic ${Buffer.from(`${client_id}:${client_secret}`).toString("base64")}`,
     },
     body: new URLSearchParams({
-      grant_type: 'refresh_token',
+      grant_type: "refresh_token",
       refresh_token,
     }),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('Spotify token error:', response.status, errorText);
+    console.error("Spotify token error:", response.status, errorText);
     throw new Error(`Failed to refresh access token: ${response.status} ${errorText}`);
   }
 
@@ -42,31 +42,30 @@ export async function GET() {
 
     const response = await fetch(SPOTIFY_RECENTLY_PLAYED_URL, {
       headers: {
-        'Authorization': `Bearer ${access_token}`,
+        "Authorization": `Bearer ${access_token}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch recently played tracks');
+      throw new Error("Failed to fetch recently played tracks");
     }
 
     const data = await response.json();
-    
+
     if (!data.items || data.items.length === 0) {
       return new NextResponse(null, { status: 204 });
     }
 
     const track = data.items[0].track;
     const playedAt = data.items[0].played_at;
-    
+
     return NextResponse.json({
       item: track,
-      is_playing: false, // Recently played, not currently playing
+      is_playing: false,
       played_at: playedAt,
     });
-
   } catch (error) {
-    console.error('Spotify API error:', error);
-    return errorResponse('spotify_fetch_failed', 'Failed to fetch Spotify data', 500);
+    console.error("Spotify API error:", error);
+    return errorResponse("spotify_fetch_failed", "Failed to fetch Spotify data", 500);
   }
 }

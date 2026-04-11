@@ -7,7 +7,6 @@ export default async function BlogPage() {
 
   return (
     <PageLayout currentPath="/blog">
-      {/* Custom header without the Article tab (BlogList has its own) */}
       <div className="px-4 sm:px-6 pt-4">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-2xl sm:text-3xl font-serif text-black">Blog</h1>

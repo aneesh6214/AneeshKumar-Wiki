@@ -1,4 +1,3 @@
-// components/BeaconProvider.tsx
 "use client";
 
 import { useEffect } from "react";

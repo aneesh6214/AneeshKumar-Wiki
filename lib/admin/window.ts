@@ -1,4 +1,3 @@
-// lib/admin/window.ts
 // Parses a ?window= param into concrete timestamps used by all admin queries.
 // "all" returns { start: null, end: now } meaning "no lower bound".
 

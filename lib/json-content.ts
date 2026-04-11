@@ -43,55 +43,42 @@ export interface JSONContent {
   sections: ContentSection[];
 }
 
+const CONTENT_LOADERS: Record<string, () => Promise<JSONContent>> = {
+  home: () => import("../content/home").then((m) => m.homeContent),
+  "industry-work": () =>
+    import("../content/industry-work").then((m) => m.industryWorkContent),
+  research: () => import("../content/research").then((m) => m.researchContent),
+  projects: () => import("../content/projects").then((m) => m.projectsContent),
+  blog: () => import("../content/blog").then((m) => m.blogContent),
+  contact: () => import("../content/contact").then((m) => m.contactContent),
+};
+
 export async function getJSONContent(slug: string): Promise<JSONContent> {
-  try {
-    switch (slug) {
-      case "home":
-        const { homeContent } = await import("../content/home");
-        return homeContent;
-      case "industry-work":
-        const { industryWorkContent } = await import(
-          "../content/industry-work"
-        );
-        return industryWorkContent;
-      case "research":
-        const { researchContent } = await import("../content/research");
-        return researchContent;
-      case "projects":
-        const { projectsContent } = await import("../content/projects");
-        return projectsContent;
-      case "blog":
-        const { blogContent } = await import("../content/blog");
-        return blogContent;
-      case "contact":
-        const { contactContent } = await import("../content/contact");
-        return contactContent;
-      default:
-        throw new Error(`Content file not found: ${slug}`);
-    }
-  } catch (error) {
-    throw new Error(`Failed to load content: ${slug}`);
+  const loader = CONTENT_LOADERS[slug];
+  if (!loader) {
+    throw new Error(`Content file not found: ${slug}`);
   }
+  return loader();
 }
 
 export async function getAllJSONContent(): Promise<
   Record<string, JSONContent>
 > {
-  const slugs = [
-    "home",
-    "industry-work",
-    "research",
-    "projects",
-    "blog",
-    "contact",
-  ];
   const allContent: Record<string, JSONContent> = {};
-
-  for (const slug of slugs) {
+  for (const slug of Object.keys(CONTENT_LOADERS)) {
     allContent[slug] = await getJSONContent(slug);
   }
-
   return allContent;
+}
+
+function reactNodeToText(node: React.ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(reactNodeToText).join(" ");
+  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+    return reactNodeToText(node.props.children);
+  }
+  return "";
 }
 
 export function extractSearchableText(content: JSONContent): string {
@@ -117,18 +104,10 @@ export function extractSearchableText(content: JSONContent): string {
     let sectionText = "";
     sections.forEach((section) => {
       sectionText += section.title + " ";
-
-      // Extract text from description (React.ReactNode)
-      // We'll do a simple string conversion for search purposes
-      if (section.description && typeof section.description === "string") {
-        sectionText += section.description + " ";
-      }
-
-      // Extract technologies
+      sectionText += reactNodeToText(section.description) + " ";
       if (section.technologies) {
         sectionText += section.technologies + " ";
       }
-
       if (section.subsections) {
         sectionText += extractFromSections(section.subsections);
       }
@@ -164,14 +143,7 @@ export function extractSections(
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
 
-      let sectionContent = "";
-
-      // Extract from description (React.ReactNode)
-      if (section.description && typeof section.description === "string") {
-        sectionContent += section.description + " ";
-      }
-
-      // Extract from technologies
+      let sectionContent = reactNodeToText(section.description) + " ";
       if (section.technologies) {
         sectionContent += section.technologies + " ";
       }

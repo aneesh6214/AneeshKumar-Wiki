@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
-import { env } from '@/lib/env';
-import { errorResponse } from '@/lib/api-errors';
+import { NextResponse } from "next/server";
+import { env } from "@/lib/env";
+import { errorResponse } from "@/lib/api-errors";
 
-const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
+const YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3";
+const REVALIDATE_SECONDS = 3600;
 
 export async function GET() {
   try {
@@ -10,59 +11,54 @@ export async function GET() {
     const channelId = env.YOUTUBE_CHANNEL_ID;
 
     if (!apiKey || !channelId) {
-      console.error('YouTube credentials check:', { 
-        hasApiKey: !!apiKey, 
-        hasChannelId: !!channelId 
+      console.error("YouTube credentials check:", {
+        hasApiKey: !!apiKey,
+        hasChannelId: !!channelId,
       });
-      throw new Error('Missing YouTube API credentials');
+      throw new Error("Missing YouTube API credentials");
     }
 
-    // First, try to get channel uploads playlist
-    let uploadsPlaylistId;
-    
-    // If channelId starts with UC, convert to UU for uploads playlist
-    if (channelId.startsWith('UC')) {
-      uploadsPlaylistId = 'UU' + channelId.substring(2);
+    let uploadsPlaylistId: string | undefined;
+
+    if (channelId.startsWith("UC")) {
+      uploadsPlaylistId = "UU" + channelId.substring(2);
     } else {
-      // Get channel details to find uploads playlist
       const channelResponse = await fetch(
         `${YOUTUBE_API_URL}/channels?key=${apiKey}&id=${channelId}&part=contentDetails`
       );
-      
+
       if (channelResponse.ok) {
         const channelData = await channelResponse.json();
         uploadsPlaylistId = channelData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
       }
     }
 
-    // Get the latest video from uploads playlist
     const response = await fetch(
       `${YOUTUBE_API_URL}/playlistItems?key=${apiKey}&playlistId=${uploadsPlaylistId}&part=snippet&order=date&maxResults=1`,
       {
-        next: { revalidate: 3600 } // Cache for 1 hour
+        next: { revalidate: REVALIDATE_SECONDS },
       }
     );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('YouTube API error:', response.status, errorText);
+      console.error("YouTube API error:", response.status, errorText);
       throw new Error(`Failed to fetch YouTube data: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();
-    
+
     if (!data.items || data.items.length === 0) {
       return new NextResponse(null, { status: 204 });
     }
 
     const video = data.items[0];
     const videoId = video.snippet.resourceId.videoId;
-    
-    // Get additional video details (views, duration, etc.)
+
     const videoDetailsResponse = await fetch(
       `${YOUTUBE_API_URL}/videos?key=${apiKey}&id=${videoId}&part=statistics,contentDetails`,
       {
-        next: { revalidate: 3600 }
+        next: { revalidate: REVALIDATE_SECONDS },
       }
     );
 
@@ -83,9 +79,8 @@ export async function GET() {
       viewCount: videoDetails?.statistics?.viewCount || null,
       duration: videoDetails?.contentDetails?.duration || null,
     });
-
   } catch (error) {
-    console.error('YouTube API error:', error);
-    return errorResponse('youtube_fetch_failed', 'Failed to fetch YouTube data', 500);
+    console.error("YouTube API error:", error);
+    return errorResponse("youtube_fetch_failed", "Failed to fetch YouTube data", 500);
   }
 }

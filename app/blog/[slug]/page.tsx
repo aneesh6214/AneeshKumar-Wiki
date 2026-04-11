@@ -10,7 +10,6 @@ interface BlogPostPageProps {
   }>;
 }
 
-// Generate static params for all blog posts
 export async function generateStaticParams() {
   const posts = await getAllBlogPosts();
   return posts.map((post) => ({

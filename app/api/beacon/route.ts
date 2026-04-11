@@ -1,4 +1,3 @@
-// app/api/beacon/route.ts
 // Accepts payloads from navigator.sendBeacon and writes to client_events.
 // Keeps payload validation loose on purpose: we drop rows that don't match
 // our schema but never throw, so broken clients don't throw 500s.

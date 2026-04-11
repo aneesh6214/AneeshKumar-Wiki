@@ -1,10 +1,14 @@
-// app/api/admin/login/route.ts
 // Native HTML form target. On success sets the admin_session cookie and
 // 303-redirects to /admin (or ?next=). On failure redirects back to the
 // login page with ?error=1 so the page can show the error banner.
 import { NextRequest, NextResponse } from "next/server";
 import { env } from "@/lib/env";
-import { ADMIN_COOKIE, signAdminSession } from "@/lib/auth/session";
+import {
+  ADMIN_COOKIE,
+  ADMIN_TTL_LONG,
+  ADMIN_TTL_SHORT,
+  signAdminSession,
+} from "@/lib/auth/session";
 
 function constantTimeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
@@ -39,7 +43,7 @@ export async function POST(req: NextRequest) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: longLived ? 60 * 60 * 24 * 30 : 60 * 60,
+    maxAge: longLived ? ADMIN_TTL_LONG : ADMIN_TTL_SHORT,
   });
   return res;
 }

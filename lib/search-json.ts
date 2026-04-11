@@ -21,12 +21,10 @@ export interface SearchResult extends SearchableContent {
   highlightedPreview: string;
 }
 
-// Cache for content data
 let contentCache: Record<string, JSONContent> | null = null;
 let blogPostsCache: Awaited<ReturnType<typeof getAllBlogPosts>> | null = null;
 
 export async function getSearchableContent(): Promise<SearchableContent[]> {
-  // Use cache if available
   if (!contentCache) {
     contentCache = await getAllJSONContent();
   }
@@ -34,12 +32,10 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
   const searchableItems: SearchableContent[] = [];
 
   for (const [slug, content] of Object.entries(contentCache)) {
-    // Skip blog page - we'll add individual blog posts separately
     if (slug === "blog") continue;
 
     const searchableText = extractSearchableText(content);
 
-    // Main page content
     searchableItems.push({
       id: `${slug}-main`,
       title: content.title,
@@ -48,7 +44,6 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
       preview: createPreview(searchableText),
     });
 
-    // Extract sections
     const sections = extractSections(content);
     sections.forEach((section) => {
       searchableItems.push({
@@ -62,7 +57,6 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
     });
   }
 
-  // Add blog posts as individual searchable items
   if (!blogPostsCache) {
     blogPostsCache = await getAllBlogPosts();
   }
@@ -78,7 +72,6 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
     });
   });
 
-  // Also add the blog listing page
   searchableItems.push({
     id: "blog-main",
     title: "Blog",
@@ -90,11 +83,21 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
   return searchableItems;
 }
 
+const DEFAULT_PREVIEW_LENGTH = 150;
+const PREVIEW_WORD_BOUNDARY_SLACK = 30;
+const MAX_RESULTS = 8;
+const TITLE_MATCH_WEIGHT = 10;
+const SECTION_MATCH_WEIGHT = 5;
+const CONTENT_MATCH_WEIGHT = 2;
+
 function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function createPreview(content: string, maxLength: number = 150): string {
+function createPreview(
+  content: string,
+  maxLength: number = DEFAULT_PREVIEW_LENGTH,
+): string {
   const preview = content.replace(/\n/g, " ").trim();
   if (preview.length <= maxLength) {
     return preview;
@@ -103,7 +106,7 @@ function createPreview(content: string, maxLength: number = 150): string {
   const truncated = preview.substring(0, maxLength);
   const lastSpace = truncated.lastIndexOf(" ");
 
-  return lastSpace > maxLength - 30
+  return lastSpace > maxLength - PREVIEW_WORD_BOUNDARY_SLACK
     ? truncated.substring(0, lastSpace) + "..."
     : truncated + "...";
 }
@@ -131,31 +134,28 @@ export async function searchJSONContent(
     let score = 0;
     const matchedTerms: string[] = [];
 
-    // Search in title (highest weight)
     searchTerms.forEach((term) => {
       if (item.title.toLowerCase().includes(term)) {
-        score += 10;
+        score += TITLE_MATCH_WEIGHT;
         matchedTerms.push(term);
       }
     });
 
-    // Search in content
     searchTerms.forEach((term) => {
       const contentLower = item.content.toLowerCase();
       const matches = (contentLower.match(new RegExp(escapeRegExp(term), "g")) || []).length;
       if (matches > 0) {
-        score += matches * 2;
+        score += matches * CONTENT_MATCH_WEIGHT;
         if (!matchedTerms.includes(term)) {
           matchedTerms.push(term);
         }
       }
     });
 
-    // Search in section title (medium weight)
     if (item.section) {
       searchTerms.forEach((term) => {
         if (item.section!.toLowerCase().includes(term)) {
-          score += 5;
+          score += SECTION_MATCH_WEIGHT;
           if (!matchedTerms.includes(term)) {
             matchedTerms.push(term);
           }
@@ -163,9 +163,7 @@ export async function searchJSONContent(
       });
     }
 
-    // Only include results with matches
     if (score > 0) {
-      // Create highlighted preview
       let highlightedPreview = item.preview;
       matchedTerms.forEach((term) => {
         const regex = new RegExp(`(${escapeRegExp(term)})`, "gi");
@@ -184,17 +182,16 @@ export async function searchJSONContent(
     }
   });
 
-  // Sort by relevance score (descending)
-  return results.sort((a, b) => b.score - a.score).slice(0, 8);
+  return results.sort((a, b) => b.score - a.score).slice(0, MAX_RESULTS);
 }
+
+const NAV_SUGGESTION_LIMIT = 6;
 
 export async function getJSONNavigationSuggestions(): Promise<
   SearchableContent[]
 > {
   const searchableContent = await getSearchableContent();
-
-  // Return main page content (not sections)
   return searchableContent
     .filter((item) => item.id.includes("-main"))
-    .slice(0, 6);
+    .slice(0, NAV_SUGGESTION_LIMIT);
 }

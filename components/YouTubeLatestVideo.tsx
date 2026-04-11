@@ -1,6 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+
+const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
+const MS_PER_HOUR = 60 * 60 * 1000;
+const HOURS_PER_DAY = 24;
+const HOURS_PER_WEEK = 24 * 7;
+const HOURS_PER_MONTH = 24 * 30;
+const VIEWS_MILLION = 1_000_000;
+const VIEWS_THOUSAND = 1_000;
 
 interface YouTubeVideo {
   id: string;
@@ -15,51 +23,52 @@ interface YouTubeVideo {
 }
 
 function formatViewCount(count: string | null): string {
-  if (!count) return '';
-  
+  if (!count) return "";
+
   const num = parseInt(count);
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1)}M views`;
-  } else if (num >= 1000) {
-    return `${(num / 1000).toFixed(1)}K views`;
+  if (num >= VIEWS_MILLION) {
+    return `${(num / VIEWS_MILLION).toFixed(1)}M views`;
+  }
+  if (num >= VIEWS_THOUSAND) {
+    return `${(num / VIEWS_THOUSAND).toFixed(1)}K views`;
   }
   return `${num} views`;
 }
 
 function formatDuration(duration: string | null): string {
-  if (!duration) return '';
-  
-  // Parse ISO 8601 duration (PT4M13S -> 4:13)
+  if (!duration) return "";
+
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!match) return '';
-  
-  const hours = parseInt(match[1] || '0');
-  const minutes = parseInt(match[2] || '0');
-  const seconds = parseInt(match[3] || '0');
-  
+  if (!match) return "";
+
+  const hours = parseInt(match[1] || "0");
+  const minutes = parseInt(match[2] || "0");
+  const seconds = parseInt(match[3] || "0");
+
   if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 function formatTimeAgo(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
-  const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-  
-  if (diffInHours < 24) {
+  const diffInHours = Math.floor((now.getTime() - date.getTime()) / MS_PER_HOUR);
+
+  if (diffInHours < HOURS_PER_DAY) {
     return `${diffInHours} hours ago`;
-  } else if (diffInHours < 168) {
-    const days = Math.floor(diffInHours / 24);
-    return `${days} day${days > 1 ? 's' : ''} ago`;
-  } else if (diffInHours < 720) {
-    const weeks = Math.floor(diffInHours / 168);
-    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-  } else {
-    const months = Math.floor(diffInHours / 720);
-    return `${months} month${months > 1 ? 's' : ''} ago`;
   }
+  if (diffInHours < HOURS_PER_WEEK) {
+    const days = Math.floor(diffInHours / HOURS_PER_DAY);
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  }
+  if (diffInHours < HOURS_PER_MONTH) {
+    const weeks = Math.floor(diffInHours / HOURS_PER_WEEK);
+    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+  }
+  const months = Math.floor(diffInHours / HOURS_PER_MONTH);
+  return `${months} month${months > 1 ? "s" : ""} ago`;
 }
 
 export default function YouTubeLatestVideo() {
@@ -70,8 +79,8 @@ export default function YouTubeLatestVideo() {
   useEffect(() => {
     async function fetchLatestVideo() {
       try {
-        const response = await fetch('/api/youtube/latest-video');
-        
+        const response = await fetch("/api/youtube/latest-video");
+
         if (response.status === 204) {
           setVideo(null);
           setError(null);
@@ -79,24 +88,22 @@ export default function YouTubeLatestVideo() {
         }
 
         if (!response.ok) {
-          throw new Error('Failed to fetch video');
+          throw new Error("Failed to fetch video");
         }
 
         const data: YouTubeVideo = await response.json();
         setVideo(data);
         setError(null);
       } catch (err) {
-        setError('Failed to load YouTube data');
-        console.error('YouTube API error:', err);
+        setError("Failed to load YouTube data");
+        console.error("YouTube API error:", err);
       } finally {
         setLoading(false);
       }
     }
 
     fetchLatestVideo();
-    
-    // Refresh every 30 minutes
-    const interval = setInterval(fetchLatestVideo, 1800000);
+    const interval = setInterval(fetchLatestVideo, REFRESH_INTERVAL_MS);
     return () => clearInterval(interval);
   }, []);
 
@@ -152,8 +159,8 @@ export default function YouTubeLatestVideo() {
     <div className="border border-gray-300 rounded-lg p-4 bg-red-50">
       <div className="flex items-center gap-3">
         <div className="flex-shrink-0 relative">
-          <img 
-            src={video.thumbnail} 
+          <img
+            src={video.thumbnail}
             alt={`${video.title} thumbnail`}
             className="w-24 h-18 rounded object-cover"
           />
@@ -163,15 +170,15 @@ export default function YouTubeLatestVideo() {
             </div>
           )}
         </div>
-        
+
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-medium text-red-700">
               📺 Latest Video
             </span>
           </div>
-          
-          <a 
+
+          <a
             href={video.url}
             target="_blank"
             rel="noopener noreferrer"
@@ -189,7 +196,7 @@ export default function YouTubeLatestVideo() {
             </div>
           </a>
         </div>
-        
+
         <div className="flex-shrink-0 flex items-center">
           <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
             <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>

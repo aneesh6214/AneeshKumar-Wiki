@@ -24,7 +24,8 @@ export const initialFilterState: BlogFilterState = {
   dateTo: "",
 };
 
-// Dual Range Slider Component
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
 interface DualRangeSliderProps {
   min: number;
   max: number;
@@ -71,9 +72,9 @@ function DualRangeSlider({
     const handleMouseMove = (e: MouseEvent) => {
       const value = getValueFromPosition(e.clientX);
       if (dragging === "min") {
-        onChange(Math.min(value, maxVal - 86400000), maxVal); // At least 1 day apart
+        onChange(Math.min(value, maxVal - MS_PER_DAY), maxVal);
       } else {
-        onChange(minVal, Math.max(value, minVal + 86400000));
+        onChange(minVal, Math.max(value, minVal + MS_PER_DAY));
       }
     };
 
@@ -94,18 +95,15 @@ function DualRangeSlider({
 
   return (
     <div className="pt-2 pb-1">
-      {/* Labels */}
       <div className="flex justify-between text-xs text-gray-600 mb-3">
         <span>{formatLabel(minVal)}</span>
         <span>{formatLabel(maxVal)}</span>
       </div>
 
-      {/* Slider Track */}
       <div
         ref={trackRef}
         className="relative h-1.5 bg-gray-200 rounded-full cursor-pointer"
       >
-        {/* Active Range */}
         <div
           className="absolute h-full bg-blue-500 rounded-full"
           style={{
@@ -114,7 +112,6 @@ function DualRangeSlider({
           }}
         />
 
-        {/* Min Thumb */}
         <div
           className={`absolute w-4 h-4 bg-white border-2 border-blue-500 rounded-full -translate-x-1/2 -translate-y-1/4 cursor-grab shadow-sm hover:shadow-md transition-shadow ${
             dragging === "min" ? "cursor-grabbing shadow-md" : ""
@@ -123,7 +120,6 @@ function DualRangeSlider({
           onMouseDown={handleMouseDown("min")}
         />
 
-        {/* Max Thumb */}
         <div
           className={`absolute w-4 h-4 bg-white border-2 border-blue-500 rounded-full -translate-x-1/2 -translate-y-1/4 cursor-grab shadow-sm hover:shadow-md transition-shadow ${
             dragging === "max" ? "cursor-grabbing shadow-md" : ""
@@ -133,7 +129,6 @@ function DualRangeSlider({
         />
       </div>
 
-      {/* Min/Max labels */}
       <div className="flex justify-between text-[10px] text-gray-400 mt-1.5">
         <span>{formatLabel(min)}</span>
         <span>{formatLabel(max)}</span>
@@ -150,7 +145,6 @@ export default function BlogFilters({
   const [isOpen, setIsOpen] = useState(false);
   const [filters, setFilters] = useState<BlogFilterState>(initialFilterState);
 
-  // Date slider state (as timestamps)
   const minTimestamp = dateRange.min.getTime();
   const maxTimestamp = dateRange.max.getTime();
   const [sliderMin, setSliderMin] = useState(minTimestamp);
@@ -159,7 +153,6 @@ export default function BlogFilters({
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -185,7 +178,6 @@ export default function BlogFilters({
     setSliderMax(newMax);
     setDateFilterActive(true);
 
-    // Convert to ISO date strings for filtering
     const fromDate = new Date(newMin).toISOString().split("T")[0];
     const toDate = new Date(newMax).toISOString().split("T")[0];
     updateFilters({ dateFrom: fromDate, dateTo: toDate });
@@ -221,7 +213,6 @@ export default function BlogFilters({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Filter Button - Wikipedia style */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-1 text-sm px-2 py-1 border-b-2 transition-colors ${
@@ -243,10 +234,8 @@ export default function BlogFilters({
         />
       </button>
 
-      {/* Dropdown Panel */}
       {isOpen && (
         <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-gray-300 rounded shadow-lg z-50">
-          {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
             <span className="font-semibold text-sm text-gray-900">
               Filter Posts
@@ -262,7 +251,6 @@ export default function BlogFilters({
           </div>
 
           <div className="p-4 space-y-4">
-            {/* Search by Title */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                 Search by title
@@ -276,7 +264,6 @@ export default function BlogFilters({
               />
             </div>
 
-            {/* Date Range Slider */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">
                 Date range
@@ -291,7 +278,6 @@ export default function BlogFilters({
               />
             </div>
 
-            {/* Topics */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                 Topics
@@ -318,7 +304,6 @@ export default function BlogFilters({
             </div>
           </div>
 
-          {/* Footer */}
           <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
             <button
               onClick={() => setIsOpen(false)}

@@ -23,7 +23,6 @@ export default function BlogPostHeader({
         <div className="italic">{topics.join(", ")}</div>
       </div>
 
-      {/* Article Tab and Back Link */}
       <div className="flex items-center justify-between border-b border-gray-300">
         <button className="pb-2 border-b-2 border-black font-medium">
           Article

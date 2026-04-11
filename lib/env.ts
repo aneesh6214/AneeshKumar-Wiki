@@ -1,5 +1,3 @@
-// lib/env.ts
-// Single entry point for analytics-related environment variables.
 // Throws at import time if a required variable is missing so misconfig
 // shows up loudly in both dev and prod, not as a mysterious runtime error.
 

@@ -2,7 +2,6 @@ import Link from "next/link";
 import React from "react";
 import { BlogPost, BlogPostSection } from "@/lib/blog-content";
 
-// Subtitle component for use within blog post content
 export function Subtitle({ children }: { children: React.ReactNode }) {
   return (
     <h4 className="text-base font-semibold underline decoration-1 underline-offset-2 text-gray-900 mt-4 mb-0">
@@ -11,7 +10,6 @@ export function Subtitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Component to parse JSX content with embedded markdown-style links
 function ParsedContent({ children }: { children: React.ReactNode }) {
   const transformNode = (node: React.ReactNode): React.ReactNode => {
     if (typeof node === "string") {
@@ -30,7 +28,6 @@ function ParsedContent({ children }: { children: React.ReactNode }) {
   return <>{transformNode(children)}</>;
 }
 
-// Parser function for Wikipedia-style links in text
 function parseText(text: string): React.ReactNode {
   if (!text) return text;
 

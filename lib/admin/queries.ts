@@ -1,4 +1,3 @@
-// lib/admin/queries.ts
 // All queries the admin dashboard needs. Every function takes a TimeWindow
 // and scopes to { start, end }. `is_bot = true` rows are excluded from
 // every aggregate. Engagement metrics come from client_events only;
