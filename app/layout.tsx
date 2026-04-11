@@ -7,7 +7,6 @@ export const metadata: Metadata = {
   title: "Aneesh Kumar - Personal Website",
   description:
     "Personal website of Aneesh Kumar, Software Engineer and AI researcher",
-  generator: "v0.dev",
 };
 
 export default function RootLayout({

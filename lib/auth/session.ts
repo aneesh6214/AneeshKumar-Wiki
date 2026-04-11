@@ -51,10 +51,7 @@ export async function verifyVid(token: string | undefined): Promise<string | nul
   }
 }
 
-/**
- * Generates a new random visitor id. Uses crypto.getRandomValues so it
- * works on Edge (no Node `crypto` import).
- */
+// Uses crypto.getRandomValues so it works on Edge (no Node `crypto` import).
 export function newVid(): string {
   const bytes = new Uint8Array(16);
   crypto.getRandomValues(bytes);
