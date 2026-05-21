@@ -44,6 +44,13 @@ function entryLinks(section: ContentSection): Array<{ href: string; label: strin
   return links;
 }
 
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function EntryImage({ section }: { section: ContentSection }) {
   if (!section.image) return null;
 
@@ -69,6 +76,7 @@ function WorkEntry({ section }: { section: ContentSection }) {
 
   return (
     <section
+      id={slugify(section.title)}
       className={`grid gap-4 py-4 ${
         section.image ? "sm:grid-cols-[minmax(0,1fr)_9rem]" : ""
       }`}

@@ -27,7 +27,7 @@ export default async function AdminLoginPage({ searchParams }: Props) {
           </div>
 
           <div className="text-sm italic text-gray-600 mb-6 pl-6 border-l-2 border-[#eaecf0]">
-            This page is restricted to the site administrator. For the public Wikipedia article, see{" "}
+            This page is restricted to the site administrator. For the public Kumarpedia article, see{" "}
             <Link href="/" className="text-blue-600 hover:underline">Home</Link>.
           </div>
 

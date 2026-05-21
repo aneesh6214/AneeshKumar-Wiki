@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header";
 import BeaconProvider from "@/components/BeaconProvider";
 
 export const metadata: Metadata = {
@@ -18,7 +17,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <div className="min-h-screen bg-white font-sans">
-          <Header />
           {children}
         </div>
         <BeaconProvider />

@@ -3,7 +3,7 @@ import ArticleHeader from "@/components/ArticleHeader";
 import WikiContent from "@/components/WikiContent";
 import { getJSONContent } from "@/lib/json-content";
 
-export default async function WikipediaStyleKB() {
+export default async function KumarpediaStyleKB() {
   const content = await getJSONContent("home");
 
   return (

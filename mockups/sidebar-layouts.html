@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kumarpedia Sidebar Mockups</title>
+    <style>
+      :root {
+        --border: #a2a9b1;
+        --border-soft: #eaecf0;
+        --ink: #202122;
+        --muted: #54595d;
+        --blue: #0645ad;
+        --blue-soft: #eaf3ff;
+        --chrome: #f8f9fa;
+        --paper: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .mockup-shell {
+        min-height: 100vh;
+      }
+
+      .mockup-tabs {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+        background: white;
+        padding: 0 24px;
+      }
+
+      .mockup-tabs input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .mockup-tabs label {
+        margin-bottom: -1px;
+        border: 1px solid transparent;
+        border-bottom: 0;
+        padding: 10px 14px 9px;
+        color: var(--blue);
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .mockup-tabs label:hover {
+        text-decoration: underline;
+      }
+
+      #rail:checked ~ label[for="rail"],
+      #folio:checked ~ label[for="folio"],
+      #index:checked ~ label[for="index"],
+      #marginalia:checked ~ label[for="marginalia"] {
+        border-color: var(--border);
+        background: white;
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .preview {
+        display: none;
+      }
+
+      body:has(#rail:checked) .rail-preview,
+      body:has(#folio:checked) .folio-preview,
+      body:has(#index:checked) .index-preview,
+      body:has(#marginalia:checked) .marginalia-preview {
+        display: grid;
+      }
+
+      .preview {
+        min-height: calc(100vh - 42px);
+        grid-template-columns: 15rem minmax(0, 1fr);
+      }
+
+      .article {
+        padding: 18px 28px 56px;
+      }
+
+      .article-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 4px;
+      }
+
+      .article h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1.15;
+      }
+
+      .languages {
+        color: var(--blue);
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .source {
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .article-tabs {
+        margin-bottom: 18px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .article-tabs span {
+        display: inline-block;
+        margin-bottom: -1px;
+        border-bottom: 2px solid var(--ink);
+        padding: 0 0 7px;
+        font-weight: 600;
+      }
+
+      .article-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 18rem;
+        gap: 24px;
+        align-items: start;
+      }
+
+      .article-copy p {
+        max-width: 72ch;
+        margin: 0 0 12px;
+      }
+
+      .infobox {
+        border: 1px solid var(--border);
+        background: var(--chrome);
+        font-size: 13px;
+      }
+
+      .infobox-title {
+        border-bottom: 1px solid var(--border);
+        background: #eaecf0;
+        padding: 7px 9px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 17px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .infobox-body {
+        padding: 10px;
+      }
+
+      .infobox-row {
+        display: grid;
+        grid-template-columns: 5.5rem 1fr;
+        gap: 8px;
+        border-top: 1px solid var(--border-soft);
+        padding: 7px 0;
+      }
+
+      .infobox-row:first-child {
+        border-top: 0;
+      }
+
+      .infobox dt {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .infobox dd {
+        margin: 0;
+      }
+
+      .side {
+        border-right: 1px solid var(--border);
+        background: var(--chrome);
+        color: var(--ink);
+      }
+
+      .side a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      .side a:hover {
+        text-decoration: underline;
+      }
+
+      .nav-link {
+        display: block;
+      }
+
+      .search-trigger {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--muted);
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+        text-align: left;
+      }
+
+      .search-trigger:active {
+        transform: scale(0.985);
+      }
+
+      .search-mark {
+        color: var(--blue);
+        font-size: 12px;
+      }
+
+      .rail-side {
+        padding: 18px 14px;
+      }
+
+      .rail-title {
+        margin: 0 0 13px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .rail-nav {
+        display: grid;
+        gap: 1px;
+      }
+
+      .rail-nav .nav-link {
+        border-left: 2px solid transparent;
+        padding: 6px 8px;
+        font-size: 13px;
+      }
+
+      .rail-nav .active {
+        border-left-color: var(--ink);
+        background: white;
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .rail-bottom {
+        margin-top: 16px;
+        border-top: 1px solid var(--border-soft);
+        padding-top: 12px;
+      }
+
+      .rail-side .search-trigger {
+        margin-top: 10px;
+        padding: 7px 9px;
+      }
+
+      .folio-side {
+        display: flex;
+        flex-direction: column;
+        padding: 0 12px 16px;
+      }
+
+      .folio-heading {
+        border-bottom: 1px solid var(--border);
+        padding: 18px 4px 10px;
+      }
+
+      .folio-heading h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .folio-heading p {
+        margin: 1px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .folio-nav {
+        margin-top: 13px;
+        counter-reset: pages;
+      }
+
+      .folio-nav .nav-link {
+        counter-increment: pages;
+        display: grid;
+        grid-template-columns: 2.25rem 1fr;
+        gap: 8px;
+        border-bottom: 1px solid var(--border-soft);
+        padding: 7px 2px;
+        font-size: 13px;
+      }
+
+      .folio-nav .nav-link::before {
+        content: counter(pages, decimal-leading-zero);
+        color: var(--muted);
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+      }
+
+      .folio-nav .active {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .folio-nav .active::before {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .folio-utility {
+        margin-top: auto;
+        padding-top: 18px;
+      }
+
+      .folio-side .search-trigger {
+        padding: 8px 9px;
+      }
+
+      .index-side {
+        padding: 14px 12px;
+      }
+
+      .index-box {
+        border: 1px solid var(--border);
+        background: white;
+      }
+
+      .index-caption {
+        border-bottom: 1px solid var(--border);
+        background: #eaecf0;
+        padding: 6px 8px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 17px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .index-section {
+        border-top: 1px solid var(--border-soft);
+        padding: 8px;
+      }
+
+      .index-section:first-of-type {
+        border-top: 0;
+      }
+
+      .index-section-title {
+        margin: 0 0 4px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .index-section .nav-link {
+        padding: 3px 0;
+        font-size: 13px;
+      }
+
+      .index-section .active {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .index-box .search-trigger {
+        border-width: 1px 0 0;
+        padding: 8px;
+      }
+
+      .marginalia-side {
+        padding: 17px 12px;
+      }
+
+      .marginalia-note {
+        margin-bottom: 14px;
+        border-left: 3px solid var(--border);
+        padding: 0 0 0 9px;
+      }
+
+      .marginalia-note h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .marginalia-note p {
+        margin: 1px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .marginalia-nav {
+        display: grid;
+        gap: 8px;
+      }
+
+      .marginalia-nav .nav-link {
+        position: relative;
+        padding: 0 0 0 16px;
+        font-size: 13px;
+      }
+
+      .marginalia-nav .nav-link::before {
+        position: absolute;
+        left: 0;
+        top: 0.72em;
+        width: 8px;
+        border-top: 1px solid var(--border);
+        content: "";
+      }
+
+      .marginalia-nav .active {
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .marginalia-side .search-trigger {
+        margin-top: 18px;
+        border-color: var(--border-soft);
+        border-left-color: var(--border);
+        border-left-width: 3px;
+        padding: 7px 8px 7px 9px;
+      }
+
+      @media (max-width: 860px) {
+        .preview {
+          grid-template-columns: 1fr;
+        }
+
+        .side {
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .article-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mockup-shell">
+      <div class="mockup-tabs" aria-label="Sidebar layout mockups">
+        <input id="rail" name="layout" type="radio" checked />
+        <input id="folio" name="layout" type="radio" />
+        <input id="index" name="layout" type="radio" />
+        <input id="marginalia" name="layout" type="radio" />
+        <label for="rail">Quiet rail</label>
+        <label for="folio">Folio index</label>
+        <label for="index">Infobox nav</label>
+        <label for="marginalia">Marginalia</label>
+      </div>
+
+      <section class="preview rail-preview">
+        <aside class="side rail-side">
+          <h2 class="rail-title">Navigation</h2>
+          <nav class="rail-nav" aria-label="Quiet rail navigation">
+            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link active" href="#">Professional Work</a>
+            <a class="nav-link" href="#">Independent Work</a>
+            <a class="nav-link" href="#">Media</a>
+            <a class="nav-link" href="#">Ask Me Anything</a>
+          </nav>
+          <div class="rail-bottom">
+            <a class="nav-link" href="#">Contact</a>
+            <button class="search-trigger" type="button">
+              <span>Search this site</span>
+              <span class="search-mark">Search</span>
+            </button>
+          </div>
+        </aside>
+        <main class="article">
+          <div class="article-head">
+            <h1>Professional Work</h1>
+            <div class="languages">142 languages</div>
+          </div>
+          <div class="source">From Kumarpedia, the free encyclopedia</div>
+          <div class="article-tabs"><span>Article</span></div>
+        </main>
+      </section>
+
+      <section class="preview folio-preview">
+        <aside class="side folio-side">
+          <div class="folio-heading">
+            <h2>Contents</h2>
+            <p>Kumarpedia index</p>
+          </div>
+          <nav class="folio-nav" aria-label="Folio index navigation">
+            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link active" href="#">Professional Work</a>
+            <a class="nav-link" href="#">Independent Work</a>
+            <a class="nav-link" href="#">Media</a>
+            <a class="nav-link" href="#">Ask Me Anything</a>
+            <a class="nav-link" href="#">Contact</a>
+          </nav>
+          <div class="folio-utility">
+            <button class="search-trigger" type="button">
+              <span>Search this site</span>
+              <span class="search-mark">Open</span>
+            </button>
+          </div>
+        </aside>
+        <main class="article">
+          <div class="article-head">
+            <h1>Professional Work</h1>
+            <div class="languages">142 languages</div>
+          </div>
+          <div class="source">From Kumarpedia, the free encyclopedia</div>
+          <div class="article-tabs"><span>Article</span></div>
+        </main>
+      </section>
+
+      <section class="preview index-preview">
+        <aside class="side index-side">
+          <div class="index-box">
+            <div class="index-caption">Kumarpedia</div>
+            <div class="index-section">
+              <p class="index-section-title">Pages</p>
+              <a class="nav-link" href="#">Home</a>
+              <a class="nav-link active" href="#">Professional Work</a>
+              <a class="nav-link" href="#">Independent Work</a>
+              <a class="nav-link" href="#">Media</a>
+              <a class="nav-link" href="#">Ask Me Anything</a>
+            </div>
+            <div class="index-section">
+              <p class="index-section-title">Reference</p>
+              <a class="nav-link" href="#">Contact</a>
+            </div>
+            <button class="search-trigger" type="button">
+              <span>Search this site</span>
+              <span class="search-mark">Open</span>
+            </button>
+          </div>
+        </aside>
+        <main class="article">
+          <div class="article-head">
+            <h1>Professional Work</h1>
+            <div class="languages">142 languages</div>
+          </div>
+          <div class="source">From Kumarpedia, the free encyclopedia</div>
+          <div class="article-tabs"><span>Article</span></div>
+        </main>
+      </section>
+
+      <section class="preview marginalia-preview">
+        <aside class="side marginalia-side">
+          <div class="marginalia-note">
+            <h2>Navigation</h2>
+            <p>Site pages</p>
+          </div>
+          <nav class="marginalia-nav" aria-label="Marginalia navigation">
+            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link active" href="#">Professional Work</a>
+            <a class="nav-link" href="#">Independent Work</a>
+            <a class="nav-link" href="#">Media</a>
+            <a class="nav-link" href="#">Ask Me Anything</a>
+            <a class="nav-link" href="#">Contact</a>
+          </nav>
+          <button class="search-trigger" type="button">
+            <span>Search this site</span>
+            <span class="search-mark">Open</span>
+          </button>
+        </aside>
+        <main class="article">
+          <div class="article-head">
+            <h1>Professional Work</h1>
+            <div class="languages">142 languages</div>
+          </div>
+          <div class="source">From Kumarpedia, the free encyclopedia</div>
+          <div class="article-tabs"><span>Article</span></div>
+        </main>
+      </section>
+    </div>
+
+    <template id="article-preview-template">
+      <div class="article-grid">
+        <div class="article-copy">
+          <p>
+            Employment and publication entries appear in a compact catalogue
+            with clear article structure and restrained metadata.
+          </p>
+          <p>
+            The sidebar should help orient visitors without becoming another
+            content block or duplicating the article body.
+          </p>
+        </div>
+        <dl class="infobox">
+          <div class="infobox-title">Aneesh Kumar</div>
+          <div class="infobox-body">
+            <div class="infobox-row">
+              <dt>Position</dt>
+              <dd>Associate Platform Engineer</dd>
+            </div>
+            <div class="infobox-row">
+              <dt>Organization</dt>
+              <dd>Quantifind</dd>
+            </div>
+            <div class="infobox-row">
+              <dt>Education</dt>
+              <dd>San Francisco State University</dd>
+            </div>
+          </div>
+        </dl>
+      </div>
+    </template>
+    <script>
+      for (const preview of document.querySelectorAll(".article")) {
+        const template = document.querySelector("#article-preview-template");
+        preview.append(template.content.cloneNode(true));
+      }
+    </script>
+  </body>
+</html>

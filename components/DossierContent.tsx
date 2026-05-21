@@ -231,6 +231,7 @@ function DossierRecordItem({
 
   return (
     <section
+      id={slugify(record.title)}
       className={`grid gap-4 border-b border-gray-200 py-4 last:border-b-0 ${
         record.image ? "sm:grid-cols-[minmax(0,1fr)_9rem]" : ""
       }`}
@@ -240,7 +241,6 @@ function DossierRecordItem({
           <>
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <h2
-                id={slugify(record.title)}
                 className={`font-semibold leading-snug text-blue-700 ${
                   record.depth > 0 ? "text-base" : "text-lg"
                 }`}

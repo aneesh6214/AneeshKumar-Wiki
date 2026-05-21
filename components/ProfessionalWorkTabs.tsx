@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import type { ReactNode } from "react";
+import LanguageSelector from "./LanguageSelector";
 
 interface ProfessionalWorkTabsProps {
   employment: ReactNode;
@@ -16,20 +17,25 @@ const publication = {
   topics: ["Sparse Autoencoders", "Transformers", "Mechanistic Interpretability"],
 };
 
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function ProfessionalHeader({ title }: { title: string }) {
   return (
     <div className="px-4 pt-4 sm:px-6">
-      <div className="mb-2 flex items-center justify-between">
-        <h1 className="font-serif text-2xl text-black sm:text-3xl">{title}</h1>
-        <div className="flex items-center gap-2 text-sm">
-          <button className="flex items-center gap-1 text-blue-600 hover:underline lg:hidden">
-            <span className="text-sm">🌐</span>
-          </button>
-        </div>
+      <div className="mb-2 flex items-start justify-between gap-4">
+        <h1 className="min-w-0 font-serif text-2xl text-black sm:text-3xl">
+          {title}
+        </h1>
+        <LanguageSelector />
       </div>
 
       <div className="mb-4 text-sm text-gray-600">
-        From Wikipedia, the free encyclopedia
+        From Kumarpedia, the free encyclopedia
       </div>
 
       <div className="flex items-center gap-6 border-b border-gray-300">
@@ -50,7 +56,10 @@ function WikiSection({
 }) {
   return (
     <section className="mb-6 last:mb-0">
-      <h2 className="mb-2 border-b border-gray-300 pb-1 font-serif text-xl font-medium text-black">
+      <h2
+        id={slugify(title)}
+        className="mb-2 border-b border-gray-300 pb-1 font-serif text-xl font-medium text-black"
+      >
         {title}
       </h2>
       {children}
@@ -87,7 +96,10 @@ function PublicationsCatalogue() {
           </tr>
         </thead>
         <tbody>
-          <tr className="border-b border-gray-200 align-top">
+          <tr
+            id={slugify(publication.title)}
+            className="border-b border-gray-200 align-top"
+          >
             <td className="px-2 py-2 text-gray-700">{publication.year}</td>
             <td className="px-2 py-2">
               <div className="font-semibold text-blue-700">

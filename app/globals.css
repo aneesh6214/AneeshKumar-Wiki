@@ -14,7 +14,7 @@ body {
 
 @layer components {
   .modal-nav-item {
-    @apply transition-all duration-200 ease-in-out;
+    @apply transition-transform duration-200 ease-out;
   }
 
   .modal-nav-item:hover {
@@ -31,6 +31,6 @@ body {
 
 @layer base {
   mark {
-    @apply bg-yellow-200 text-yellow-900 px-0.5 rounded-sm;
+    @apply bg-yellow-200 text-yellow-900 px-0.5;
   }
 }

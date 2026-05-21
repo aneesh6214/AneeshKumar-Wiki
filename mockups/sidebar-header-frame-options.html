@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sidebar and Header Frame Mockups</title>
+    <style>
+      :root {
+        --border: #a2a9b1;
+        --border-soft: #eaecf0;
+        --ink: #202122;
+        --muted: #54595d;
+        --blue: #0645ad;
+        --chrome: #f8f9fa;
+        --chrome-strong: #eaecf0;
+        --paper: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: white;
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .tabs {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        background: white;
+        padding: 0 24px;
+      }
+
+      .tabs input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .tabs label {
+        margin-bottom: -1px;
+        border: 1px solid transparent;
+        border-bottom: 0;
+        padding: 10px 14px 9px;
+        color: var(--blue);
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .tabs label:hover {
+        text-decoration: underline;
+      }
+
+      #compact-index:checked ~ label[for="compact-index"],
+      #personal-margin:checked ~ label[for="personal-margin"],
+      #article-ribbon:checked ~ label[for="article-ribbon"],
+      #section-index:checked ~ label[for="section-index"] {
+        border-color: var(--border);
+        background: white;
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .frame {
+        display: none;
+        min-height: calc(100vh - 42px);
+      }
+
+      body:has(#compact-index:checked) .compact-index-frame,
+      body:has(#personal-margin:checked) .personal-margin-frame,
+      body:has(#article-ribbon:checked) .article-ribbon-frame,
+      body:has(#section-index:checked) .section-index-frame {
+        display: grid;
+      }
+
+      .frame {
+        grid-template-columns: 15rem minmax(0, 1fr);
+      }
+
+      .sidebar {
+        border-right: 1px solid var(--border);
+        background: var(--chrome);
+      }
+
+      .sidebar-inner {
+        padding: 14px 12px;
+      }
+
+      .search-trigger {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--muted);
+        cursor: pointer;
+        font: inherit;
+        text-align: left;
+      }
+
+      .search-trigger:active {
+        transform: scale(0.985);
+      }
+
+      .search-trigger .key {
+        color: var(--blue);
+        font-size: 12px;
+      }
+
+      .site-nav {
+        display: grid;
+        font-size: 17px;
+      }
+
+      .site-nav a {
+        display: block;
+        border-left: 1px solid var(--border-soft);
+        padding: 5px 8px;
+      }
+
+      .site-nav .active {
+        border-left-color: var(--ink);
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .article {
+        padding: 16px 28px 56px;
+      }
+
+      .article-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 4px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1.15;
+      }
+
+      .languages {
+        color: var(--blue);
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .source {
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .article-tabs {
+        margin-bottom: 18px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .article-tabs span {
+        display: inline-block;
+        margin-bottom: -1px;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 7px;
+        font-weight: 600;
+      }
+
+      .article-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 18rem;
+        gap: 24px;
+        align-items: start;
+      }
+
+      .article-copy p {
+        max-width: 72ch;
+        margin: 0 0 12px;
+      }
+
+      .infobox {
+        border: 1px solid var(--border);
+        background: var(--chrome);
+        font-size: 13px;
+      }
+
+      .infobox-title {
+        border-bottom: 1px solid var(--border);
+        background: var(--chrome-strong);
+        padding: 7px 9px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 17px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .infobox-body {
+        padding: 10px;
+      }
+
+      .infobox-row {
+        display: grid;
+        grid-template-columns: 5.5rem 1fr;
+        gap: 8px;
+        border-top: 1px solid var(--border-soft);
+        padding: 7px 0;
+      }
+
+      .infobox-row:first-child {
+        border-top: 0;
+      }
+
+      .infobox dt {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .infobox dd {
+        margin: 0;
+      }
+
+      .compact-index-frame .sidebar {
+        background: white;
+      }
+
+      .compact-index-frame .sidebar-inner {
+        position: sticky;
+        top: 56px;
+        padding-top: 22px;
+      }
+
+      .compact-index-frame .search-trigger {
+        height: 36px;
+        margin-bottom: 12px;
+        padding: 0 9px;
+        font-size: 14px;
+      }
+
+      .compact-index-box {
+        border: 1px solid var(--border);
+        background: var(--chrome);
+      }
+
+      .compact-index-title {
+        border-bottom: 1px solid var(--border);
+        background: var(--chrome-strong);
+        padding: 6px 8px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .compact-index-box .site-nav {
+        padding: 8px;
+        font-size: 16px;
+      }
+
+      .compact-index-box .site-nav a {
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
+
+      .personal-margin-frame .sidebar {
+        background:
+          linear-gradient(to bottom, #ffffff 0, #ffffff 74px, var(--chrome) 74px);
+      }
+
+      .personal-card {
+        border-bottom: 1px solid var(--border);
+        padding: 16px 12px 12px;
+      }
+
+      .personal-name {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 22px;
+        line-height: 1.05;
+      }
+
+      .personal-kicker {
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .personal-margin-frame .search-trigger {
+        height: 36px;
+        margin-bottom: 14px;
+        padding: 0 9px;
+        font-size: 14px;
+      }
+
+      .personal-margin-frame .site-nav {
+        font-size: 16px;
+      }
+
+      .personal-meta {
+        margin-top: 16px;
+        border-top: 1px solid var(--border-soft);
+        padding-top: 10px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .article-ribbon-frame {
+        grid-template-columns: 15rem minmax(0, 1fr);
+      }
+
+      .article-ribbon-frame .sidebar {
+        background: white;
+      }
+
+      .article-ribbon-frame .sidebar-inner {
+        padding-top: 70px;
+      }
+
+      .article-ribbon-frame .search-trigger {
+        height: 34px;
+        margin-bottom: 12px;
+        padding: 0 8px;
+        font-size: 13px;
+      }
+
+      .article-ribbon-frame .site-nav {
+        font-size: 16px;
+      }
+
+      .ribbon {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px;
+        margin: 0 -28px 16px;
+        border-bottom: 1px solid var(--border);
+        background: var(--chrome);
+        padding: 10px 28px;
+      }
+
+      .ribbon-title {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .ribbon-title strong {
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .ribbon .languages {
+        font-size: 13px;
+      }
+
+      .article-ribbon-frame .article-head .languages {
+        display: none;
+      }
+
+      .section-index-frame .sidebar {
+        background: var(--chrome);
+      }
+
+      .section-index-frame .sidebar-inner {
+        padding-top: 18px;
+      }
+
+      .section-index-frame .search-trigger {
+        height: 36px;
+        margin-bottom: 16px;
+        padding: 0 9px;
+        font-size: 14px;
+      }
+
+      .section-label {
+        margin: 14px 0 5px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .section-index-frame .site-nav {
+        font-size: 16px;
+      }
+
+      .section-links {
+        display: grid;
+        margin-top: 2px;
+        font-size: 13px;
+      }
+
+      .section-links a {
+        border-left: 1px solid var(--border-soft);
+        padding: 3px 8px;
+      }
+
+      @media (max-width: 860px) {
+        .frame {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .article-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .article-ribbon-frame .sidebar-inner {
+          padding-top: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tabs" aria-label="Sidebar and header frame mockups">
+      <input id="compact-index" name="layout" type="radio" checked />
+      <input id="personal-margin" name="layout" type="radio" />
+      <input id="article-ribbon" name="layout" type="radio" />
+      <input id="section-index" name="layout" type="radio" />
+      <label for="compact-index">Compact index</label>
+      <label for="personal-margin">Personal margin</label>
+      <label for="article-ribbon">Article ribbon</label>
+      <label for="section-index">Section index</label>
+    </div>
+
+    <section class="frame compact-index-frame">
+      <aside class="sidebar">
+        <div class="sidebar-inner">
+          <button class="search-trigger" type="button">
+            <span>Search this site</span>
+            <span class="key">Open</span>
+          </button>
+          <div class="compact-index-box">
+            <div class="compact-index-title">Site index</div>
+            <nav class="site-nav" aria-label="Site navigation">
+              <a href="#">Home</a>
+              <a class="active" href="#">Professional Work</a>
+              <a href="#">Independent Work</a>
+              <a href="#">Media</a>
+              <a href="#">Ask Me Anything</a>
+            </nav>
+          </div>
+        </div>
+      </aside>
+      <main class="article">
+        <div class="article-head">
+          <h1>Professional Work</h1>
+          <div class="languages">142 languages</div>
+        </div>
+        <div class="source">From Kumarpedia, the free encyclopedia</div>
+        <div class="article-tabs"><span>Article</span></div>
+        <div class="article-grid">
+          <div class="article-copy">
+            <p>
+              The sidebar stops pretending to be a full-height product shell.
+              It becomes a compact local index near the article content.
+            </p>
+            <p>
+              This keeps the left side useful without leaving a large empty gray
+              column after the navigation ends.
+            </p>
+          </div>
+          <Infobox />
+        </div>
+      </main>
+    </section>
+
+    <section class="frame personal-margin-frame">
+      <aside class="sidebar">
+        <div class="personal-card">
+          <div class="personal-name">Aneesh Kumar</div>
+          <div class="personal-kicker">personal encyclopedia</div>
+        </div>
+        <div class="sidebar-inner">
+          <button class="search-trigger" type="button">
+            <span>Search this site</span>
+            <span class="key">Open</span>
+          </button>
+          <nav class="site-nav" aria-label="Site navigation">
+            <a href="#">Home</a>
+            <a class="active" href="#">Professional Work</a>
+            <a href="#">Independent Work</a>
+            <a href="#">Media</a>
+            <a href="#">Ask Me Anything</a>
+          </nav>
+          <div class="personal-meta">Kumarpedia · selected work and notes</div>
+        </div>
+      </aside>
+      <main class="article">
+        <div class="article-head">
+          <h1>Professional Work</h1>
+          <div class="languages">142 languages</div>
+        </div>
+        <div class="source">From Kumarpedia, the free encyclopedia</div>
+        <div class="article-tabs"><span>Article</span></div>
+        <div class="article-grid">
+          <div class="article-copy">
+            <p>
+              This accepts that the site is personal, not a product. The left
+              side is a quiet page margin with the subject name, not a logo.
+            </p>
+            <p>
+              It gives the empty column a reason to exist while keeping the main
+              article unchanged.
+            </p>
+          </div>
+          <Infobox />
+        </div>
+      </main>
+    </section>
+
+    <section class="frame article-ribbon-frame">
+      <aside class="sidebar">
+        <div class="sidebar-inner">
+          <button class="search-trigger" type="button">
+            <span>Search this site</span>
+            <span class="key">Open</span>
+          </button>
+          <nav class="site-nav" aria-label="Site navigation">
+            <a href="#">Home</a>
+            <a class="active" href="#">Professional Work</a>
+            <a href="#">Independent Work</a>
+            <a href="#">Media</a>
+            <a href="#">Ask Me Anything</a>
+          </nav>
+        </div>
+      </aside>
+      <main class="article">
+        <div class="ribbon">
+          <div class="ribbon-title">
+            <strong>Aneesh Kumar</strong> · personal encyclopedia
+          </div>
+          <div class="languages">142 languages</div>
+        </div>
+        <div class="article-head">
+          <h1>Professional Work</h1>
+          <div class="languages">142 languages</div>
+        </div>
+        <div class="source">From Kumarpedia, the free encyclopedia</div>
+        <div class="article-tabs"><span>Article</span></div>
+        <div class="article-grid">
+          <div class="article-copy">
+            <p>
+              A very thin article ribbon creates top structure without becoming
+              a product header or logo. It reads like publication metadata.
+            </p>
+            <p>
+              The sidebar can start lower, aligned to the article body, so the
+              top-left emptiness feels intentional.
+            </p>
+          </div>
+          <Infobox />
+        </div>
+      </main>
+    </section>
+
+    <section class="frame section-index-frame">
+      <aside class="sidebar">
+        <div class="sidebar-inner">
+          <button class="search-trigger" type="button">
+            <span>Search this site</span>
+            <span class="key">Open</span>
+          </button>
+          <div class="section-label">Pages</div>
+          <nav class="site-nav" aria-label="Site navigation">
+            <a href="#">Home</a>
+            <a class="active" href="#">Professional Work</a>
+            <a href="#">Independent Work</a>
+            <a href="#">Media</a>
+            <a href="#">Ask Me Anything</a>
+          </nav>
+          <div class="section-label">This article</div>
+          <nav class="section-links" aria-label="Article sections">
+            <a href="#">Employment</a>
+            <a href="#">Publications</a>
+            <a href="#">See also</a>
+          </nav>
+        </div>
+      </aside>
+      <main class="article">
+        <div class="article-head">
+          <h1>Professional Work</h1>
+          <div class="languages">142 languages</div>
+        </div>
+        <div class="source">From Kumarpedia, the free encyclopedia</div>
+        <div class="article-tabs"><span>Article</span></div>
+        <div class="article-grid">
+          <div class="article-copy">
+            <p>
+              The sidebar becomes more useful by adding local article anchors.
+              It avoids logo/header concerns by behaving like a table of
+              contents.
+            </p>
+            <p>
+              This is the densest option, but it makes the blank area earn its
+              space on long pages.
+            </p>
+          </div>
+          <Infobox />
+        </div>
+      </main>
+    </section>
+
+    <template id="infobox-template">
+      <dl class="infobox">
+        <div class="infobox-title">Aneesh Kumar</div>
+        <div class="infobox-body">
+          <div class="infobox-row">
+            <dt>Position</dt>
+            <dd>Associate Platform Engineer</dd>
+          </div>
+          <div class="infobox-row">
+            <dt>Org.</dt>
+            <dd>Quantifind</dd>
+          </div>
+          <div class="infobox-row">
+            <dt>Education</dt>
+            <dd>San Francisco State University</dd>
+          </div>
+        </div>
+      </dl>
+    </template>
+    <script>
+      for (const placeholder of document.querySelectorAll("Infobox")) {
+        const template = document.querySelector("#infobox-template");
+        placeholder.replaceWith(template.content.cloneNode(true));
+      }
+    </script>
+  </body>
+</html>

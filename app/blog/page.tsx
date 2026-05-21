@@ -122,6 +122,7 @@ export default async function AskMeAnythingPage({
       <div className="flex flex-col gap-6 px-4 pt-3 sm:px-6 lg:flex-row">
         <div className="min-w-0 flex-1">
           <form
+            id="ask-a-question"
             action={submitQuestion}
             className="mt-1"
           >
@@ -172,7 +173,10 @@ export default async function AskMeAnythingPage({
           </form>
 
           <section className="mt-6">
-            <h2 className="border-b border-gray-300 pb-1 font-serif text-xl font-medium text-[#202122]">
+            <h2
+              id="answered-questions"
+              className="border-b border-gray-300 pb-1 font-serif text-xl font-medium text-[#202122]"
+            >
               Answered Questions
             </h2>
             <div className="mt-3">

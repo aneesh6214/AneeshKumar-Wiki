@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sidebar Active State Mockups</title>
+    <style>
+      :root {
+        --border: #a2a9b1;
+        --border-soft: #eaecf0;
+        --ink: #202122;
+        --muted: #54595d;
+        --blue: #0645ad;
+        --chrome: #f8f9fa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: white;
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .tabs {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        background: white;
+        padding: 0 24px;
+      }
+
+      .tabs input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .tabs label {
+        margin-bottom: -1px;
+        border: 1px solid transparent;
+        border-bottom: 0;
+        padding: 10px 14px 9px;
+        color: var(--blue);
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .tabs label:hover {
+        text-decoration: underline;
+      }
+
+      #plain:checked ~ label[for="plain"],
+      #toc:checked ~ label[for="toc"],
+      #rule:checked ~ label[for="rule"],
+      #tab:checked ~ label[for="tab"],
+      #marker:checked ~ label[for="marker"] {
+        border-color: var(--border);
+        background: white;
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .preview {
+        display: none;
+        min-height: calc(100vh - 42px);
+        grid-template-columns: 15rem minmax(0, 1fr);
+      }
+
+      body:has(#plain:checked) .plain-preview,
+      body:has(#toc:checked) .toc-preview,
+      body:has(#rule:checked) .rule-preview,
+      body:has(#tab:checked) .tab-preview,
+      body:has(#marker:checked) .marker-preview {
+        display: grid;
+      }
+
+      .side {
+        border-right: 1px solid var(--border);
+        background: var(--chrome);
+        padding: 14px 12px;
+      }
+
+      .side h2 {
+        margin: 0 0 12px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .nav {
+        display: grid;
+        gap: 1px;
+        font-size: 15px;
+      }
+
+      .nav a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      .nav a:hover {
+        text-decoration: underline;
+      }
+
+      .utility {
+        margin-top: 14px;
+        border-top: 1px solid var(--border-soft);
+        padding-top: 12px;
+      }
+
+      .search-trigger {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+        border: 1px solid var(--border);
+        background: white;
+        padding: 8px 10px;
+        color: var(--muted);
+        cursor: pointer;
+        font: inherit;
+        font-size: 15px;
+        text-align: left;
+      }
+
+      .search-trigger:active {
+        transform: scale(0.985);
+      }
+
+      .search-trigger span:last-child {
+        color: var(--blue);
+        font-size: 12px;
+      }
+
+      .article {
+        padding: 18px 28px 56px;
+      }
+
+      .article-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 4px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1.15;
+      }
+
+      .languages {
+        color: var(--blue);
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .source {
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .article-tabs {
+        margin-bottom: 18px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .article-tabs span {
+        display: inline-block;
+        margin-bottom: -1px;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 7px;
+        font-weight: 600;
+      }
+
+      .article-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 18rem;
+        gap: 24px;
+        align-items: start;
+      }
+
+      .article p {
+        max-width: 72ch;
+        margin: 0 0 12px;
+      }
+
+      .infobox {
+        border: 1px solid var(--border);
+        background: var(--chrome);
+        font-size: 13px;
+      }
+
+      .infobox-title {
+        border-bottom: 1px solid var(--border);
+        background: #eaecf0;
+        padding: 7px 9px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 17px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .infobox-body {
+        padding: 10px;
+      }
+
+      .infobox-row {
+        display: grid;
+        grid-template-columns: 5.5rem 1fr;
+        gap: 8px;
+        border-top: 1px solid var(--border-soft);
+        padding: 7px 0;
+      }
+
+      .infobox-row:first-child {
+        border-top: 0;
+      }
+
+      .infobox dt {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .infobox dd {
+        margin: 0;
+      }
+
+      .plain .nav a {
+        display: block;
+        padding: 5px 2px;
+      }
+
+      .plain .nav .active {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .toc .nav a {
+        display: block;
+        border-left: 1px solid var(--border-soft);
+        padding: 5px 8px;
+      }
+
+      .toc .nav .active {
+        border-left-color: var(--ink);
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .rule .nav a {
+        display: block;
+        padding: 5px 0;
+      }
+
+      .rule .nav .active span {
+        border-bottom: 1px solid var(--ink);
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .tablike .nav a {
+        display: block;
+        border: 1px solid transparent;
+        padding: 5px 8px;
+      }
+
+      .tablike .nav .active {
+        border-color: var(--border);
+        border-right-color: var(--chrome);
+        background: white;
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .marker .nav a {
+        display: grid;
+        grid-template-columns: 1rem 1fr;
+        gap: 4px;
+        padding: 5px 0;
+      }
+
+      .marker .nav a::before {
+        color: transparent;
+        content: "›";
+      }
+
+      .marker .nav .active {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .marker .nav .active::before {
+        color: var(--ink);
+      }
+
+      @media (max-width: 860px) {
+        .preview {
+          grid-template-columns: 1fr;
+        }
+
+        .side {
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .article-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tabs" aria-label="Active state mockups">
+      <input id="plain" name="active-state" type="radio" checked />
+      <input id="toc" name="active-state" type="radio" />
+      <input id="rule" name="active-state" type="radio" />
+      <input id="tab" name="active-state" type="radio" />
+      <input id="marker" name="active-state" type="radio" />
+      <label for="plain">Plain current</label>
+      <label for="toc">Contents rail</label>
+      <label for="rule">Underline</label>
+      <label for="tab">Page tab</label>
+      <label for="marker">Marker</label>
+    </div>
+
+    <section class="preview plain-preview">
+      <Sidebar class="plain" />
+      <Article />
+    </section>
+
+    <section class="preview toc-preview">
+      <Sidebar class="toc" />
+      <Article />
+    </section>
+
+    <section class="preview rule-preview">
+      <Sidebar class="rule" />
+      <Article />
+    </section>
+
+    <section class="preview tab-preview">
+      <Sidebar class="tablike" />
+      <Article />
+    </section>
+
+    <section class="preview marker-preview">
+      <Sidebar class="marker" />
+      <Article />
+    </section>
+
+    <template id="sidebar-template">
+      <aside class="side">
+        <h2>Navigation</h2>
+        <nav class="nav" aria-label="Site navigation">
+          <a href="#"><span>Home</span></a>
+          <a class="active" href="#"><span>Professional Work</span></a>
+          <a href="#"><span>Independent Work</span></a>
+          <a href="#"><span>Media</span></a>
+          <a href="#"><span>Ask Me Anything</span></a>
+        </nav>
+        <div class="utility">
+          <nav class="nav" aria-label="Contact navigation">
+            <a href="#"><span>Contact</span></a>
+          </nav>
+          <button class="search-trigger" type="button">
+            <span>Search this site</span>
+            <span>Open</span>
+          </button>
+        </div>
+      </aside>
+    </template>
+
+    <template id="article-template">
+      <main class="article">
+        <div class="article-head">
+          <h1>Professional Work</h1>
+          <div class="languages">142 languages</div>
+        </div>
+        <div class="source">From Kumarpedia, the free encyclopedia</div>
+        <div class="article-tabs"><span>Article</span></div>
+        <div class="article-grid">
+          <div>
+            <p>
+              Employment and publication entries appear in a compact catalogue
+              with clear article structure and restrained metadata.
+            </p>
+            <p>
+              The active sidebar state should orient visitors without looking
+              like a selected app menu item or a rounded button.
+            </p>
+          </div>
+          <dl class="infobox">
+            <div class="infobox-title">Aneesh Kumar</div>
+            <div class="infobox-body">
+              <div class="infobox-row">
+                <dt>Position</dt>
+                <dd>Associate Platform Engineer</dd>
+              </div>
+              <div class="infobox-row">
+                <dt>Org.</dt>
+                <dd>Quantifind</dd>
+              </div>
+              <div class="infobox-row">
+                <dt>Education</dt>
+                <dd>San Francisco State University</dd>
+              </div>
+            </div>
+          </dl>
+        </div>
+      </main>
+    </template>
+
+    <script>
+      for (const placeholder of document.querySelectorAll("Sidebar")) {
+        const template = document.querySelector("#sidebar-template");
+        const node = template.content.cloneNode(true);
+        node.querySelector(".side").classList.add(placeholder.className);
+        placeholder.replaceWith(node);
+      }
+
+      for (const placeholder of document.querySelectorAll("Article")) {
+        const template = document.querySelector("#article-template");
+        placeholder.replaceWith(template.content.cloneNode(true));
+      }
+    </script>
+  </body>
+</html>
