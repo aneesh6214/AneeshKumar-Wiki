@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import BeaconProvider from "@/components/BeaconProvider";
+import TopBanner from "@/components/TopBanner";
 
 export const metadata: Metadata = {
   title: "Aneesh Kumar - Personal Website",
@@ -16,7 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="min-h-screen bg-white font-sans">
+        <div className="min-h-screen bg-white pt-8 font-sans">
+          <TopBanner />
           {children}
         </div>
         <BeaconProvider />

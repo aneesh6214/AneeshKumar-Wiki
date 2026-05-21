@@ -10,6 +10,26 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .kumarpedia-marquee {
+    animation: kumarpedia-marquee 42s linear infinite;
+  }
+}
+
+@keyframes kumarpedia-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kumarpedia-marquee {
+    animation: none;
+  }
 }
 
 @layer components {

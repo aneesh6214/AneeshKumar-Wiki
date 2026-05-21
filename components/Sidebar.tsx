@@ -52,7 +52,7 @@ export default function Sidebar({ currentPath }: SidebarProps) {
   const articleLinks = articleLinksByPath[currentPath] || [];
 
   return (
-    <aside className="w-full border-b border-[#a2a9b1] bg-[#f8f9fa] md:fixed md:left-0 md:top-0 md:flex md:h-screen md:min-h-screen md:w-[15rem] md:min-w-[15rem] md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
+    <aside className="w-full border-b border-[#a2a9b1] bg-[#f8f9fa] md:fixed md:left-0 md:top-8 md:flex md:h-[calc(100vh-2rem)] md:min-h-[calc(100vh-2rem)] md:w-[15rem] md:min-w-[15rem] md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
       <div className="px-3 py-3">
         <div className="mb-4">
           <SearchNavigation />
