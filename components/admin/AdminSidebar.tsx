@@ -45,6 +45,12 @@ export default function AdminSidebar({ currentWindow = "30d" }: AdminSidebarProp
             </h3>
             <div className="space-y-1">
               <Link
+                href="/admin/ama"
+                className="block text-blue-600 hover:underline"
+              >
+                Ask Me Anything
+              </Link>
+              <Link
                 href="/admin/raw"
                 className="block text-blue-600 hover:underline"
               >

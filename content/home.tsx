@@ -10,7 +10,7 @@ export const homeContent: JSONContent = {
   description: "Personal knowledge base and portfolio",
   url: "/",
   disambiguation:
-    "This article is about the software engineer. For his technical blog, see [Aneesh Kumar (Blog)](/blog). ",
+    "This article is about the software engineer. For questions and answers, see [Aneesh Kumar (Ask Me Anything)](/blog). ",
   infobox: aneeshKumarInfobox,
   sections: [
     {

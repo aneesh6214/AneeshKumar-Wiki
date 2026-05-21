@@ -4,7 +4,6 @@ import {
   extractSections,
   JSONContent,
 } from "./json-content";
-import { getAllBlogPosts } from "./blog-content";
 
 export interface SearchableContent {
   id: string;
@@ -22,7 +21,6 @@ export interface SearchResult extends SearchableContent {
 }
 
 let contentCache: Record<string, JSONContent> | null = null;
-let blogPostsCache: Awaited<ReturnType<typeof getAllBlogPosts>> | null = null;
 
 export async function getSearchableContent(): Promise<SearchableContent[]> {
   if (!contentCache) {
@@ -57,27 +55,14 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
     });
   }
 
-  if (!blogPostsCache) {
-    blogPostsCache = await getAllBlogPosts();
-  }
-
-  blogPostsCache.forEach((post) => {
-    const content = post.searchableContent || `${post.title} ${post.topics.join(" ")}`;
-    searchableItems.push({
-      id: `blog-${post.slug}`,
-      title: post.title,
-      url: `/blog/${post.slug}`,
-      content: content,
-      preview: createPreview(content),
-    });
-  });
-
   searchableItems.push({
     id: "blog-main",
-    title: "Blog",
+    title: "Ask Me Anything",
     url: "/blog",
-    content: "Blog technical articles project insights software engineering artificial intelligence research",
-    preview: "Technical articles, project insights, and thoughts on software engineering and AI.",
+    content:
+      "Ask Me Anything anonymous questions published answers professional work research projects",
+    preview:
+      "Anonymous questions and published answers about work, research, and projects.",
   });
 
   return searchableItems;

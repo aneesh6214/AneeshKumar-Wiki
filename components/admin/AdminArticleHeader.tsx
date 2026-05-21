@@ -3,11 +3,12 @@ import Link from "next/link";
 interface AdminArticleHeaderProps {
   title: string;
   subtitle?: string;
-  activeTab?: "dashboard" | "raw" | "live";
+  activeTab?: "dashboard" | "ama" | "raw" | "live";
 }
 
 const tabs = [
   { key: "dashboard", label: "Dashboard", href: "/admin" },
+  { key: "ama", label: "AMA", href: "/admin/ama" },
   { key: "raw", label: "Raw data", href: "/admin/raw" },
   { key: "live", label: "Live", href: "/admin/live" },
 ] as const;

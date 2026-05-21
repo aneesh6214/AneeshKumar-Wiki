@@ -16,9 +16,9 @@ export default function SeeAlsoSection() {
         </li>
         <li>
           <Link href="/blog" className="text-blue-600 hover:underline">
-            Blog
+            Ask Me Anything
           </Link>{" "}
-          — long-form writing
+          — anonymous questions and published answers
         </li>
         <li>
           <Link href="/independent-work" className="text-blue-600 hover:underline">

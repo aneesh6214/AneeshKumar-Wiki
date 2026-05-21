@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ask Me Anything Mockup</title>
+    <style>
+      :root {
+        --border: #a2a9b1;
+        --border-soft: #eaecf0;
+        --ink: #202122;
+        --muted: #54595d;
+        --blue: #0645ad;
+        --chrome: #f8f9fa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .page {
+        display: grid;
+        min-height: 100vh;
+        grid-template-columns: 13rem minmax(0, 1fr);
+      }
+
+      aside {
+        border-right: 1px solid var(--border-soft);
+        padding: 14px 12px;
+      }
+
+      aside h2 {
+        margin: 0 0 12px;
+        font-size: 14px;
+      }
+
+      aside a {
+        display: block;
+        padding: 4px 0;
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      aside a:hover {
+        text-decoration: underline;
+      }
+
+      main {
+        padding: 16px 24px 48px;
+      }
+
+      .article-header h1 {
+        margin: 0 0 6px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 32px;
+        font-weight: 400;
+      }
+
+      .subtitle {
+        margin-bottom: 16px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .tabs {
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 14px;
+      }
+
+      .tabs input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .tabs label {
+        margin-bottom: -1px;
+        border: 1px solid transparent;
+        border-bottom: 0;
+        padding: 7px 12px 6px;
+        color: var(--blue);
+        cursor: pointer;
+      }
+
+      .tabs label:hover {
+        text-decoration: underline;
+      }
+
+      #public:checked ~ label[for="public"],
+      #admin:checked ~ label[for="admin"] {
+        border-color: var(--border);
+        background: white;
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .panel {
+        display: none;
+      }
+
+      body:has(#public:checked) .public-panel,
+      body:has(#admin:checked) .admin-panel {
+        display: block;
+      }
+
+      .ask-strip {
+        margin-bottom: 16px;
+      }
+
+      .inline-question {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: start;
+        max-width: 760px;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        font-style: italic;
+      }
+
+      button {
+        border: 1px solid #72777d;
+        background: var(--chrome);
+        padding: 6px 10px;
+        color: var(--ink);
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .primary {
+        border-color: #36c;
+        background: #36c;
+        color: white;
+        font-weight: 700;
+      }
+
+      h2 {
+        margin: 0 0 10px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 3px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 22px;
+        font-weight: 400;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border-soft);
+        padding: 10px 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        background: var(--chrome);
+        font-weight: 700;
+      }
+
+      .date {
+        width: 8.5rem;
+        white-space: nowrap;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .question {
+        width: 34%;
+        font-weight: 600;
+      }
+
+      .answer {
+        color: var(--ink);
+      }
+
+      .answered {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        font-style: italic;
+      }
+
+      .empty-note {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        padding: 8px;
+        font: inherit;
+      }
+
+      textarea {
+        min-height: 132px;
+        resize: vertical;
+      }
+
+      .inline-question input {
+        min-height: 34px;
+      }
+
+      .quiet {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding-top: 9px;
+      }
+
+      .admin-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 24rem;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .selected {
+        background: #fff8e5;
+      }
+
+      .status {
+        display: inline-flex;
+        border: 1px solid var(--border);
+        background: white;
+        padding: 1px 5px;
+        font-size: 11px;
+      }
+
+      .response-panel {
+        border-top: 1px solid var(--border);
+      }
+
+      .response-panel h3 {
+        margin: 0 0 8px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 20px;
+        font-weight: 400;
+      }
+
+      .selected-question {
+        margin: 0 0 10px;
+        border-left: 3px solid var(--border-soft);
+        padding-left: 10px;
+      }
+
+      @media (max-width: 920px) {
+        .page,
+        .admin-grid {
+          grid-template-columns: 1fr;
+        }
+
+        aside {
+          border-right: 0;
+          border-bottom: 1px solid var(--border-soft);
+        }
+
+        .inline-question {
+          grid-template-columns: 1fr;
+        }
+
+        .date,
+        .question {
+          width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <aside>
+        <h2>Navigation</h2>
+        <a href="#">Home</a>
+        <a href="#">Professional Work</a>
+        <a href="#">Independent Work</a>
+        <a href="#">Media</a>
+        <a href="#"><strong>Ask Me Anything</strong></a>
+        <a href="#">Contact</a>
+      </aside>
+
+      <main>
+        <div class="article-header">
+          <h1>Ask Me Anything</h1>
+          <div class="subtitle">From Wikipedia, the free encyclopedia</div>
+        </div>
+
+        <div class="tabs">
+          <input id="public" name="surface" type="radio" checked />
+          <input id="admin" name="surface" type="radio" />
+          <label for="public">Public page</label>
+          <label for="admin">Admin response flow</label>
+        </div>
+
+        <section class="panel public-panel">
+          <div class="ask-strip">
+            <div class="inline-question">
+              <input placeholder="Ask a question." />
+              <button class="primary">Ask a question</button>
+            </div>
+            <p class="lead">
+              Questions are submitted anonymously. Only questions that receive a
+              response are published here.
+            </p>
+          </div>
+
+          <h2>Answered questions</h2>
+          <table>
+            <thead>
+              <tr>
+                <th class="date">Asked</th>
+                <th class="question">Question</th>
+                <th>Answer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="date">May 14, 2026</td>
+                <td class="question">How do you decide what to build first?</td>
+                <td class="answer">
+                  I usually look for the smallest version of the idea that can
+                  teach me something real. If a prototype can clarify the system
+                  or make the next decision easier, it is usually worth building.
+                  <div class="answered">Answered May 18, 2026</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="date">April 27, 2026</td>
+                <td class="question">What are you currently interested in?</td>
+                <td class="answer">
+                  Agentic engineering, model behavior, ML architecture, and the
+                  practical systems that make these ideas usable rather than
+                  merely interesting.
+                  <div class="answered">Answered May 2, 2026</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel admin-panel">
+          <div class="ask-strip">
+            <p class="lead">
+              Pending questions stay private. Publishing an answer makes both
+              the question and response visible on the public page.
+            </p>
+          </div>
+
+          <div class="admin-grid">
+            <section>
+              <h2>Question queue</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Status</th>
+                    <th>Question</th>
+                    <th>Asked</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="selected">
+                    <td><span class="status">Pending</span></td>
+                    <td>What makes a project worth turning into a full product?</td>
+                    <td class="date">May 21, 2026</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status">Pending</span></td>
+                    <td>How did you get interested in mechanistic interpretability?</td>
+                    <td class="date">May 19, 2026</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status">Published</span></td>
+                    <td>What are you currently interested in?</td>
+                    <td class="date">April 27, 2026</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="response-panel">
+              <h3>Respond</h3>
+              <p class="selected-question">
+                What makes a project worth turning into a full product?
+              </p>
+              <textarea placeholder="Write the public answer here."></textarea>
+              <p class="quiet">
+                Response date is set when the answer is published.
+              </p>
+              <div class="dialog-actions">
+                <button>Archive</button>
+                <button>Save draft</button>
+                <button class="primary">Publish answer</button>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+  </body>
+</html>

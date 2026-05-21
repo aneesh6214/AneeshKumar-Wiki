@@ -116,38 +116,30 @@ function ArtifactShell({
 }
 
 function EngineeringBox() {
-  const commands = [
-    {
-      command: "focus",
-      flag: "--current",
-      output: "platform systems, APIs, reliability",
-    },
-    {
-      command: "build",
-      flag: "--mode practical",
-      output: "full-stack products and technical tools",
-    },
-  ];
-
   return (
-    <ArtifactShell title="~/aneesh/engineering" titleVariant="terminal">
-      <div className="flex-1 font-mono text-[12px] leading-relaxed text-gray-800">
-        <div className="space-y-2 px-2 py-2.5">
-          {commands.map((item) => (
-            <div key={item.command}>
-              <div>
-                <span className="text-gray-500">$ </span>
-                <span className="font-semibold text-blue-700">
-                  {item.command}
-                </span>{" "}
-                <span className="text-purple-700">{item.flag}</span>
-              </div>
-              <div className="pl-3 text-gray-700">
-                <span className="text-emerald-700">=&gt; </span>
-                {item.output}
-              </div>
-            </div>
-          ))}
+    <ArtifactShell title="aneesh@portfolio:~/engineering" titleVariant="terminal">
+      <div
+        className="flex-1 px-2.5 py-2 font-mono text-[12px] leading-[1.55] text-gray-800"
+        style={{
+          backgroundImage:
+            "linear-gradient(to bottom, rgba(255,255,255,0.74), rgba(255,255,255,0.74)), repeating-linear-gradient(to bottom, #f6f8fa 0, #f6f8fa 23px, #eaecf0 24px)",
+        }}
+      >
+        <div>
+          <span className="text-gray-500">$ </span>
+          <span className="font-semibold text-blue-700">focus</span>{" "}
+          <span className="text-purple-700">--areas</span>
+        </div>
+        <div className="pl-3 text-emerald-700">platform systems</div>
+        <div className="pl-3 text-emerald-700">agentic infrastructure</div>
+
+        <div className="mt-1">
+          <span className="text-gray-500">$ </span>
+          <span className="font-semibold text-blue-700">cat</span>{" "}
+          <span className="text-purple-700">interests.txt</span>
+        </div>
+        <div className="pl-3 text-gray-600">
+          agentic engineering · ML architecture · code puzzles
         </div>
       </div>
       <SeeAlsoLinks

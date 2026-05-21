@@ -28,9 +28,17 @@ export interface InfoboxField {
   value: string;
 }
 
+export interface InfoboxSocialLink {
+  platform: "linkedin" | "github" | "youtube";
+  href: string;
+  label: string;
+}
+
 export interface Infobox {
   image?: string;
   imageCaption?: string;
+  email?: string;
+  socialLinks?: InfoboxSocialLink[];
   fields: InfoboxField[];
 }
 

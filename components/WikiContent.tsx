@@ -4,9 +4,11 @@ import {
   JSONContent,
   ContentSection,
   Infobox,
+  InfoboxSocialLink,
   ImagePosition,
 } from "@/lib/json-content";
 import { AiOutlineGlobal } from "react-icons/ai";
+import { FaGithub, FaLinkedin, FaYoutube } from "react-icons/fa";
 
 function ParsedContent({ children }: { children: React.ReactNode }) {
   const transformNode = (node: React.ReactNode): React.ReactNode => {
@@ -403,8 +405,60 @@ export function WikiInfobox({
           </div>
         ))}
       </dl>
+
+      {(infobox.email || infobox.socialLinks?.length) && (
+        <div className="border-t border-gray-300">
+          {infobox.email && (
+            <div className="grid grid-cols-[5.75rem_minmax(0,1fr)] border-b border-gray-200">
+              <div className="bg-gray-100 px-2 py-1.5 font-semibold text-gray-900">
+                Email
+              </div>
+              <div className="min-w-0 break-words px-2 py-1.5 text-gray-700">
+                <a
+                  href={`mailto:${infobox.email}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  {infobox.email}
+                </a>
+              </div>
+            </div>
+          )}
+
+          {infobox.socialLinks?.length ? (
+            <div className="flex items-center justify-center gap-3 bg-white px-2 py-2.5">
+              {infobox.socialLinks.map((link) => (
+                <a
+                  key={link.platform}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  title={link.label}
+                  className="text-gray-700 transition-colors hover:text-blue-700"
+                >
+                  <SocialIcon link={link} />
+                </a>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      )}
     </div>
   );
+}
+
+function SocialIcon({ link }: { link: InfoboxSocialLink }) {
+  const className = "h-5 w-5";
+
+  if (link.platform === "linkedin") {
+    return <FaLinkedin aria-hidden="true" className={className} />;
+  }
+
+  if (link.platform === "github") {
+    return <FaGithub aria-hidden="true" className={className} />;
+  }
+
+  return <FaYoutube aria-hidden="true" className={className} />;
 }
 
 function InfoboxValue({ value }: { value: string }) {

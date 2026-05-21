@@ -69,17 +69,19 @@ function WorkEntry({ section }: { section: ContentSection }) {
 
   return (
     <section
-      className={`grid gap-4 border-b border-gray-200 py-4 last:border-b-0 ${
+      className={`grid gap-4 py-4 ${
         section.image ? "sm:grid-cols-[minmax(0,1fr)_9rem]" : ""
       }`}
     >
       <div className="min-w-0">
-        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          <h3 className="font-semibold leading-snug text-blue-700">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-gray-300 pb-1">
+          <h3 className="font-serif text-lg font-medium leading-snug text-black">
             {section.title}
           </h3>
           {section.date && (
-            <span className="text-xs text-gray-600">{section.date}</span>
+            <span className="ml-auto text-right text-xs italic text-gray-600">
+              {section.date}
+            </span>
           )}
         </div>
 
@@ -91,14 +93,6 @@ function WorkEntry({ section }: { section: ContentSection }) {
 
         {(technologies.length > 0 || links.length > 0) && (
           <div className="mt-3 flex flex-wrap gap-1.5">
-            {technologies.map((technology) => (
-              <span
-                key={technology}
-                className="inline-flex min-h-6 items-center border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-700"
-              >
-                {technology}
-              </span>
-            ))}
             {links.map((link) => (
               <a
                 key={`${link.label}-${link.href}`}
@@ -110,6 +104,14 @@ function WorkEntry({ section }: { section: ContentSection }) {
                 <span>{link.label}</span>
                 <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
               </a>
+            ))}
+            {technologies.map((technology) => (
+              <span
+                key={technology}
+                className="inline-flex min-h-6 items-center border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-700"
+              >
+                {technology}
+              </span>
             ))}
           </div>
         )}
