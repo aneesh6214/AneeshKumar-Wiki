@@ -8,7 +8,7 @@ export enum ImagePosition {
 export interface ContentSection {
   title: string;
   date?: string;
-  description: React.ReactNode;
+  description?: React.ReactNode;
   technologies?: string;
   githubUrl?: string;
   websiteUrl?: string;
@@ -16,6 +16,7 @@ export interface ContentSection {
     src: string;
     alt: string;
     caption?: string;
+    captionUrl?: string;
     position: ImagePosition;
     link?: string;
   };
@@ -45,10 +46,11 @@ export interface JSONContent {
 
 const CONTENT_LOADERS: Record<string, () => Promise<JSONContent>> = {
   home: () => import("../content/home").then((m) => m.homeContent),
-  "industry-work": () =>
-    import("../content/industry-work").then((m) => m.industryWorkContent),
-  research: () => import("../content/research").then((m) => m.researchContent),
-  projects: () => import("../content/projects").then((m) => m.projectsContent),
+  "professional-work": () =>
+    import("../content/professional-work").then((m) => m.professionalWorkContent),
+  "independent-work": () =>
+    import("../content/independent-work").then((m) => m.independentWorkContent),
+  media: () => import("../content/media").then((m) => m.mediaContent),
   blog: () => import("../content/blog").then((m) => m.blogContent),
   contact: () => import("../content/contact").then((m) => m.contactContent),
 };

@@ -21,14 +21,14 @@ export default function SeeAlsoSection() {
           — long-form writing
         </li>
         <li>
-          <Link href="/research" className="text-blue-600 hover:underline">
-            Research
+          <Link href="/independent-work" className="text-blue-600 hover:underline">
+            Independent Work
           </Link>{" "}
-          — academic work and interpretability notes
+          — independent products and research prototypes
         </li>
         <li>
-          <Link href="/projects" className="text-blue-600 hover:underline">
-            Projects
+          <Link href="/media" className="text-blue-600 hover:underline">
+            Media
           </Link>
         </li>
         <li>

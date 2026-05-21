@@ -182,8 +182,8 @@ export { Quote };
 
 export default function WikiContent({ content }: WikiContentProps) {
   return (
-    <div className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6 pt-3">
-      <div className="flex-1 lg:w-2/3 lg:pr-3">
+    <div className="flex flex-col gap-6 px-4 pt-3 sm:px-6 lg:flex-row">
+      <div className="min-w-0 flex-1">
         <div>
           {content.disambiguation && (
             <p className="text-xs italic mb-2 text-gray-600">
@@ -200,9 +200,9 @@ export default function WikiContent({ content }: WikiContentProps) {
       </div>
 
       {content.infobox && (
-        <div className="lg:w-1/3 lg:pl-3">
+        <aside className="lg:w-80 lg:flex-shrink-0">
           <WikiInfobox infobox={content.infobox} title={content.title} />
-        </div>
+        </aside>
       )}
     </div>
   );
@@ -258,10 +258,10 @@ function WikiSection({
             id={id}
             className={
               level === 2
-                ? "text-xl font-bold"
+                ? "font-serif text-xl font-medium"
                 : level === 3
-                  ? "text-base font-semibold"
-                  : "text-sm font-medium"
+                  ? "font-serif text-base font-medium"
+                  : "font-serif text-sm font-medium"
             }
           >
             {section.title}
@@ -360,43 +360,49 @@ function WikiSection({
   );
 }
 
-function WikiInfobox({ infobox, title }: { infobox: Infobox; title: string }) {
+export function WikiInfobox({
+  infobox,
+  title,
+}: {
+  infobox: Infobox;
+  title: string;
+}) {
   return (
-    <div className="bg-gray-50 border border-gray-300 rounded p-4 sticky top-6 max-w-xs">
-      <h3 className="font-bold text-center mb-4 text-lg border-b border-gray-300 pb-2">
+    <div className="w-full max-w-xs border border-gray-400 bg-gray-50 text-[13px] lg:sticky lg:top-6">
+      <h3 className="border-b border-gray-400 bg-gray-100 px-2 py-1.5 text-center text-sm font-bold text-gray-900">
         {title}
       </h3>
 
       {infobox.image && (
-        <div className="mb-4">
+        <div className="px-2 pb-2 pt-2">
           <img
             src={infobox.image}
             alt={infobox.imageCaption || title}
-            className="w-full aspect-square object-cover border border-gray-300 rounded"
+            className="w-full border border-gray-300 object-contain"
           />
           {infobox.imageCaption && (
-            <p className="text-xs text-gray-600 mt-2 text-center italic">
+            <p className="mt-1.5 text-center text-xs italic text-gray-600">
               {infobox.imageCaption}
             </p>
           )}
         </div>
       )}
 
-      <div className="space-y-3">
+      <dl className="border-t border-gray-300">
         {infobox.fields.map((field, index) => (
           <div
             key={index}
-            className="border-b border-gray-200 pb-2 last:border-b-0"
+            className="grid grid-cols-[5.75rem_minmax(0,1fr)] border-b border-gray-200 last:border-b-0"
           >
-            <dt className="font-semibold text-sm text-gray-900 mb-1">
+            <dt className="bg-gray-100 px-2 py-1.5 font-semibold text-gray-900">
               {field.label}
             </dt>
-            <dd className="text-sm text-gray-700">
+            <dd className="min-w-0 break-words px-2 py-1.5 text-gray-700">
               <InfoboxValue value={field.value} />
             </dd>
           </div>
         ))}
-      </div>
+      </dl>
     </div>
   );
 }

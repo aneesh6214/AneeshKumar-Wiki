@@ -7,8 +7,8 @@ interface SidebarProps {
 
 export default function Sidebar({ currentPath }: SidebarProps) {
   return (
-    <aside className="w-full bg-white border-b md:border-b-0 md:border-r border-gray-200 md:w-1/5 md:min-w-[240px] md:min-h-screen md:sticky md:top-0 md:h-screen md:overflow-y-auto">
-      <div className="p-4">
+    <aside className="w-full bg-white border-b md:border-b-0 md:border-r border-gray-200 md:w-[13rem] md:min-w-[13rem] md:min-h-screen md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+      <div className="p-3">
         <div className="mb-4 hidden md:block">
           <h2 className="text-sm font-bold text-gray-900 mb-3">Navigation</h2>
         </div>

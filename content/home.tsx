@@ -1,7 +1,8 @@
 import React from "react";
 import { JSONContent } from "@/lib/json-content";
-import SpotifyNowPlaying from "@/components/SpotifyNowPlaying";
-import YouTubeLatestVideo from "@/components/YouTubeLatestVideo";
+import HomeActivityGrid from "@/components/HomeActivityGrid";
+import HomeWorkSummary from "@/components/HomeWorkSummary";
+import { aneeshKumarInfobox } from "./profile-infobox";
 
 export const homeContent: JSONContent = {
   title: "Aneesh Kumar",
@@ -10,23 +11,7 @@ export const homeContent: JSONContent = {
   url: "/",
   disambiguation:
     "This article is about the software engineer. For his technical blog, see [Aneesh Kumar (Blog)](/blog). ",
-  infobox: {
-    image: "/profile-photo.png",
-    imageCaption: "Aneesh Kumar in 2025",
-    fields: [
-      {
-        label: "Born",
-        value:
-          "Aneesh Kumar\nJune 21, 2004 (age 21)\nSan Francisco, California, U.S.",
-      },
-      { label: "Location", value: "San Francisco Bay Area" },
-      {
-        label: "Position",
-        value: "SWE Intern at [Quantifind](https://www.quantifind.com/)",
-      },
-      { label: "University", value: "San Francisco State University" },
-    ],
-  },
+  infobox: aneeshKumarInfobox,
   sections: [
     {
       title: "Overview",
@@ -39,8 +24,15 @@ export const homeContent: JSONContent = {
           behaviors presented at the 2026 [AAAI](https://en.wikipedia.org/wiki/AAAI_Conference_on_Artificial_Intelligence) [XAI4Science Workshop](https://xai4science.github.io/).
           He also works on independent software and AI projects, developing both practical systems
           to conceptual experiments.
-          <br />
-          <br />
+          <HomeWorkSummary />
+        </>
+
+      ),
+    },
+    {
+      title: "Personal Life",
+      description: (
+        <>
           Outside of professional work, Kumar founded and serves as president of the{" "}
           [Artificial Intelligence Club](https://ai-at-sfsu.vercel.app/home) at{" "}
           [San Francisco State University](https://www.sfsu.edu),
@@ -56,10 +48,7 @@ export const homeContent: JSONContent = {
       title: "",
       description: (
         <>
-          <div className="space-y-4">
-            <SpotifyNowPlaying />
-            <YouTubeLatestVideo />
-          </div>
+          <HomeActivityGrid />
         </>
       ),
     },

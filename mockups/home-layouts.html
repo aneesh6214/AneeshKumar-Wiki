@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home Page Layout Mockups</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --page: #f8f9fa;
+        --ink: #202122;
+        --muted: #54595d;
+        --line: #a2a9b1;
+        --line-soft: #c8ccd1;
+        --panel: #f8f9fa;
+        --panel-strong: #eaecf0;
+        --blue: #0645ad;
+        --blue-soft: #eaf3ff;
+        --green: #14866d;
+        --red: #b32424;
+        --gold: #9b6a00;
+        --font-sans: Arial, Helvetica, sans-serif;
+        --font-serif: Georgia, "Times New Roman", Times, serif;
+        --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      .shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 236px minmax(0, 1fr);
+        background: linear-gradient(90deg, var(--page) 0 236px, #fff 236px);
+      }
+
+      .sidebar {
+        border-right: 1px solid var(--line-soft);
+        padding: 18px 18px 28px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 26px;
+        color: var(--ink);
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--line-soft);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #fff;
+        font: 700 15px var(--font-serif);
+      }
+
+      .brand-title {
+        display: block;
+        font: 700 22px/1 var(--font-serif);
+      }
+
+      .brand-subtitle {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font: 12px/1.2 var(--font-serif);
+      }
+
+      .nav-group {
+        border-top: 1px solid var(--line-soft);
+        padding-top: 12px;
+        margin-top: 14px;
+      }
+
+      .nav-title {
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .nav-link {
+        display: block;
+        padding: 4px 0;
+        color: var(--blue);
+      }
+
+      main {
+        min-width: 0;
+      }
+
+      .topbar {
+        border-bottom: 1px solid var(--line-soft);
+        min-height: 48px;
+        padding: 8px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .search {
+        flex: 1;
+        max-width: 520px;
+        display: flex;
+        border: 1px solid var(--line);
+        background: #fff;
+        height: 32px;
+      }
+
+      .search input {
+        min-width: 0;
+        flex: 1;
+        border: 0;
+        padding: 0 10px;
+      }
+
+      .search button {
+        border: 0;
+        border-left: 1px solid var(--line);
+        padding: 0 12px;
+        background: var(--panel);
+        cursor: pointer;
+      }
+
+      .page {
+        padding: 18px 28px 52px;
+        max-width: 1280px;
+        min-width: 0;
+      }
+
+      .article-head {
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 14px;
+        min-width: 0;
+      }
+
+      h1 {
+        margin: 0 0 3px;
+        font: 400 32px/1.15 var(--font-serif);
+      }
+
+      .source-line {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 13px;
+      }
+
+      .tabs {
+        display: flex;
+        align-items: end;
+        gap: 1px;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      .tab {
+        border: 1px solid transparent;
+        border-bottom: 0;
+        background: transparent;
+        color: var(--blue);
+        padding: 8px 12px 7px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background 160ms var(--ease-out),
+          color 160ms var(--ease-out);
+      }
+
+      .tab:hover {
+        background: var(--blue-soft);
+      }
+
+      .tab:active {
+        transform: scale(0.98);
+      }
+
+      .tab[aria-selected="true"] {
+        background: #fff;
+        border-color: var(--line);
+        color: var(--ink);
+        font-weight: 700;
+        position: relative;
+        top: 1px;
+      }
+
+      .layout {
+        display: none;
+        min-width: 0;
+      }
+
+      .layout.active {
+        display: block;
+      }
+
+      .wiki-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 292px;
+        gap: 24px;
+        align-items: start;
+        min-width: 0;
+      }
+
+      .wiki-grid > * {
+        min-width: 0;
+      }
+
+      .lead {
+        margin: 0 0 14px;
+        max-width: 78ch;
+      }
+
+      .section-title {
+        border-bottom: 1px solid var(--line);
+        font: 400 22px/1.2 var(--font-serif);
+        margin: 22px 0 10px;
+        padding-bottom: 3px;
+      }
+
+      .sub-title {
+        border-bottom: 1px solid var(--line-soft);
+        font: 700 16px/1.3 var(--font-sans);
+        margin: 18px 0 8px;
+        padding-bottom: 4px;
+      }
+
+      .contents {
+        border: 1px solid var(--line-soft);
+        background: var(--panel);
+        padding: 10px 12px;
+        width: min(100%, 340px);
+        margin: 12px 0 18px;
+      }
+
+      .contents-title {
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 6px;
+      }
+
+      .contents ol {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .infobox {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        font-size: 13px;
+      }
+
+      .infobox-title {
+        background: var(--panel-strong);
+        border-bottom: 1px solid var(--line);
+        text-align: center;
+        font-weight: 700;
+        padding: 8px 10px;
+      }
+
+      .infobox img {
+        display: block;
+        width: calc(100% - 18px);
+        margin: 9px;
+        border: 1px solid var(--line-soft);
+        background: #fff;
+      }
+
+      .info-row {
+        display: grid;
+        grid-template-columns: 88px 1fr;
+        border-top: 1px solid var(--line-soft);
+      }
+
+      .info-row dt,
+      .info-row dd {
+        margin: 0;
+        padding: 7px 8px;
+      }
+
+      .info-row dt {
+        font-weight: 700;
+        background: #f1f2f4;
+      }
+
+      .portal-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+        gap: 14px;
+      }
+
+      .portal-panel {
+        border: 1px solid var(--line);
+        background: #fff;
+        min-width: 0;
+      }
+
+      .portal-title {
+        background: var(--panel-strong);
+        border-bottom: 1px solid var(--line);
+        font-weight: 700;
+        padding: 7px 10px;
+      }
+
+      .portal-body {
+        padding: 10px;
+      }
+
+      .portal-body p:first-child {
+        margin-top: 0;
+      }
+
+      .portal-body p:last-child {
+        margin-bottom: 0;
+      }
+
+      .compact-list {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .compact-list li + li {
+        margin-top: 5px;
+      }
+
+      .link-columns {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px 18px;
+      }
+
+      .link-row {
+        border-bottom: 1px solid var(--line-soft);
+        padding: 7px 0;
+      }
+
+      .link-row:last-child {
+        border-bottom: 0;
+      }
+
+      .link-row strong {
+        display: block;
+        line-height: 1.25;
+      }
+
+      .link-row span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 2px;
+      }
+
+      .status-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        border: 1px solid var(--line);
+        margin: 12px 0 18px;
+      }
+
+      .status-item {
+        padding: 9px 10px;
+        border-right: 1px solid var(--line-soft);
+        background: #fff;
+      }
+
+      .status-item:last-child {
+        border-right: 0;
+      }
+
+      .status-item b {
+        display: block;
+        font-size: 16px;
+        line-height: 1.2;
+      }
+
+      .status-item span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .directory {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .directory-box {
+        border: 1px solid var(--line);
+        background: #fff;
+        min-width: 0;
+      }
+
+      .directory-box h3 {
+        margin: 0;
+        padding: 7px 9px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel-strong);
+        font-size: 14px;
+      }
+
+      .directory-box ul {
+        margin: 0;
+        padding: 8px 9px 9px 24px;
+      }
+
+      .directory-box li + li {
+        margin-top: 4px;
+      }
+
+      .activity-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .activity {
+        border: 1px solid var(--line);
+        background: #fff;
+        display: grid;
+        grid-template-columns: 74px minmax(0, 1fr);
+        gap: 10px;
+        padding: 9px;
+      }
+
+      .activity img {
+        width: 74px;
+        height: 74px;
+        object-fit: cover;
+        border: 1px solid var(--line-soft);
+        background: var(--panel);
+      }
+
+      .activity.video img {
+        height: 52px;
+        margin-top: 7px;
+      }
+
+      .activity-label {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 2px;
+      }
+
+      .activity strong {
+        display: block;
+        line-height: 1.25;
+      }
+
+      .activity p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .timeline {
+        border-top: 1px solid var(--line);
+      }
+
+      .timeline-row {
+        display: grid;
+        grid-template-columns: 92px minmax(0, 1fr);
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .timeline-year {
+        font: 400 22px/1 var(--font-serif);
+      }
+
+      .timeline-row p {
+        margin: 4px 0 0;
+        color: var(--muted);
+      }
+
+      .quote-note {
+        border-left: 4px solid #8daedb;
+        background: #f6f8fb;
+        padding: 9px 12px;
+        margin: 12px 0;
+        color: var(--muted);
+      }
+
+      .nameplate {
+        border: 1px solid var(--line);
+        background: #fff;
+        display: grid;
+        grid-template-columns: 148px minmax(0, 1fr);
+        gap: 14px;
+        padding: 10px;
+        margin-bottom: 16px;
+      }
+
+      .nameplate img {
+        width: 148px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border: 1px solid var(--line-soft);
+      }
+
+      .nameplate h2 {
+        margin: 0 0 6px;
+        font: 400 24px/1.15 var(--font-serif);
+      }
+
+      .nameplate p {
+        margin: 0;
+      }
+
+      .role-grid {
+        display: grid;
+        grid-template-columns: 108px minmax(0, 1fr);
+        border: 1px solid var(--line);
+        font-size: 13px;
+      }
+
+      .role-grid dt,
+      .role-grid dd {
+        margin: 0;
+        padding: 7px 8px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .role-grid dt {
+        background: var(--panel-strong);
+        font-weight: 700;
+      }
+
+      .role-grid dd {
+        border-left: 1px solid var(--line-soft);
+      }
+
+      .role-grid dt:last-of-type,
+      .role-grid dd:last-of-type {
+        border-bottom: 0;
+      }
+
+      .micro-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--line);
+        font-size: 13px;
+      }
+
+      .micro-table th,
+      .micro-table td {
+        border: 1px solid var(--line);
+        padding: 7px 8px;
+        vertical-align: top;
+        text-align: left;
+      }
+
+      .micro-table th {
+        background: var(--panel-strong);
+      }
+
+      .micro-table tr:nth-child(even) td {
+        background: #fbfbfb;
+      }
+
+      @media (max-width: 980px) {
+        .shell {
+          display: block;
+          background: #fff;
+        }
+
+        .sidebar {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--line-soft);
+        }
+
+        .topbar {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .search {
+          width: 100%;
+          max-width: none;
+        }
+
+        .wiki-grid,
+        .portal-grid,
+        .directory,
+        .activity-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .infobox {
+          max-width: 420px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .page {
+          padding: 16px;
+        }
+
+        h1 {
+          font-size: 28px;
+        }
+
+        .status-strip,
+        .nameplate,
+        .activity,
+        .timeline-row {
+          grid-template-columns: 1fr;
+        }
+
+        .status-item {
+          border-right: 0;
+          border-bottom: 1px solid var(--line-soft);
+        }
+
+        .status-item:last-child {
+          border-bottom: 0;
+        }
+
+        .link-columns {
+          grid-template-columns: 1fr;
+        }
+
+        .nameplate img,
+        .activity img {
+          width: 100%;
+          max-width: 180px;
+        }
+
+        .role-grid,
+        .info-row {
+          grid-template-columns: 1fr;
+        }
+
+        .role-grid dd,
+        .info-row dd {
+          border-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="#">
+          <span class="brand-mark">W</span>
+          <span>
+            <span class="brand-title">WikipediA</span>
+            <span class="brand-subtitle">The Aneesh Encyclopedia</span>
+          </span>
+        </a>
+
+        <div class="nav-group">
+          <div class="nav-title">Navigation</div>
+          <a class="nav-link" href="#">Home</a>
+          <a class="nav-link" href="#">Industry Work</a>
+          <a class="nav-link" href="#">Research Work</a>
+          <a class="nav-link" href="#">Projects</a>
+          <a class="nav-link" href="#">Blog</a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-title">Mockup Index</div>
+          <a class="nav-link" href="#biography">Biography article</a>
+          <a class="nav-link" href="#portal">Portal article</a>
+          <a class="nav-link" href="#index">Index article</a>
+        </div>
+      </aside>
+
+      <main>
+        <div class="topbar">
+          <form class="search">
+            <input aria-label="Search" value="Aneesh Kumar" />
+            <button type="button">Search</button>
+          </form>
+          <a href="#">142 languages</a>
+        </div>
+
+        <section class="page">
+          <header class="article-head">
+            <h1>Aneesh Kumar</h1>
+            <div class="source-line">From Wikipedia, the free encyclopedia</div>
+            <nav class="tabs" aria-label="Home page mockups">
+              <button class="tab" type="button" aria-selected="true" data-layout="biography">
+                Biography article
+              </button>
+              <button class="tab" type="button" aria-selected="false" data-layout="portal">
+                Portal article
+              </button>
+              <button class="tab" type="button" aria-selected="false" data-layout="index">
+                Index article
+              </button>
+            </nav>
+          </header>
+
+          <article class="layout active" id="biography">
+            <div class="wiki-grid">
+              <div>
+                <p class="lead">
+                  <strong>Aneesh Kumar</strong> is a San Francisco based computer
+                  scientist and platform engineer at <a href="#">Quantifind</a>.
+                  His work spans AI infrastructure, independent software systems,
+                  and early research on emergent behavior in machine learning models.
+                </p>
+
+                <div class="contents">
+                  <div class="contents-title">Contents</div>
+                  <ol>
+                    <li><a href="#">Overview</a></li>
+                    <li><a href="#">Current work</a></li>
+                    <li><a href="#">Selected areas</a></li>
+                    <li><a href="#">Public activity</a></li>
+                  </ol>
+                </div>
+
+                <h2 class="section-title">Overview</h2>
+                <p>
+                  Kumar works on practical AI systems and conceptual experiments
+                  around model reasoning, memory, and identity. He is also president
+                  of the Artificial Intelligence Club at San Francisco State University
+                  and publishes educational videos on artificial intelligence.
+                </p>
+
+                <div class="status-strip">
+                  <div class="status-item"><b>Platform</b><span>current role</span></div>
+                  <div class="status-item"><b>AI systems</b><span>primary focus</span></div>
+                  <div class="status-item"><b>Research</b><span>AAAI workshop</span></div>
+                  <div class="status-item"><b>SFSU</b><span>university</span></div>
+                </div>
+
+                <h2 class="section-title">Current work</h2>
+                <table class="micro-table">
+                  <thead>
+                    <tr>
+                      <th>Area</th>
+                      <th>Current example</th>
+                      <th>Related page</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Industry</td>
+                      <td>Platform engineering for high-scale AI infrastructure</td>
+                      <td><a href="#">Industry Work</a></td>
+                    </tr>
+                    <tr>
+                      <td>Research</td>
+                      <td>Sparse-feature topology and emergence prediction</td>
+                      <td><a href="#">Research Work</a></td>
+                    </tr>
+                    <tr>
+                      <td>Projects</td>
+                      <td>PaperGrader, agent identity experiments, browser tooling</td>
+                      <td><a href="#">Projects</a></td>
+                    </tr>
+                    <tr>
+                      <td>Teaching</td>
+                      <td>AI Club talks and educational YouTube explainers</td>
+                      <td><a href="#">Blog</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h2 class="section-title">Public activity</h2>
+                <div class="activity-grid">
+                  <a class="activity" href="#">
+                    <img src="../public/placeholder.svg" alt="Album cover placeholder" />
+                    <span>
+                      <span class="activity-label">Recently played</span>
+                      <strong>Track title</strong>
+                      <p>Artist name, album title</p>
+                    </span>
+                  </a>
+                  <a class="activity video" href="#">
+                    <img src="../public/placeholder.jpg" alt="Video thumbnail placeholder" />
+                    <span>
+                      <span class="activity-label">Latest video</span>
+                      <strong>How AI systems reason with memory</strong>
+                      <p>Educational video, current channel update</p>
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              <aside class="infobox">
+                <div class="infobox-title">Aneesh Kumar</div>
+                <img src="../public/profile-photo.png" alt="Aneesh Kumar" />
+                <dl>
+                  <div class="info-row">
+                    <dt>Born</dt>
+                    <dd>June 21, 2004<br />San Francisco, California</dd>
+                  </div>
+                  <div class="info-row">
+                    <dt>Location</dt>
+                    <dd>San Francisco Bay Area</dd>
+                  </div>
+                  <div class="info-row">
+                    <dt>Position</dt>
+                    <dd>SWE Intern at Quantifind</dd>
+                  </div>
+                  <div class="info-row">
+                    <dt>University</dt>
+                    <dd>San Francisco State University</dd>
+                  </div>
+                </dl>
+              </aside>
+            </div>
+          </article>
+
+          <article class="layout" id="portal">
+            <p class="lead">
+              <strong>Aneesh Kumar</strong> is a software engineer focused on AI
+              systems, infrastructure, research, and education.
+            </p>
+
+            <div class="portal-grid">
+              <section class="portal-panel">
+                <h2 class="portal-title">About</h2>
+                <div class="portal-body">
+                  <div class="nameplate">
+                    <img src="../public/profile-photo.png" alt="Aneesh Kumar" />
+                    <div>
+                      <h2>Aneesh Kumar</h2>
+                      <p>
+                        Platform engineer and computer science student working on AI
+                        infrastructure, agent systems, and learning tools.
+                      </p>
+                      <div class="quote-note">
+                        San Francisco Bay Area - Quantifind - San Francisco State University
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 class="sub-title">Selected areas</h3>
+                  <div class="link-columns">
+                    <div class="link-row">
+                      <strong><a href="#">AI infrastructure</a></strong>
+                      <span>Production systems, APIs, data operations</span>
+                    </div>
+                    <div class="link-row">
+                      <strong><a href="#">AI research</a></strong>
+                      <span>Emergence, sparse features, interpretability</span>
+                    </div>
+                    <div class="link-row">
+                      <strong><a href="#">Independent software</a></strong>
+                      <span>Paper review, browser agents, ML models</span>
+                    </div>
+                    <div class="link-row">
+                      <strong><a href="#">Education</a></strong>
+                      <span>AI Club, talks, YouTube videos</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="portal-panel">
+                <h2 class="portal-title">At a glance</h2>
+                <div class="portal-body">
+                  <dl class="role-grid">
+                    <dt>Role</dt>
+                    <dd>Platform Engineering Intern</dd>
+                    <dt>Field</dt>
+                    <dd>Artificial intelligence and software systems</dd>
+                    <dt>School</dt>
+                    <dd>San Francisco State University</dd>
+                    <dt>Organization</dt>
+                    <dd>Artificial Intelligence Club</dd>
+                  </dl>
+                </div>
+              </section>
+
+              <section class="portal-panel">
+                <h2 class="portal-title">Featured pages</h2>
+                <div class="portal-body">
+                  <ul class="compact-list">
+                    <li><a href="#">Projects</a> - compact catalog of software and AI work</li>
+                    <li><a href="#">Research Work</a> - papers, reports, and technical study</li>
+                    <li><a href="#">Industry Work</a> - professional engineering experience</li>
+                    <li><a href="#">Blog</a> - technical writing and notes</li>
+                  </ul>
+                </div>
+              </section>
+
+              <section class="portal-panel">
+                <h2 class="portal-title">Now</h2>
+                <div class="portal-body">
+                  <a class="activity" href="#">
+                    <img src="../public/placeholder.svg" alt="Album cover placeholder" />
+                    <span>
+                      <span class="activity-label">Recently played</span>
+                      <strong>Track title</strong>
+                      <p>Artist name</p>
+                    </span>
+                  </a>
+                  <div style="height: 10px"></div>
+                  <a class="activity video" href="#">
+                    <img src="../public/placeholder.jpg" alt="Video thumbnail placeholder" />
+                    <span>
+                      <span class="activity-label">Latest video</span>
+                      <strong>AI systems and memory</strong>
+                      <p>Recent upload</p>
+                    </span>
+                  </a>
+                </div>
+              </section>
+            </div>
+          </article>
+
+          <article class="layout" id="index">
+            <div class="wiki-grid">
+              <div>
+                <p class="lead">
+                  This index article summarizes Aneesh Kumar's public work and
+                  routes readers to the more specific articles in the encyclopedia.
+                </p>
+
+                <h2 class="section-title">Directory</h2>
+                <div class="directory">
+                  <section class="directory-box">
+                    <h3>Work</h3>
+                    <ul>
+                      <li><a href="#">Quantifind platform engineering</a></li>
+                      <li><a href="#">Oracle software engineering internship</a></li>
+                      <li><a href="#">Production infrastructure</a></li>
+                    </ul>
+                  </section>
+                  <section class="directory-box">
+                    <h3>Research</h3>
+                    <ul>
+                      <li><a href="#">Sparse feature topology</a></li>
+                      <li><a href="#">BTSP review</a></li>
+                      <li><a href="#">Emergent behavior in models</a></li>
+                    </ul>
+                  </section>
+                  <section class="directory-box">
+                    <h3>Projects</h3>
+                    <ul>
+                      <li><a href="#">PaperGrader</a></li>
+                      <li><a href="#">The Emergent Machine</a></li>
+                      <li><a href="#">Browser automation tools</a></li>
+                    </ul>
+                  </section>
+                </div>
+
+                <h2 class="section-title">Timeline</h2>
+                <div class="timeline">
+                  <div class="timeline-row">
+                    <div class="timeline-year">2026</div>
+                    <div>
+                      <strong>AAAI XAI4Science workshop and PaperGrader development</strong>
+                      <p>Research publication and academic review tooling.</p>
+                    </div>
+                  </div>
+                  <div class="timeline-row">
+                    <div class="timeline-year">2025</div>
+                    <div>
+                      <strong>Quantifind platform engineering and BTSP report</strong>
+                      <p>Production systems work alongside neuroscience and AI study.</p>
+                    </div>
+                  </div>
+                  <div class="timeline-row">
+                    <div class="timeline-year">2024</div>
+                    <div>
+                      <strong>Oracle internship and early agent experiments</strong>
+                      <p>Full-stack cloud work and independent AI systems.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <h2 class="section-title">Live activity</h2>
+                <div class="activity-grid">
+                  <a class="activity" href="#">
+                    <img src="../public/placeholder.svg" alt="Album cover placeholder" />
+                    <span>
+                      <span class="activity-label">Music</span>
+                      <strong>Recently played track</strong>
+                      <p>Spotify activity module</p>
+                    </span>
+                  </a>
+                  <a class="activity video" href="#">
+                    <img src="../public/placeholder.jpg" alt="Video thumbnail placeholder" />
+                    <span>
+                      <span class="activity-label">Video</span>
+                      <strong>Latest AI explainer</strong>
+                      <p>YouTube activity module</p>
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              <aside class="infobox">
+                <div class="infobox-title">Aneesh Kumar</div>
+                <img src="../public/profile-photo.png" alt="Aneesh Kumar" />
+                <dl>
+                  <div class="info-row">
+                    <dt>Known for</dt>
+                    <dd>AI systems, infrastructure, research, education</dd>
+                  </div>
+                  <div class="info-row">
+                    <dt>Pages</dt>
+                    <dd>Industry Work<br />Research Work<br />Projects<br />Blog</dd>
+                  </div>
+                  <div class="info-row">
+                    <dt>Current</dt>
+                    <dd>Platform Engineering Intern at Quantifind</dd>
+                  </div>
+                </dl>
+              </aside>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const tabs = document.querySelectorAll(".tab");
+      const layouts = document.querySelectorAll(".layout");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const target = tab.dataset.layout;
+
+          tabs.forEach((item) => {
+            item.setAttribute("aria-selected", String(item === tab));
+          });
+
+          layouts.forEach((layout) => {
+            layout.classList.toggle("active", layout.id === target);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

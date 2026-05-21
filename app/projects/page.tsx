@@ -1,15 +1,5 @@
-import PageLayout from "@/components/PageLayout";
-import ArticleHeader from "@/components/ArticleHeader";
-import WikiContent from "@/components/WikiContent";
-import { getJSONContent } from "@/lib/json-content";
+import { redirect } from "next/navigation";
 
 export default async function ProjectsPage() {
-  const content = await getJSONContent("projects");
-
-  return (
-    <PageLayout currentPath="/projects">
-      <ArticleHeader title={content.title} />
-      <WikiContent content={content} />
-    </PageLayout>
-  );
+  redirect("/independent-work");
 }
