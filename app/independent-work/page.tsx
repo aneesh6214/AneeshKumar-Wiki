@@ -7,7 +7,7 @@ export default async function IndependentWorkPage() {
   const content = await getJSONContent("independent-work");
 
   return (
-    <PageLayout currentPath="/independent-work">
+    <PageLayout currentPath="/independent-work" content={content}>
       <ArticleHeader title={content.title} />
       <WorkCatalogueContent content={content} />
     </PageLayout>

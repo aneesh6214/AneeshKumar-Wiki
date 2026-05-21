@@ -1,7 +1,9 @@
-import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import { ContentSection, JSONContent } from "@/lib/json-content";
+import { siteContent } from "@/content/site";
+import { ContentSection, JSONContent, sectionId } from "@/lib/json-content";
+import { InlineMarkdownText } from "./InlineContent";
+import { WikiExternalLinkBadge, WikiTag } from "./WikiPrimitives";
 import { WikiInfobox } from "./WikiContent";
 
 interface DossierContentProps {
@@ -23,28 +25,6 @@ type TechnologyPlacement =
   | "inline-role"
   | "logo-panel"
   | "metadata-line";
-
-function parseInlineLinks(text: string): React.ReactNode {
-  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  const parts = text.split(linkRegex);
-
-  return parts.map((part, index) => {
-    if (index % 3 === 0) {
-      return part;
-    }
-
-    if (index % 3 === 1) {
-      const url = parts[index + 1];
-      return (
-        <Link key={`${part}-${index}`} href={url} className="text-blue-600 hover:underline">
-          {part}
-        </Link>
-      );
-    }
-
-    return null;
-  });
-}
 
 function collectTextUntilBreak(
   node: React.ReactNode,
@@ -99,13 +79,6 @@ function flattenSections(sections: ContentSection[], depth = 0): DossierRecord[]
     { ...section, depth },
     ...(section.subsections ? flattenSections(section.subsections, depth + 1) : []),
   ]);
-}
-
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 function pageKind(content: JSONContent): string {
@@ -231,7 +204,7 @@ function DossierRecordItem({
 
   return (
     <section
-      id={slugify(record.title)}
+      id={sectionId(record)}
       className={`grid gap-4 border-b border-gray-200 py-4 last:border-b-0 ${
         record.image ? "sm:grid-cols-[minmax(0,1fr)_9rem]" : ""
       }`}
@@ -277,23 +250,14 @@ function DossierRecordItem({
         {(technologies.length > 0 || links.length > 0) && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {technologies.map((technology) => (
-              <span
-                key={technology}
-                className="inline-flex min-h-6 items-center border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-700"
-              >
-                {technology}
-              </span>
+              <WikiTag key={technology}>{technology}</WikiTag>
             ))}
             {links.map((link) => (
-              <a
+              <WikiExternalLinkBadge
                 key={`${link.label}-${link.href}`}
                 href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-6 items-center border border-gray-300 bg-gray-50 px-2 py-0.5 text-xs text-blue-700 hover:bg-blue-50 hover:no-underline"
-              >
-                {link.label}
-              </a>
+                label={link.label}
+              />
             ))}
           </div>
         )}
@@ -359,12 +323,7 @@ function DossierRecordItem({
       {technologyPlacement === "full-row" && roleTechnologies.length > 0 && (
         <div className="flex flex-wrap gap-1.5 sm:col-span-2">
           {roleTechnologies.map((technology) => (
-            <span
-              key={technology}
-              className="inline-flex min-h-6 items-center border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-700"
-            >
-              {technology}
-            </span>
+            <WikiTag key={technology}>{technology}</WikiTag>
           ))}
         </div>
       )}
@@ -388,7 +347,7 @@ function RoleTimeline({
 
         return (
           <section
-            key={role.title}
+            key={sectionId(role)}
             className="grid grid-cols-[1rem_minmax(0,1fr)] gap-x-3"
           >
             <div className="relative flex justify-center">
@@ -429,12 +388,7 @@ function RoleTimeline({
               {showTechnologies && technologies.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {technologies.map((technology) => (
-                    <span
-                      key={technology}
-                      className="inline-flex min-h-6 items-center border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-700"
-                    >
-                      {technology}
-                    </span>
+                    <WikiTag key={technology}>{technology}</WikiTag>
                   ))}
                 </div>
               )}
@@ -475,7 +429,7 @@ export default function DossierContent({
       <div className="min-w-0 flex-1">
         {showDisambiguation && content.disambiguation && (
           <p className="mb-3 text-xs italic text-gray-600">
-            {parseInlineLinks(content.disambiguation)}
+            <InlineMarkdownText text={content.disambiguation} />
           </p>
         )}
 
@@ -501,7 +455,7 @@ export default function DossierContent({
         <div className={embedded ? "" : "border-t border-gray-300"}>
           {records.map((record) => (
             <DossierRecordItem
-              key={`${record.depth}-${record.title}`}
+              key={`${record.depth}-${sectionId(record)}`}
               content={content}
               record={record}
               technologyPlacement={technologyPlacement}
@@ -514,7 +468,11 @@ export default function DossierContent({
         <aside className="lg:w-80 lg:flex-shrink-0">
           <WikiInfobox
             infobox={content.infobox}
-            title={sideInfoboxTitle || content.title}
+            title={
+              sideInfoboxTitle ||
+              content.infoboxTitle ||
+              siteContent.infobox.defaultTitle
+            }
           />
         </aside>
       ) : (

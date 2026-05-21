@@ -6,8 +6,13 @@ export enum ImagePosition {
 }
 
 export interface ContentSection {
+  id?: string;
   title: string;
+  navLabel?: string;
+  group?: string;
+  hideFromArticleNav?: boolean;
   date?: string;
+  venue?: string;
   description?: React.ReactNode;
   technologies?: string;
   githubUrl?: string;
@@ -49,7 +54,14 @@ export interface JSONContent {
   url: string;
   disambiguation?: string;
   infobox?: Infobox;
+  infoboxTitle?: string;
   sections: ContentSection[];
+}
+
+export interface ArticleNavItem {
+  href: string;
+  label: string;
+  depth: number;
 }
 
 const CONTENT_LOADERS: Record<string, () => Promise<JSONContent>> = {
@@ -62,6 +74,46 @@ const CONTENT_LOADERS: Record<string, () => Promise<JSONContent>> = {
   blog: () => import("../content/blog").then((m) => m.blogContent),
   contact: () => import("../content/contact").then((m) => m.contactContent),
 };
+
+export function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export function sectionId(section: ContentSection): string {
+  return section.id || slugify(section.title);
+}
+
+export function getArticleNavigation(
+  content: JSONContent,
+  maxDepth = 1,
+): ArticleNavItem[] {
+  const links: ArticleNavItem[] = [];
+
+  function visit(sections: ContentSection[], depth: number) {
+    if (depth > maxDepth) return;
+
+    for (const section of sections) {
+      const hasVisibleTitle = section.title.trim().length > 0;
+      if (!section.hideFromArticleNav && hasVisibleTitle) {
+        links.push({
+          href: `#${sectionId(section)}`,
+          label: section.navLabel || section.title,
+          depth,
+        });
+      }
+
+      if (section.subsections) {
+        visit(section.subsections, depth + 1);
+      }
+    }
+  }
+
+  visit(content.sections, 0);
+  return links;
+}
 
 export async function getJSONContent(slug: string): Promise<JSONContent> {
   const loader = CONTENT_LOADERS[slug];
@@ -148,10 +200,14 @@ export function extractSections(
       const fullTitle = parentTitle
         ? `${parentTitle} > ${section.title}`
         : section.title;
-      const id = section.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
+      if (section.title.trim().length === 0) {
+        if (section.subsections) {
+          processSections(section.subsections, parentTitle);
+        }
+        return;
+      }
+
+      const id = sectionId(section);
 
       let sectionContent = reactNodeToText(section.description) + " ";
       if (section.technologies) {

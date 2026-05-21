@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React from "react";
 import {
   JSONContent,
@@ -6,27 +5,16 @@ import {
   Infobox,
   InfoboxSocialLink,
   ImagePosition,
+  sectionId,
 } from "@/lib/json-content";
+import { siteContent } from "@/content/site";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { FaGithub, FaLinkedin, FaYoutube } from "react-icons/fa";
-
-function ParsedContent({ children }: { children: React.ReactNode }) {
-  const transformNode = (node: React.ReactNode): React.ReactNode => {
-    if (typeof node === "string") {
-      return parseJSXText(node);
-    }
-
-    if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
-      const newChildren =
-        React.Children.map(node.props.children, transformNode) || [];
-      return React.cloneElement(node, node.props, ...newChildren);
-    }
-
-    return node;
-  };
-
-  return transformNode(children);
-}
+import {
+  InlineMarkdownText,
+  InlineMarkdownWithBreaks,
+  ParsedContent,
+} from "./InlineContent";
 
 function Quote({ children }: { children: React.ReactNode }) {
   return (
@@ -34,94 +22,6 @@ function Quote({ children }: { children: React.ReactNode }) {
       <ParsedContent>{children}</ParsedContent>
     </blockquote>
   );
-}
-
-function parseJSXText(text: string): React.ReactNode {
-  if (!text) return text;
-
-  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  const linkParts = text.split(linkRegex);
-
-  const processedElements: React.ReactNode[] = [];
-
-  for (let i = 0; i < linkParts.length; i++) {
-    const part = linkParts[i];
-
-    if (i % 3 === 0) {
-      if (part) {
-        processedElements.push(parseJSXTags(part, `text-${i}`));
-      }
-    } else if (i % 3 === 1) {
-      const linkText = part;
-      const linkUrl = linkParts[i + 1];
-      processedElements.push(
-        <Link
-          key={`link-${i}`}
-          href={linkUrl}
-          className="text-blue-600 hover:underline"
-        >
-          {parseJSXTags(linkText, `link-text-${i}`)}
-        </Link>,
-      );
-    }
-  }
-
-  return processedElements.length === 1
-    ? processedElements[0]
-    : processedElements;
-}
-
-function parseJSXTags(text: string, keyPrefix: string): React.ReactNode {
-  if (!text) return text;
-
-  const parts = text.split(/(<\/?(?:strong|em|br)\s*\/?>)/g);
-
-  const elements: React.ReactNode[] = [];
-  let currentIndex = 0;
-
-  while (currentIndex < parts.length) {
-    const part = parts[currentIndex];
-
-    if (part === "<strong>") {
-      let content = "";
-      let nextIndex = currentIndex + 1;
-      while (nextIndex < parts.length && parts[nextIndex] !== "</strong>") {
-        content += parts[nextIndex];
-        nextIndex++;
-      }
-      elements.push(
-        <strong key={`${keyPrefix}-strong-${currentIndex}`}>
-          {parseJSXTags(content, `${keyPrefix}-nested-${currentIndex}`)}
-        </strong>,
-      );
-      currentIndex = nextIndex + 1;
-    } else if (part === "<em>") {
-      let content = "";
-      let nextIndex = currentIndex + 1;
-      while (nextIndex < parts.length && parts[nextIndex] !== "</em>") {
-        content += parts[nextIndex];
-        nextIndex++;
-      }
-      elements.push(
-        <em key={`${keyPrefix}-em-${currentIndex}`}>
-          {parseJSXTags(content, `${keyPrefix}-nested-${currentIndex}`)}
-        </em>,
-      );
-      currentIndex = nextIndex + 1;
-    } else if (part === "<br>" || part === "<br />") {
-      elements.push(<br key={`${keyPrefix}-br-${currentIndex}`} />);
-      currentIndex++;
-    } else if (part === "</strong>" || part === "</em>") {
-      currentIndex++;
-    } else if (part) {
-      elements.push(part);
-      currentIndex++;
-    } else {
-      currentIndex++;
-    }
-  }
-
-  return elements.length === 1 ? elements[0] : elements;
 }
 
 interface SectionImageProps {
@@ -189,7 +89,7 @@ export default function WikiContent({ content }: WikiContentProps) {
         <div>
           {content.disambiguation && (
             <p className="text-xs italic mb-2 text-gray-600">
-              <DisambiguationText text={content.disambiguation} />
+              <InlineMarkdownText text={content.disambiguation} />
             </p>
           )}
 
@@ -203,37 +103,15 @@ export default function WikiContent({ content }: WikiContentProps) {
 
       {content.infobox && (
         <aside className="lg:w-80 lg:flex-shrink-0">
-          <WikiInfobox infobox={content.infobox} title={content.title} />
+          <WikiInfobox
+            infobox={content.infobox}
+            title={
+              content.infoboxTitle || content.title || siteContent.infobox.defaultTitle
+            }
+          />
         </aside>
       )}
     </div>
-  );
-}
-
-function DisambiguationText({ text }: { text: string }) {
-  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  const parts = text.split(linkRegex);
-
-  return (
-    <>
-      {parts.map((part, index) => {
-        if (index % 3 === 0) {
-          return part;
-        } else if (index % 3 === 1) {
-          const url = parts[index + 1];
-          return (
-            <Link
-              key={index}
-              href={url}
-              className="text-blue-600 hover:underline"
-            >
-              {part}
-            </Link>
-          );
-        }
-        return null;
-      })}
-    </>
   );
 }
 
@@ -245,10 +123,7 @@ function WikiSection({
   level: number;
 }) {
   const HeadingTag = `h${level}` as React.ElementType;
-  const id = section.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+  const id = sectionId(section);
 
   return (
     <div className="mb-4 first:mt-0">
@@ -462,33 +337,5 @@ function SocialIcon({ link }: { link: InfoboxSocialLink }) {
 }
 
 function InfoboxValue({ value }: { value: string }) {
-  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  const parts = value.split(linkRegex);
-
-  return (
-    <>
-      {parts.map((part, index) => {
-        if (index % 3 === 0) {
-          return part.split("\n").map((line, lineIndex, lines) => (
-            <span key={`${index}-${lineIndex}`}>
-              {parseJSXText(line)}
-              {lineIndex < lines.length - 1 && <br />}
-            </span>
-          ));
-        } else if (index % 3 === 1) {
-          const url = parts[index + 1];
-          return (
-            <Link
-              key={index}
-              href={url}
-              className="text-blue-600 hover:underline"
-            >
-              {parseJSXText(part)}
-            </Link>
-          );
-        }
-        return null;
-      })}
-    </>
-  );
+  return <InlineMarkdownWithBreaks text={value} />;
 }

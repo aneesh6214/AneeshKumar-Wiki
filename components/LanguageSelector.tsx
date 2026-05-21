@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Languages } from "lucide-react";
+import { siteContent } from "@/content/site";
 
 export default function LanguageSelector() {
   const [languagesOpen, setLanguagesOpen] = useState(false);
@@ -30,7 +31,7 @@ export default function LanguageSelector() {
         aria-expanded={languagesOpen}
       >
         <Languages className="h-4 w-4" aria-hidden="true" />
-        <span>142 languages</span>
+        <span>{siteContent.languageSelector.label}</span>
         <ChevronDown
           className={`h-3.5 w-3.5 transition-transform duration-150 ease-out ${
             languagesOpen ? "rotate-180" : ""
@@ -42,10 +43,10 @@ export default function LanguageSelector() {
       {languagesOpen && (
         <div className="absolute right-0 top-full z-50 mt-2 w-64 border border-[#a2a9b1] bg-white shadow-[0_8px_18px_rgba(0,0,0,0.12)]">
           <div className="border-b border-[#eaecf0] bg-[#f8f9fa] px-3 py-1.5 text-xs font-medium text-gray-600">
-            Languages
+            {siteContent.languageSelector.menuTitle}
           </div>
           <div className="px-4 py-3 text-center text-sm text-gray-600">
-            Sorry! This feature has not been implemented yet.
+            {siteContent.languageSelector.unavailableMessage}
           </div>
         </div>
       )}

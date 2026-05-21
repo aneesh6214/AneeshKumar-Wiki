@@ -3,6 +3,7 @@
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { siteContent } from "@/content/site";
 import { SearchResult } from "@/lib/search-json";
 import { sendBeacon } from "@/lib/beacon";
 
@@ -147,7 +148,7 @@ export default function SearchNavigation() {
         >
           <div className="flex items-center justify-between border-b border-[#a2a9b1] bg-[#f8f9fa] px-3 py-2">
             <div className="font-serif text-base font-medium text-[#202122]">
-              Search Kumarpedia
+              {siteContent.search.dialogTitle}
             </div>
             <button
               type="button"
@@ -166,10 +167,10 @@ export default function SearchNavigation() {
                   className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
                   aria-hidden="true"
                 />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Search this site"
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    placeholder={siteContent.search.triggerLabel}
                   value={searchValue}
                   onChange={handleSearchChange}
                   onKeyDown={handleKeyDown}
@@ -277,7 +278,7 @@ export default function SearchNavigation() {
           className="h-4 w-4 shrink-0 text-gray-500"
           aria-hidden="true"
         />
-        <span className="truncate">Search this site</span>
+        <span className="truncate">{siteContent.search.triggerLabel}</span>
       </button>
       {searchOverlay ? createPortal(searchOverlay, document.body) : null}
     </>

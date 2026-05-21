@@ -17,6 +17,7 @@ export const mediaContent: JSONContent = {
   disambiguation:
     "This article covers public communication and educational media by [Aneesh Kumar](/). For independent software and research projects, see [Aneesh Kumar (Independent Work)](/independent-work).",
   infobox: aneeshKumarInfobox,
+  infoboxTitle: "Aneesh Kumar",
   sections: [
     {
       title: "AI Club Lectures",

@@ -1,12 +1,19 @@
-const bannerItems = Array.from({ length: 12 }, (_, index) => index);
+import { siteContent } from "@/content/site";
+
+const bannerItems = Array.from(
+  { length: siteContent.banner.repeatCount },
+  (_, index) => index,
+);
 
 function BannerTrack() {
   return (
     <div className="flex shrink-0 items-center">
       {bannerItems.map((item) => (
         <span key={item} className="flex items-center whitespace-nowrap">
-          <span>Aneesh Kumar Rocks</span>
-          <span className="px-3 text-gray-500">·</span>
+          <span>{siteContent.banner.text}</span>
+          <span className="px-3 text-gray-500">
+            {siteContent.banner.separator}
+          </span>
         </span>
       ))}
     </div>

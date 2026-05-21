@@ -17,6 +17,7 @@ export const independentWorkContent: JSONContent = {
   disambiguation:
     "This article covers independent technical work by [Aneesh Kumar](/). For employment and publications, see [Aneesh Kumar (Professional Work)](/professional-work).",
   infobox: aneeshKumarInfobox,
+  infoboxTitle: "Aneesh Kumar",
   sections: [
     {
       title: "LitReviewer",

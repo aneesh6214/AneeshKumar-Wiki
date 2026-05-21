@@ -1,28 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import { ContentSection, JSONContent } from "@/lib/json-content";
+import { ContentSection, JSONContent, sectionId } from "@/lib/json-content";
+import { siteContent } from "@/content/site";
+import { InlineMarkdownText } from "./InlineContent";
 import { WikiInfobox } from "./WikiContent";
-import { ExternalLink } from "lucide-react";
-
-function parseInlineLinks(text: string): React.ReactNode {
-  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  const parts = text.split(linkRegex);
-
-  return parts.map((part, index) => {
-    if (index % 3 === 0) return part;
-    if (index % 3 === 1) {
-      const url = parts[index + 1];
-      return (
-        <Link key={`${part}-${index}`} href={url} className="text-blue-600 hover:underline">
-          {part}
-        </Link>
-      );
-    }
-
-    return null;
-  });
-}
+import { WikiExternalLinkBadge, WikiTag } from "./WikiPrimitives";
 
 function splitTechnologies(value?: string): string[] {
   if (!value) return [];
@@ -34,7 +15,9 @@ function splitTechnologies(value?: string): string[] {
     .slice(0, 8);
 }
 
-function entryLinks(section: ContentSection): Array<{ href: string; label: string }> {
+function entryLinks(
+  section: ContentSection,
+): Array<{ href: string; label: string }> {
   const links: Array<{ href: string; label: string }> = [];
 
   if (section.websiteUrl) links.push({ href: section.websiteUrl, label: "Website" });
@@ -42,13 +25,6 @@ function entryLinks(section: ContentSection): Array<{ href: string; label: strin
   if (section.image?.link) links.push({ href: section.image.link, label: "View" });
 
   return links;
-}
-
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 function EntryImage({ section }: { section: ContentSection }) {
@@ -76,7 +52,7 @@ function WorkEntry({ section }: { section: ContentSection }) {
 
   return (
     <section
-      id={slugify(section.title)}
+      id={sectionId(section)}
       className={`grid gap-4 py-4 ${
         section.image ? "sm:grid-cols-[minmax(0,1fr)_9rem]" : ""
       }`}
@@ -102,24 +78,14 @@ function WorkEntry({ section }: { section: ContentSection }) {
         {(technologies.length > 0 || links.length > 0) && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {links.map((link) => (
-              <a
+              <WikiExternalLinkBadge
                 key={`${link.label}-${link.href}`}
                 href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-6 items-center gap-1 border border-gray-300 bg-gray-50 px-2 py-0.5 text-xs text-blue-700 hover:bg-blue-50 hover:no-underline"
-              >
-                <span>{link.label}</span>
-                <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
-              </a>
+                label={link.label}
+              />
             ))}
             {technologies.map((technology) => (
-              <span
-                key={technology}
-                className="inline-flex min-h-6 items-center border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-700"
-              >
-                {technology}
-              </span>
+              <WikiTag key={technology}>{technology}</WikiTag>
             ))}
           </div>
         )}
@@ -136,20 +102,23 @@ export default function WorkCatalogueContent({ content }: { content: JSONContent
       <div className="min-w-0 flex-1">
         {content.disambiguation && (
           <p className="mb-3 text-xs italic text-gray-600">
-            {parseInlineLinks(content.disambiguation)}
+            <InlineMarkdownText text={content.disambiguation} />
           </p>
         )}
 
         <div>
           {content.sections.map((section) => (
-            <WorkEntry key={section.title} section={section} />
+            <WorkEntry key={sectionId(section)} section={section} />
           ))}
         </div>
       </div>
 
       {content.infobox && (
         <aside className="lg:w-80 lg:flex-shrink-0">
-          <WikiInfobox infobox={content.infobox} title="Aneesh Kumar" />
+          <WikiInfobox
+            infobox={content.infobox}
+            title={content.infoboxTitle || siteContent.infobox.defaultTitle}
+          />
         </aside>
       )}
     </div>

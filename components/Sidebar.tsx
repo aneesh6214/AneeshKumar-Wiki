@@ -1,56 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { navigationItems } from "@/lib/navigation";
+import { siteContent } from "@/content/site";
+import { ArticleNavItem } from "@/lib/json-content";
 import SearchNavigation from "./SearchNavigation";
 
 interface SidebarProps {
   currentPath: string;
+  articleLinks: ArticleNavItem[];
 }
 
-type ArticleLink = {
-  href: string;
-  label: string;
-  depth?: number;
-};
-
-const articleLinksByPath: Record<string, ArticleLink[]> = {
-  "/": [
-    { href: "#overview", label: "Overview" },
-    { href: "#personal-life", label: "Personal Life" },
-  ],
-  "/professional-work": [
-    { href: "#employment", label: "Employment" },
-    { href: "#quantifind", label: "Quantifind", depth: 1 },
-    { href: "#oracle", label: "Oracle", depth: 1 },
-    { href: "#publications", label: "Publications" },
-    {
-      href: "#exploring-sparse-feature-topology-as-a-predictor-for-emergence",
-      label: "Sparse Feature Topology",
-      depth: 1,
-    },
-  ],
-  "/independent-work": [
-    { href: "#litreviewer", label: "LitReviewer" },
-    { href: "#csc648-showcase-team-lead", label: "CSC648 Showcase" },
-    { href: "#suri-concept-formation-model", label: "SURI Concept Formation" },
-    {
-      href: "#biological-timescale-synaptic-plasticity",
-      label: "BTSP Writeup",
-    },
-  ],
-  "/media": [
-    { href: "#ai-club-lectures", label: "AI Club Lectures" },
-    { href: "#ai-architecture-series", label: "AI Architecture Series" },
-  ],
-  "/blog": [
-    { href: "#ask-a-question", label: "Ask a Question" },
-    { href: "#answered-questions", label: "Answered Questions" },
-  ],
-};
-
-export default function Sidebar({ currentPath }: SidebarProps) {
-  const articleLinks = articleLinksByPath[currentPath] || [];
-
+export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
+  const sidebarImage = siteContent.sidebar.decorativeImage;
   return (
     <aside className="w-full border-b border-[#a2a9b1] bg-[#f8f9fa] md:fixed md:left-0 md:top-8 md:flex md:h-[calc(100vh-2rem)] md:min-h-[calc(100vh-2rem)] md:w-[15rem] md:min-w-[15rem] md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
       <div className="px-3 py-3">
@@ -108,10 +69,10 @@ export default function Sidebar({ currentPath }: SidebarProps) {
       <div className="mt-auto hidden px-3 pb-3 md:block" aria-hidden="true">
         <div className="inline-block border border-[#a2a9b1] bg-white p-1">
           <Image
-            src="/aang.jpg"
+            src={sidebarImage.src}
             alt=""
-            width={333}
-            height={250}
+            width={sidebarImage.width}
+            height={sidebarImage.height}
             className="h-auto w-24 object-cover"
           />
         </div>

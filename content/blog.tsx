@@ -1,19 +1,25 @@
-import { BlogContent } from "@/lib/blog-content";
 import { JSONContent } from "@/lib/json-content";
-import { manifestoPost } from "./blog/manifesto";
-
-export const blogPosts: BlogContent = {
-  posts: [manifestoPost],
-};
+import { aneeshKumarInfobox } from "./profile-infobox";
 
 export const blogContent: JSONContent = {
-  title: "Blog",
-  subtitle: "Technical Writing and Thoughts",
-  description: "Personal blog and technical articles",
+  title: "Ask Me Anything",
+  subtitle: "Anonymous questions and published answers",
+  description: "Anonymous questions and published answers",
   url: "/blog",
-  sections: blogPosts.posts.map((post) => ({
-    title: post.title,
-    date: post.date,
-    description: post.searchableContent || `${post.topics.join(", ")} - ${post.date}`,
-  })),
+  infobox: aneeshKumarInfobox,
+  infoboxTitle: "Aneesh Kumar",
+  sections: [
+    {
+      id: "ask-a-question",
+      title: "Ask a Question",
+      description:
+        "Anonymous question submission for topics related to this site.",
+    },
+    {
+      id: "answered-questions",
+      title: "Answered Questions",
+      description:
+        "Published question and answer archive sorted by recency.",
+    },
+  ],
 };

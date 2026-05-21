@@ -1,4 +1,5 @@
 import LanguageSelector from "./LanguageSelector";
+import { ArticleSourceLine, ArticleTabs } from "./WikiPrimitives";
 
 interface ArticleHeaderProps {
   title: string;
@@ -18,16 +19,9 @@ export default function ArticleHeader({
         {showLanguageButton && <LanguageSelector />}
       </div>
 
-      <div className="text-sm text-gray-600 mb-4">
-        From Kumarpedia, the free encyclopedia
-      </div>
+      <ArticleSourceLine className="mb-4" />
 
-      {/* Simplified Article Tab */}
-      <div className="flex items-center gap-6 border-b border-gray-300">
-        <button className="pb-2 border-b-2 border-black font-medium">
-          Article
-        </button>
-      </div>
+      <ArticleTabs />
     </div>
   );
 }

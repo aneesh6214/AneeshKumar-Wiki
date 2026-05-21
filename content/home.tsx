@@ -12,6 +12,7 @@ export const homeContent: JSONContent = {
   disambiguation:
     "This article is about the software engineer. For questions and answers, see [Aneesh Kumar (Ask Me Anything)](/blog). ",
   infobox: aneeshKumarInfobox,
+  infoboxTitle: "Aneesh Kumar",
   sections: [
     {
       title: "Overview",

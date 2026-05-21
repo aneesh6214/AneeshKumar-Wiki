@@ -3,11 +3,11 @@ import ArticleHeader from "@/components/ArticleHeader";
 import WikiContent from "@/components/WikiContent";
 import { getJSONContent } from "@/lib/json-content";
 
-export default async function KumarpediaStyleKB() {
+export default async function HomePage() {
   const content = await getJSONContent("home");
 
   return (
-    <PageLayout currentPath="/">
+    <PageLayout currentPath="/" content={content}>
       <ArticleHeader title={content.title} />
       <WikiContent content={content} />
     </PageLayout>

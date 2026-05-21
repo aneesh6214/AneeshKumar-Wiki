@@ -2,12 +2,14 @@ import { redirect } from "next/navigation";
 import PageLayout from "@/components/PageLayout";
 import ArticleHeader from "@/components/ArticleHeader";
 import { WikiInfobox } from "@/components/WikiContent";
-import { aneeshKumarInfobox } from "@/content/profile-infobox";
+import { WikiSectionHeading } from "@/components/WikiPrimitives";
+import { siteContent } from "@/content/site";
 import {
   createAmaQuestion,
   getAnsweredAmaQuestions,
   type AmaQuestion,
 } from "@/lib/ama/queries";
+import { getJSONContent, sectionId } from "@/lib/json-content";
 
 export const dynamic = "force-dynamic";
 
@@ -58,7 +60,7 @@ function QuestionList({
   if (unavailable) {
     return (
       <div className="border-y border-[#a2a9b1] px-3 py-5 text-center text-sm italic text-gray-600">
-          The answered question archive is temporarily unavailable.
+        The answered question archive is temporarily unavailable.
       </div>
     );
   }
@@ -66,7 +68,7 @@ function QuestionList({
   if (questions.length === 0) {
     return (
       <div className="border-y border-[#a2a9b1] px-3 py-5 text-center text-sm italic text-gray-600">
-          No answered questions have been published yet.
+        No answered questions have been published yet.
       </div>
     );
   }
@@ -105,6 +107,13 @@ export default async function AskMeAnythingPage({
   searchParams,
 }: AskMeAnythingPageProps) {
   const params = await searchParams;
+  const content = await getJSONContent("blog");
+  const askSection = content.sections.find(
+    (section) => section.id === "ask-a-question",
+  );
+  const answersSection = content.sections.find(
+    (section) => section.id === "answered-questions",
+  );
   let questions: AmaQuestion[] = [];
   let questionsUnavailable = false;
 
@@ -116,13 +125,13 @@ export default async function AskMeAnythingPage({
   }
 
   return (
-    <PageLayout currentPath="/blog">
-      <ArticleHeader title="Ask Me Anything" />
+    <PageLayout currentPath="/blog" content={content}>
+      <ArticleHeader title={content.title} />
 
       <div className="flex flex-col gap-6 px-4 pt-3 sm:px-6 lg:flex-row">
         <div className="min-w-0 flex-1">
           <form
-            id="ask-a-question"
+            id={askSection ? sectionId(askSection) : "ask-a-question"}
             action={submitQuestion}
             className="mt-1"
           >
@@ -173,12 +182,13 @@ export default async function AskMeAnythingPage({
           </form>
 
           <section className="mt-6">
-            <h2
-              id="answered-questions"
-              className="border-b border-gray-300 pb-1 font-serif text-xl font-medium text-[#202122]"
+            <WikiSectionHeading
+              id={
+                answersSection ? sectionId(answersSection) : "answered-questions"
+              }
             >
-              Answered Questions
-            </h2>
+              {answersSection?.title || "Answered Questions"}
+            </WikiSectionHeading>
             <div className="mt-3">
               <QuestionList
                 questions={questions}
@@ -188,9 +198,14 @@ export default async function AskMeAnythingPage({
           </section>
         </div>
 
-        <aside className="lg:w-80 lg:flex-shrink-0">
-          <WikiInfobox infobox={aneeshKumarInfobox} title="Aneesh Kumar" />
-        </aside>
+        {content.infobox && (
+          <aside className="lg:w-80 lg:flex-shrink-0">
+            <WikiInfobox
+              infobox={content.infobox}
+              title={content.infoboxTitle || siteContent.infobox.defaultTitle}
+            />
+          </aside>
+        )}
       </div>
     </PageLayout>
   );

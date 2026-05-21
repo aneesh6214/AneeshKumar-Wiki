@@ -7,7 +7,7 @@ export default async function MediaPage() {
   const content = await getJSONContent("media");
 
   return (
-    <PageLayout currentPath="/media">
+    <PageLayout currentPath="/media" content={content}>
       <ArticleHeader title={content.title} />
       <WorkCatalogueContent content={content} />
     </PageLayout>

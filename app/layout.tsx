@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 import BeaconProvider from "@/components/BeaconProvider";
 import TopBanner from "@/components/TopBanner";
+import { siteContent } from "@/content/site";
 
 export const metadata: Metadata = {
-  title: "Aneesh Kumar - Personal Website",
-  description:
-    "Personal website of Aneesh Kumar, Software Engineer and AI researcher",
+  title: siteContent.metadata.title,
+  description: siteContent.metadata.description,
 };
 
 export default function RootLayout({

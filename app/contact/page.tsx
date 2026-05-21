@@ -7,7 +7,7 @@ export default async function ContactPage() {
   const content = await getJSONContent("contact");
 
   return (
-    <PageLayout currentPath="/contact">
+    <PageLayout currentPath="/contact" content={content}>
       <ArticleHeader title={content.title} />
       <WikiContent content={content} />
     </PageLayout>

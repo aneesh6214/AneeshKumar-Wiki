@@ -30,8 +30,6 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
   const searchableItems: SearchableContent[] = [];
 
   for (const [slug, content] of Object.entries(contentCache)) {
-    if (slug === "blog") continue;
-
     const searchableText = extractSearchableText(content);
 
     searchableItems.push({
@@ -54,16 +52,6 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
       });
     });
   }
-
-  searchableItems.push({
-    id: "blog-main",
-    title: "Ask Me Anything",
-    url: "/blog",
-    content:
-      "Ask Me Anything anonymous questions published answers professional work research projects",
-    preview:
-      "Anonymous questions and published answers about work, research, and projects.",
-  });
 
   return searchableItems;
 }
