@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { adminContent } from "@/content/admin";
 
 export const metadata: Metadata = {
-  title: "aneeshkumar.com — Administrator's observatory",
-  description: "Observability dashboard",
+  title: adminContent.metadata.title,
+  description: adminContent.metadata.description,
 };
 
 export default function AdminLayout({

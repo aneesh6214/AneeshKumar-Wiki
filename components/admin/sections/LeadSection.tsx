@@ -1,6 +1,7 @@
 import type { AdminSummary } from "@/lib/admin/queries";
 import type { TimeWindow } from "@/lib/admin/window";
 import { formatNumber, formatPercent } from "@/lib/admin/format";
+import { adminContent } from "@/content/admin";
 import Footnote from "./Footnote";
 
 interface Props {
@@ -25,7 +26,8 @@ export default function LeadSection({ summary, window }: Props) {
   return (
     <div className="text-[15px] leading-7 space-y-4">
       <p>
-        <strong>aneeshkumar.com</strong> is a personal portfolio website
+        <strong>{adminContent.articleTitle}</strong> is a{" "}
+        {adminContent.infobox.siteType.toLowerCase()} website
         launched in {summary.launched}. Over the{" "}
         <strong>{window.label.toLowerCase()}</strong> it has received{" "}
         <strong>{formatNumber(summary.totalPageviews)} pageviews</strong> from

@@ -2,6 +2,7 @@ import SectionHeading from "@/components/admin/SectionHeading";
 import WikiFigure from "@/components/admin/WikiFigure";
 import PerformanceLineChart from "@/components/admin/charts/PerformanceLineChart";
 import type { PerfPoint, JsErrorRow } from "@/lib/admin/queries";
+import { AdminInlineCode } from "../AdminPrimitives";
 
 interface Props {
   perf: PerfPoint[];
@@ -34,13 +35,8 @@ export default function OperationalSection({ perf, errors }: Props) {
       </SectionHeading>
       <p className="leading-7 mb-2">
         Errors captured via{" "}
-        <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
-          window.onerror
-        </code>{" "}
-        and{" "}
-        <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
-          unhandledrejection
-        </code>
+        <AdminInlineCode>window.onerror</AdminInlineCode> and{" "}
+        <AdminInlineCode>unhandledrejection</AdminInlineCode>
         .
       </p>
       {errors.length > 0 ? (

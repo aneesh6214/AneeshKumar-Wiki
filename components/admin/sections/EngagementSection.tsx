@@ -3,6 +3,7 @@ import WikiFigure from "@/components/admin/WikiFigure";
 import ScrollDepthChart from "@/components/admin/charts/ScrollDepthChart";
 import type { ScrollDepthData, TopPage } from "@/lib/admin/queries";
 import { formatDuration } from "@/lib/admin/format";
+import { AdminInlineCode } from "../AdminPrimitives";
 import Footnote from "./Footnote";
 
 interface Props {
@@ -43,13 +44,8 @@ export default function EngagementSection({ scroll, topPages }: Props) {
       {topPages.length > 0 && topPages[0].avgTimeSec > 0 ? (
         <p className="leading-7 mb-2">
           Average time visible, per page, derived from{" "}
-          <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
-            visibilitychange
-          </code>{" "}
-          +{" "}
-          <code className="bg-[#f8f9fa] px-1 border border-[#eaecf0] text-xs">
-            pagehide
-          </code>{" "}
+          <AdminInlineCode>visibilitychange</AdminInlineCode> +{" "}
+          <AdminInlineCode>pagehide</AdminInlineCode>{" "}
           events. The longest average session is on{" "}
           <em>{topPages[0].title}</em> at{" "}
           {formatDuration(topPages[0].avgTimeSec)}.

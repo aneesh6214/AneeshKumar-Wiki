@@ -4,6 +4,15 @@ import { revalidatePath } from "next/cache";
 import AdminPageLayout from "@/components/admin/AdminPageLayout";
 import AdminArticleHeader from "@/components/admin/AdminArticleHeader";
 import {
+  AdminArticleBody,
+  AdminLeadNote,
+  AdminPanel,
+  AdminPanelHeader,
+  AdminStatusDot,
+  adminLinkClass,
+} from "@/components/admin/AdminPrimitives";
+import { adminContent } from "@/content/admin";
+import {
   archiveAmaQuestion,
   getAdminAmaQuestions,
   saveAmaAnswer,
@@ -90,36 +99,33 @@ export default async function AdminAmaPage({
   const publishedCount = questions.length - pendingCount;
 
   return (
-    <AdminPageLayout currentWindow="">
+    <AdminPageLayout currentWindow="" activePath="ama">
       <AdminArticleHeader
-        title="aneeshkumar.com"
+        title={adminContent.articleTitle}
         subtitle="Anonymous question queue"
         activeTab="ama"
       />
 
-      <article className="px-4 py-4 text-[#202122] sm:px-6">
-        <div className="mb-4 border-l-2 border-[#eaecf0] pl-6 text-sm italic text-gray-600">
-          Questions submitted through the public Ask Me Anything page stay
-          private until an answer is published.
-        </div>
+      <AdminArticleBody>
+        <AdminLeadNote>{adminContent.notes.ama}</AdminLeadNote>
 
         <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
           <span>
             <strong>{pendingCount}</strong> pending
           </span>
-          <span className="text-gray-400">·</span>
+          <AdminStatusDot />
           <span>
             <strong>{publishedCount}</strong> published
           </span>
           {params.saved === "1" && (
             <>
-              <span className="text-gray-400">·</span>
+              <AdminStatusDot />
               <span className="font-medium text-[#14866d]">Answer saved.</span>
             </>
           )}
           {params.archived === "1" && (
             <>
-              <span className="text-gray-400">·</span>
+              <AdminStatusDot />
               <span className="font-medium text-[#14866d]">
                 Question archived.
               </span>
@@ -174,7 +180,7 @@ export default async function AdminAmaPage({
                           <td className="border border-[#a2a9b1] px-3 py-2 leading-6">
                             <Link
                               href={`/admin/ama?question=${question.id}`}
-                              className="text-blue-600 hover:underline"
+                              className={adminLinkClass}
                             >
                               {question.question}
                             </Link>
@@ -191,10 +197,8 @@ export default async function AdminAmaPage({
             </div>
           </section>
 
-          <aside className="min-w-0 border border-[#a2a9b1] bg-[#f8f9fa]">
-            <div className="border-b border-[#a2a9b1] bg-[#eaecf0] px-3 py-1.5 font-serif text-base font-medium">
-              Response
-            </div>
+          <AdminPanel className="min-w-0">
+            <AdminPanelHeader>Response</AdminPanelHeader>
 
             {selectedQuestion ? (
               <div className="space-y-4 p-3">
@@ -247,9 +251,9 @@ export default async function AdminAmaPage({
                 Select a question to write a response.
               </div>
             )}
-          </aside>
+          </AdminPanel>
         </div>
-      </article>
+      </AdminArticleBody>
     </AdminPageLayout>
   );
 }

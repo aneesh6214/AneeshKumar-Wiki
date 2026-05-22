@@ -18,6 +18,12 @@ interface WikiTableProps<T> {
   defaultSort?: { key: string; direction: "asc" | "desc" };
 }
 
+const alignClass = {
+  left: "text-left",
+  right: "text-right",
+  center: "text-center",
+} as const;
+
 export default function WikiTable<T>({
   columns,
   data,
@@ -67,7 +73,7 @@ export default function WikiTable<T>({
                 <th
                   key={c.key}
                   onClick={c.sortable ? () => handleSort(c.key) : undefined}
-                  className={`border border-[#a2a9b1] px-3 py-1.5 font-bold text-[#202122] text-${c.align ?? "left"} ${
+                  className={`border border-[#a2a9b1] px-3 py-1.5 font-bold text-[#202122] ${alignClass[c.align ?? "left"]} ${
                     c.sortable ? "cursor-pointer hover:bg-[#dce1e5] select-none" : ""
                   }`}
                 >
@@ -88,7 +94,7 @@ export default function WikiTable<T>({
               {columns.map((c) => (
                 <td
                   key={c.key}
-                  className={`border border-[#a2a9b1] px-3 py-1.5 text-[#202122] text-${c.align ?? "left"}`}
+                  className={`border border-[#a2a9b1] px-3 py-1.5 text-[#202122] ${alignClass[c.align ?? "left"]}`}
                 >
                   {c.render(row)}
                 </td>

@@ -2,6 +2,10 @@
 
 import Link from "next/link";
 import WikiTable, { WikiColumn } from "@/components/admin/WikiTable";
+import {
+  AdminEmptyState,
+  adminLinkClass,
+} from "@/components/admin/AdminPrimitives";
 import { formatNumber, formatDuration } from "@/lib/admin/format";
 import type { TopPage } from "@/lib/admin/queries";
 
@@ -23,7 +27,7 @@ const columns: WikiColumn<PageRow>[] = [
       <span>
         <Link
           href={r.path}
-          className="text-blue-600 hover:underline"
+          className={adminLinkClass}
           target="_blank"
         >
           {r.title}
@@ -61,9 +65,9 @@ const columns: WikiColumn<PageRow>[] = [
 export default function TopPagesTable({ data }: { data: TopPage[] }) {
   if (data.length === 0) {
     return (
-      <p className="text-sm italic text-gray-600 my-4">
+      <AdminEmptyState>
         No pageviews in this window yet.
-      </p>
+      </AdminEmptyState>
     );
   }
   const ranked: PageRow[] = data.map((p, i) => ({ ...p, rank: i + 1 }));

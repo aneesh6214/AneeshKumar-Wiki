@@ -282,41 +282,50 @@ export function WikiInfobox({
       </dl>
 
       {(infobox.email || infobox.socialLinks?.length) && (
-        <div className="border-t border-gray-300">
+        <dl className="border-t border-gray-300">
           {infobox.email && (
-            <div className="grid grid-cols-[5.75rem_minmax(0,1fr)] border-b border-gray-200">
-              <div className="bg-gray-100 px-2 py-1.5 font-semibold text-gray-900">
+            <div
+              className={`grid grid-cols-[5.75rem_minmax(0,1fr)] ${
+                infobox.socialLinks?.length ? "border-b border-gray-200" : ""
+              }`}
+            >
+              <dt className="bg-gray-100 px-2 py-1.5 font-semibold text-gray-900">
                 Email
-              </div>
-              <div className="min-w-0 break-words px-2 py-1.5 text-gray-700">
+              </dt>
+              <dd className="min-w-0 break-words px-2 py-1.5 text-gray-700">
                 <a
                   href={`mailto:${infobox.email}`}
                   className="text-blue-600 hover:underline"
                 >
                   {infobox.email}
                 </a>
-              </div>
+              </dd>
             </div>
           )}
 
           {infobox.socialLinks?.length ? (
-            <div className="flex items-center justify-center gap-3 bg-white px-2 py-2.5">
-              {infobox.socialLinks.map((link) => (
-                <a
-                  key={link.platform}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={link.label}
-                  title={link.label}
-                  className="text-gray-700 transition-colors hover:text-blue-700"
-                >
-                  <SocialIcon link={link} />
-                </a>
-              ))}
+            <div className="grid grid-cols-[5.75rem_minmax(0,1fr)]">
+              <dt className="bg-gray-100 px-2 py-1.5 font-semibold text-gray-900">
+                Social
+              </dt>
+              <dd className="flex min-w-0 items-center gap-3 px-2 py-1.5 text-gray-700">
+                {infobox.socialLinks.map((link) => (
+                  <a
+                    key={link.platform}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={link.label}
+                    title={link.label}
+                    className="transition-colors hover:text-blue-700"
+                  >
+                    <SocialIcon link={link} />
+                  </a>
+                ))}
+              </dd>
             </div>
           ) : null}
-        </div>
+        </dl>
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import WikiTable, { WikiColumn } from "@/components/admin/WikiTable";
+import { AdminEmptyState } from "@/components/admin/AdminPrimitives";
 import { formatNumber } from "@/lib/admin/format";
 import type { SearchRow } from "@/lib/admin/queries";
 
@@ -27,9 +28,9 @@ const columns: WikiColumn<SearchRow>[] = [
 export default function SearchQueriesTable({ data }: { data: SearchRow[] }) {
   if (data.length === 0) {
     return (
-      <p className="text-sm italic text-gray-600 my-4">
+      <AdminEmptyState>
         No on-site searches in this window yet.
-      </p>
+      </AdminEmptyState>
     );
   }
   return (

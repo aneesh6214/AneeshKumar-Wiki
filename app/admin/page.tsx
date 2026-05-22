@@ -1,6 +1,11 @@
 import Link from "next/link";
 import AdminPageLayout from "@/components/admin/AdminPageLayout";
 import AdminArticleHeader from "@/components/admin/AdminArticleHeader";
+import {
+  AdminArticleBody,
+  AdminLeadNote,
+  adminLinkClass,
+} from "@/components/admin/AdminPrimitives";
 import Infobox from "@/components/admin/Infobox";
 import TableOfContents from "@/components/admin/TableOfContents";
 import RefreshButton from "@/components/admin/RefreshButton";
@@ -30,6 +35,7 @@ import {
   getPerformance,
   getJsErrors,
 } from "@/lib/admin/queries";
+import { adminContent } from "@/content/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -72,18 +78,26 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
   ]);
 
   return (
-    <AdminPageLayout currentWindow={window.value as WindowValue}>
-      <AdminArticleHeader title="aneeshkumar.com" activeTab="dashboard" />
+    <AdminPageLayout
+      currentWindow={window.value as WindowValue}
+      activePath="dashboard"
+    >
+      <AdminArticleHeader
+        title={adminContent.articleTitle}
+        activeTab="dashboard"
+      />
 
-      <article className="px-4 sm:px-6 py-4 text-[#202122] max-w-none">
-        <div className="text-sm italic text-gray-600 mb-4 pl-6 border-l-2 border-[#eaecf0]">
-          This is the administrator&apos;s private observability dashboard for
-          the website. For the public article, see{" "}
-          <Link href="/" className="text-blue-600 hover:underline">
-            Home
+      <AdminArticleBody className="max-w-none">
+        <AdminLeadNote>
+          {adminContent.notes.dashboard} For the public article, see{" "}
+          <Link
+            href={adminContent.publicArticleHref}
+            className={adminLinkClass}
+          >
+            {adminContent.publicArticleLabel}
           </Link>
           .
-        </div>
+        </AdminLeadNote>
 
         <Infobox summary={summary} windowLabel={window.label} />
 
@@ -118,7 +132,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
           })}{" "}
           UTC. <RefreshButton />
         </div>
-      </article>
+      </AdminArticleBody>
     </AdminPageLayout>
   );
 }

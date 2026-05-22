@@ -1,5 +1,6 @@
 import type { AdminSummary } from "@/lib/admin/queries";
 import { formatNumber, formatPercent, formatDuration } from "@/lib/admin/format";
+import { adminContent } from "@/content/admin";
 
 interface InfoboxProps {
   summary: AdminSummary;
@@ -8,7 +9,7 @@ interface InfoboxProps {
 
 export default function Infobox({ summary, windowLabel }: InfoboxProps) {
   const rows: { label: string; value: string }[] = [
-    { label: "Type", value: "Personal portfolio" },
+    { label: "Type", value: adminContent.infobox.siteType },
     { label: "Launched", value: summary.launched },
     {
       label: "Tracking since",
@@ -65,9 +66,11 @@ export default function Infobox({ summary, windowLabel }: InfoboxProps) {
     <aside className="w-full sm:w-[300px] sm:float-right sm:ml-6 sm:mb-4 mb-6 border border-[#a2a9b1] bg-[#f8f9fa] text-sm">
       <div className="bg-[#eaecf0] border-b border-[#a2a9b1] px-3 py-2 text-center">
         <div className="font-serif text-base font-bold text-[#202122]">
-          aneeshkumar.com
+          {adminContent.infobox.title}
         </div>
-        <div className="text-xs text-gray-600 italic">Observability summary</div>
+        <div className="text-xs text-gray-600 italic">
+          {adminContent.infobox.subtitle}
+        </div>
       </div>
 
       <table className="w-full">

@@ -1,3 +1,5 @@
+import { adminLinkClass } from "./AdminPrimitives";
+
 interface SectionHeadingProps {
   id: string;
   num: string;
@@ -33,7 +35,7 @@ export default function SectionHeading({
           [
           <a
             href={`#${id}`}
-            className="text-blue-600 hover:underline"
+            className={adminLinkClass}
           >
             edit
           </a>

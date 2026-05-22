@@ -1,6 +1,7 @@
 "use client";
 
 import WikiTable, { WikiColumn } from "@/components/admin/WikiTable";
+import { AdminEmptyState } from "@/components/admin/AdminPrimitives";
 import { formatNumber, formatPercent } from "@/lib/admin/format";
 import type { CountryRow } from "@/lib/admin/queries";
 
@@ -33,9 +34,9 @@ const columns: WikiColumn<CountryRow>[] = [
 export default function CountriesTable({ data }: { data: CountryRow[] }) {
   if (data.length === 0) {
     return (
-      <p className="text-sm italic text-gray-600 my-4">
+      <AdminEmptyState>
         No geolocation data yet. Country is only recorded for requests served by Vercel&apos;s edge network; local-dev requests do not populate this field.
-      </p>
+      </AdminEmptyState>
     );
   }
   return (

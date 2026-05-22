@@ -31,7 +31,7 @@ export const aneeshKumarInfobox: Infobox = {
       label: "Position",
       value: "Associate Platform Engineer",
     },
-    { label: "Organization", value: "[Quantifind](https://www.quantifind.com/)" },
+    { label: "Institution", value: "[Quantifind](https://www.quantifind.com/)" },
     {
       label: "Education",
       value:
