@@ -168,11 +168,13 @@ function ResearchBox() {
             systems where structure is learned rather than specified. My work
             looks for useful explanations inside messy representations.
           </p>
-          <p className="mt-auto border-t border-gray-300 pt-1 font-serif text-[10.5px] leading-snug text-gray-700">
-            <sup className="mr-1 text-[9px] leading-none">1</sup>
-            <span className="font-bold">Keywords.</span> Sparse features;
-            memory; emergence.
-          </p>
+          <div className="mt-auto pt-3">
+            <p className="border-t border-gray-300 pt-1 font-serif text-[10.5px] leading-snug text-gray-700">
+              <sup className="mr-1 text-[9px] leading-none">1</sup>
+              <span className="font-bold">Keywords.</span> Sparse features;
+              memory; emergence.
+            </p>
+          </div>
         </div>
       </div>
       <SeeAlsoLinks

@@ -50,6 +50,7 @@ export default function AdminSidebar({
               {adminContent.sidebar.tools.map((link) => {
                 const isActive =
                   (activePath === "ama" && link.href === "/admin/ama") ||
+                  (activePath === "banner" && link.href === "/admin/banner") ||
                   (activePath === "raw" && link.href === "/admin/raw") ||
                   (activePath === "live" && link.href === "/admin/live");
 

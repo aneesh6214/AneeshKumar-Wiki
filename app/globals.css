@@ -12,7 +12,11 @@ body {
   }
 
   .kumarpedia-marquee {
-    animation: kumarpedia-marquee 42s linear infinite;
+    animation: kumarpedia-marquee var(--kumarpedia-marquee-duration, 42s) linear infinite;
+  }
+
+  .kumarpedia-banner:hover .kumarpedia-marquee {
+    animation-play-state: paused;
   }
 }
 

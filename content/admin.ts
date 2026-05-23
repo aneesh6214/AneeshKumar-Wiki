@@ -1,4 +1,10 @@
-export type AdminTabKey = "dashboard" | "ama" | "raw" | "live" | "login";
+export type AdminTabKey =
+  | "dashboard"
+  | "ama"
+  | "banner"
+  | "raw"
+  | "live"
+  | "login";
 
 export interface AdminTabItem {
   key: AdminTabKey;
@@ -36,6 +42,7 @@ export const adminContent = {
   tabs: [
     { key: "dashboard", label: "Dashboard", href: "/admin" },
     { key: "ama", label: "AMA", href: "/admin/ama" },
+    { key: "banner", label: "Banner", href: "/admin/banner" },
     { key: "raw", label: "Raw data", href: "/admin/raw" },
     { key: "live", label: "Live", href: "/admin/live" },
   ] satisfies AdminTabItem[],
@@ -58,6 +65,7 @@ export const adminContent = {
     ] satisfies AdminTimeWindowItem[],
     tools: [
       { label: "Ask Me Anything", href: "/admin/ama" },
+      { label: "Wiki banner", href: "/admin/banner" },
       { label: "Raw data", href: "/admin/raw" },
       { label: "Live view", href: "/admin/live" },
     ] satisfies AdminSidebarLink[],
@@ -134,6 +142,8 @@ export const adminContent = {
       "This is the administrator's private observability dashboard for the website.",
     ama:
       "Questions submitted through the public Ask Me Anything page stay private until an answer is published.",
+    banner:
+      "Curated Wikipedia articles used by the public top banner. Each day, the site chooses one enabled article from this set.",
     raw:
       "Raw event stream. This is the underlying data that the main dashboard aggregates. Sorted newest-first.",
     live: "Live view. Visitors active in the last 5 minutes.",
@@ -150,6 +160,11 @@ export const adminContent = {
       label: "Ask Me Anything",
       href: "/blog",
       description: "anonymous questions and published answers",
+    },
+    {
+      label: "Wiki banner",
+      href: "/admin/banner",
+      description: "curated Wikipedia article ticker",
     },
     {
       label: "Independent Work",
