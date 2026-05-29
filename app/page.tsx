@@ -1,15 +1,13 @@
-import PageLayout from "@/components/PageLayout";
-import ArticleHeader from "@/components/ArticleHeader";
 import WikiContent from "@/components/WikiContent";
+import WikiArticlePage from "@/components/WikiArticlePage";
 import { getJSONContent } from "@/lib/json-content";
 
 export default async function HomePage() {
   const content = await getJSONContent("home");
 
   return (
-    <PageLayout currentPath="/" content={content}>
-      <ArticleHeader title={content.title} />
+    <WikiArticlePage currentPath="/" content={content}>
       <WikiContent content={content} />
-    </PageLayout>
+    </WikiArticlePage>
   );
 }

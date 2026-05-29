@@ -1,9 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { navigationItems } from "@/lib/navigation";
-import { siteContent } from "@/content/site";
 import { ArticleNavItem } from "@/lib/json-content";
-import SearchNavigation from "./SearchNavigation";
 
 interface SidebarProps {
   currentPath: string;
@@ -11,14 +8,9 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
-  const sidebarImage = siteContent.sidebar.decorativeImage;
   return (
-    <aside className="w-full border-b border-[#a2a9b1] bg-[#f8f9fa] md:fixed md:left-0 md:top-8 md:flex md:h-[calc(100vh-2rem)] md:min-h-[calc(100vh-2rem)] md:w-[15rem] md:min-w-[15rem] md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
+    <aside className="w-full border-b border-gray-200 bg-white md:fixed md:left-0 md:top-14 md:flex md:h-[calc(100vh-3.5rem)] md:min-h-[calc(100vh-3.5rem)] md:w-[15rem] md:min-w-[15rem] md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
       <div className="px-3 py-3">
-        <div className="mb-4">
-          <SearchNavigation />
-        </div>
-
         <nav
           className="flex flex-wrap gap-x-1 gap-y-1 md:flex-col md:gap-0"
           aria-label="Pages"
@@ -34,8 +26,8 @@ export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
                   href={item.href}
                   className={`block border-l px-2 py-1.5 text-[17px] leading-snug hover:underline ${
                     isActive
-                      ? "border-[#202122] font-medium text-[#202122] hover:no-underline"
-                      : "border-[#eaecf0] text-blue-700"
+                      ? "border-gray-500 font-medium text-[#202122] hover:no-underline"
+                      : "border-gray-200 text-blue-700"
                   }`}
                 >
                   {item.sidebarLabel}
@@ -55,7 +47,7 @@ export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`block border-l border-[#eaecf0] py-1 leading-snug text-blue-700 hover:underline ${
+                  className={`block border-l border-gray-200 py-1 leading-snug text-blue-700 hover:underline ${
                     item.depth ? "pl-5 pr-2 text-sm" : "px-2 text-[15px]"
                   }`}
                 >
@@ -65,17 +57,6 @@ export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
             </div>
           </nav>
         )}
-      </div>
-      <div className="mt-auto hidden px-3 pb-3 md:block" aria-hidden="true">
-        <div className="inline-block border border-[#a2a9b1] bg-white p-1">
-          <Image
-            src={sidebarImage.src}
-            alt=""
-            width={sidebarImage.width}
-            height={sidebarImage.height}
-            className="h-auto w-24 object-cover"
-          />
-        </div>
       </div>
     </aside>
   );

@@ -1,226 +1,105 @@
-import React from "react";
-import {
-  JSONContent,
+import Image from "next/image";
+import type { ElementType, ReactNode } from "react";
+import { siteContent } from "@/content/site";
+import type {
   ContentSection,
   Infobox,
   InfoboxSocialLink,
-  ImagePosition,
-  sectionId,
+  JSONContent,
 } from "@/lib/json-content";
-import { siteContent } from "@/content/site";
-import { AiOutlineGlobal } from "react-icons/ai";
+import { sectionId } from "@/lib/json-content";
 import { FaGithub, FaLinkedin, FaYoutube } from "react-icons/fa";
+import HomeActivityGrid from "./HomeActivityGrid";
+import HomeRoleFocus from "./HomeRoleFocus";
 import {
-  InlineMarkdownText,
   InlineMarkdownWithBreaks,
-  ParsedContent,
+  MarkdownParagraphs,
 } from "./InlineContent";
-
-function Quote({ children }: { children: React.ReactNode }) {
-  return (
-    <blockquote className="border-l-4 border-blue-300 pl-4 py-2 my-4 bg-blue-50 italic text-gray-700 rounded-r">
-      <ParsedContent>{children}</ParsedContent>
-    </blockquote>
-  );
-}
-
-interface SectionImageProps {
-  image: {
-    src: string;
-    alt: string;
-    caption?: string;
-    position: ImagePosition;
-    link?: string;
-  };
-}
-
-function SectionImage({ image }: SectionImageProps) {
-  const imageElement = (
-    <img
-      src={image.src}
-      alt={image.alt}
-      className="w-full h-auto object-contain rounded"
-    />
-  );
-
-  return (
-    <div className="border border-gray-300 rounded bg-gray-50 p-2">
-      {image.link ? (
-        <a
-          href={image.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block hover:opacity-80 transition-opacity cursor-pointer"
-        >
-          {imageElement}
-        </a>
-      ) : (
-        imageElement
-      )}
-      {image.caption && (
-        <div className="text-xs text-gray-600 mt-2 text-center italic">
-          <div>{image.caption}</div>
-          {image.link && (
-            <a
-              href={image.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-blue-600 hover:underline mt-1 cursor-pointer"
-            >
-              Click to view document
-            </a>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
+import { ArticleLayout, WikiSectionHeading } from "./WikiPrimitives";
 
 interface WikiContentProps {
   content: JSONContent;
 }
 
-export { Quote };
+interface WikiSectionProps {
+  level: number;
+  section: ContentSection;
+}
+
+interface WikiTextSectionHeadingProps {
+  HeadingTag: ElementType;
+  id: string;
+  level: number;
+  title: string;
+}
+
+interface WikiInfoboxPanelProps {
+  infobox?: Infobox;
+  title?: string;
+}
+
+interface WikiArticleLayoutProps {
+  children: ReactNode;
+  content: JSONContent;
+}
+
+interface WikiInfoboxProps {
+  infobox: Infobox;
+  title: string;
+}
+
+interface SocialIconProps {
+  link: InfoboxSocialLink;
+}
+
+interface InfoboxValueProps {
+  value: string;
+}
 
 export default function WikiContent({ content }: WikiContentProps) {
   return (
-    <div className="flex flex-col gap-6 px-4 pt-3 sm:px-6 lg:flex-row">
-      <div className="min-w-0 flex-1">
-        <div>
-          {content.disambiguation && (
-            <p className="text-xs italic mb-2 text-gray-600">
-              <InlineMarkdownText text={content.disambiguation} />
-            </p>
-          )}
-
-          <div className="max-w-none">
-            {content.sections.map((section, index) => (
-              <WikiSection key={index} section={section} level={2} />
-            ))}
-          </div>
-        </div>
+    <WikiArticleLayout content={content}>
+      <div className="max-w-none">
+        {content.sections.map((section, index) => (
+          <WikiSection key={index} section={section} level={2} />
+        ))}
       </div>
-
-      {content.infobox && (
-        <aside className="lg:w-80 lg:flex-shrink-0">
-          <WikiInfobox
-            infobox={content.infobox}
-            title={
-              content.infoboxTitle || content.title || siteContent.infobox.defaultTitle
-            }
-          />
-        </aside>
-      )}
-    </div>
+    </WikiArticleLayout>
   );
 }
 
-function WikiSection({
-  section,
-  level,
-}: {
-  section: ContentSection;
-  level: number;
-}) {
-  const HeadingTag = `h${level}` as React.ElementType;
+function WikiSection({ section, level }: WikiSectionProps) {
+  if (section.variant === "home-role-focus") {
+    return <HomeRoleFocus items={section.roleFocusItems ?? []} />;
+  }
+
+  if (section.variant === "home-activity-grid") {
+    return (
+      <div className="mb-4">
+        <HomeActivityGrid />
+      </div>
+    );
+  }
+
+  const HeadingTag = `h${level}` as ElementType;
   const id = sectionId(section);
 
   return (
-    <div className="mb-4 first:mt-0">
+    <div className="mb-4 flow-root first:mt-0">
       {section.title && (
-        <div
-          className={`mb-2 ${level === 2 ? "border-b border-gray-300 pb-1" : level === 3 ? "border-b border-gray-200 pb-1" : ""} flex justify-between items-baseline`}
-        >
-          <HeadingTag
-            id={id}
-            className={
-              level === 2
-                ? "font-serif text-xl font-medium"
-                : level === 3
-                  ? "font-serif text-base font-medium"
-                  : "font-serif text-sm font-medium"
-            }
-          >
-            {section.title}
-          </HeadingTag>
-          <div className="flex items-center gap-2">
-            {section.githubUrl && (
-              <a
-                href={section.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-                title="View on GitHub"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                </svg>
-              </a>
-            )}
-            {section.websiteUrl && (
-              <a
-                href={section.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-                title="Open website"
-              >
-                <AiOutlineGlobal className="w-4 h-4" aria-hidden="true" />
-              </a>
-            )}
-            {section.date && (
-              <span className="text-sm text-gray-600 italic">
-                {section.date}
-              </span>
-            )}
-          </div>
-        </div>
+        <WikiTextSectionHeading
+          HeadingTag={HeadingTag}
+          id={id}
+          level={level}
+          title={section.title}
+        />
       )}
 
-      {section.image ? (
-        <div
-          className={`flex gap-4 ${section.image.position === ImagePosition.LEFT ? "flex-row-reverse" : "flex-row"}`}
-        >
-          <div className="flex-1 space-y-2">
-            <div className="text-gray-900 leading-relaxed text-sm">
-              <ParsedContent>{section.description}</ParsedContent>
-            </div>
-
-            {section.technologies && (
-              <div className="mt-3">
-                <strong className="text-sm text-gray-900">
-                  Technologies:{" "}
-                </strong>
-                <span className="text-sm text-gray-700">
-                  {section.technologies}
-                </span>
-              </div>
-            )}
-          </div>
-          <div className="flex-shrink-0 w-48">
-            <SectionImage image={section.image} />
-          </div>
+      <div className="space-y-2">
+        <div className="text-sm leading-relaxed text-gray-900">
+          <MarkdownParagraphs text={section.description} />
         </div>
-      ) : (
-        <div className="space-y-2">
-          <div className="text-gray-900 leading-relaxed text-sm">
-            <ParsedContent>{section.description}</ParsedContent>
-          </div>
-
-          {section.technologies && (
-            <div className="mt-3">
-              <strong className="text-sm text-gray-900">Technologies: </strong>
-              <span className="text-sm text-gray-700">
-                {section.technologies}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
+      </div>
 
       {section.subsections && (
         <div className="mt-3">
@@ -237,24 +116,87 @@ function WikiSection({
   );
 }
 
+function WikiTextSectionHeading({
+  HeadingTag,
+  id,
+  level,
+  title,
+}: WikiTextSectionHeadingProps) {
+  if (level === 2) {
+    return <WikiSectionHeading id={id}>{title}</WikiSectionHeading>;
+  }
+
+  return (
+    <div
+      className={`mb-2 ${level === 3 ? "border-b border-gray-200 pb-1" : ""}`}
+    >
+      <HeadingTag
+        id={id}
+        className={
+          level === 3
+            ? "font-serif text-base font-medium"
+            : "font-serif text-sm font-medium"
+        }
+      >
+        {title}
+      </HeadingTag>
+    </div>
+  );
+}
+
+export function WikiInfoboxPanel({
+  infobox,
+  title,
+}: WikiInfoboxPanelProps) {
+  if (!infobox) return null;
+
+  return (
+    <aside className="lg:w-80 lg:flex-shrink-0" data-search-exclude="true">
+      <WikiInfobox
+        infobox={infobox}
+        title={title || siteContent.infobox.defaultTitle}
+      />
+    </aside>
+  );
+}
+
+export function WikiArticleLayout({
+  children,
+  content,
+}: WikiArticleLayoutProps) {
+  return (
+    <ArticleLayout
+      disambiguation={content.disambiguation}
+      sidePanel={
+        <WikiInfoboxPanel
+          infobox={content.infobox}
+          title={content.infoboxTitle || content.title}
+        />
+      }
+    >
+      {children}
+    </ArticleLayout>
+  );
+}
+
 export function WikiInfobox({
   infobox,
   title,
-}: {
-  infobox: Infobox;
-  title: string;
-}) {
+}: WikiInfoboxProps) {
   return (
-    <div className="w-full max-w-xs border border-gray-400 bg-gray-50 text-[13px] lg:sticky lg:top-6">
+    <div className="w-full max-w-xs border border-gray-400 bg-gray-50 text-[13px] lg:sticky lg:top-20">
       <h3 className="border-b border-gray-400 bg-gray-100 px-2 py-1.5 text-center text-sm font-bold text-gray-900">
         {title}
       </h3>
 
       {infobox.image && (
         <div className="px-2 pb-2 pt-2">
-          <img
+          <Image
             src={infobox.image}
             alt={infobox.imageCaption || title}
+            width={320}
+            height={420}
+            unoptimized
             className="w-full border border-gray-300 object-contain"
           />
           {infobox.imageCaption && (
@@ -331,7 +273,7 @@ export function WikiInfobox({
   );
 }
 
-function SocialIcon({ link }: { link: InfoboxSocialLink }) {
+function SocialIcon({ link }: SocialIconProps) {
   const className = "h-5 w-5";
 
   if (link.platform === "linkedin") {
@@ -345,6 +287,6 @@ function SocialIcon({ link }: { link: InfoboxSocialLink }) {
   return <FaYoutube aria-hidden="true" className={className} />;
 }
 
-function InfoboxValue({ value }: { value: string }) {
+function InfoboxValue({ value }: InfoboxValueProps) {
   return <InlineMarkdownWithBreaks text={value} />;
 }

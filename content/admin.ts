@@ -158,7 +158,7 @@ export const adminContent = {
     },
     {
       label: "Ask Me Anything",
-      href: "/blog",
+      href: "/ama",
       description: "anonymous questions and published answers",
     },
     {
@@ -167,8 +167,8 @@ export const adminContent = {
       description: "curated Wikipedia article ticker",
     },
     {
-      label: "Independent Work",
-      href: "/independent-work",
+      label: "Projects",
+      href: "/projects",
       description: "independent products and research prototypes",
     },
     {

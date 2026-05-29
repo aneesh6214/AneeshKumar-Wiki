@@ -1,5 +1,13 @@
-import { redirect } from "next/navigation";
+import WorkCatalogueContent from "@/components/WorkCatalogueContent";
+import WikiArticlePage from "@/components/WikiArticlePage";
+import { getJSONContent } from "@/lib/json-content";
 
 export default async function ProjectsPage() {
-  redirect("/independent-work");
+  const content = await getJSONContent("projects");
+
+  return (
+    <WikiArticlePage currentPath="/projects" content={content}>
+      <WorkCatalogueContent content={content} />
+    </WikiArticlePage>
+  );
 }

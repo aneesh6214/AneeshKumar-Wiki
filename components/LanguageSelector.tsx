@@ -27,7 +27,7 @@ export default function LanguageSelector() {
       <button
         type="button"
         onClick={() => setLanguagesOpen((open) => !open)}
-        className="flex items-center gap-1 whitespace-nowrap text-sm text-blue-700 hover:underline"
+        className="flex items-center gap-1 whitespace-nowrap text-base leading-6 text-blue-700 hover:underline"
         aria-expanded={languagesOpen}
       >
         <Languages className="h-4 w-4" aria-hidden="true" />
@@ -41,8 +41,8 @@ export default function LanguageSelector() {
       </button>
 
       {languagesOpen && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-64 border border-[#a2a9b1] bg-white shadow-[0_8px_18px_rgba(0,0,0,0.12)]">
-          <div className="border-b border-[#eaecf0] bg-[#f8f9fa] px-3 py-1.5 text-xs font-medium text-gray-600">
+        <div className="absolute right-0 top-full z-50 mt-2 w-64 border border-gray-300 bg-white shadow-[0_8px_18px_rgba(0,0,0,0.12)]">
+          <div className="border-b border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600">
             {siteContent.languageSelector.menuTitle}
           </div>
           <div className="px-4 py-3 text-center text-sm text-gray-600">

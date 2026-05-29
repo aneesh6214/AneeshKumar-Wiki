@@ -1,21 +1,14 @@
-import React from "react";
-import { ImagePosition, JSONContent } from "@/lib/json-content";
+import { ImagePosition, type JSONContent } from "@/lib/json-content";
 import { aneeshKumarInfobox } from "./profile-infobox";
 
-const placeholderDescription = (
-  <>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua.
-  </>
-);
+const placeholderDescription =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
 export const mediaContent: JSONContent = {
   title: "Media",
-  subtitle: "Writing, lectures, and public communication",
-  description: "Technical writing, talks, lectures, and video-based public communication",
   url: "/media",
   disambiguation:
-    "This article covers public communication and educational media by [Aneesh Kumar](/). For independent software and research projects, see [Aneesh Kumar (Independent Work)](/independent-work).",
+    "This article covers lectures and educational media by [Aneesh Kumar](/). For technical projects, see [Projects](/projects).",
   infobox: aneeshKumarInfobox,
   infoboxTitle: "Aneesh Kumar",
   sections: [

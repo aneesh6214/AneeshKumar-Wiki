@@ -1,6 +1,9 @@
 "use client";
 
+import Image from "next/image";
+import type { ReactNode } from "react";
 import { useState, useEffect } from "react";
+import { FaSpotify } from "react-icons/fa";
 import WikiActivityBox from "./WikiActivityBox";
 
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
@@ -23,6 +26,21 @@ interface SpotifyResponse {
   item: SpotifyTrack;
   is_playing: boolean;
   played_at?: string;
+}
+
+interface SpotifyActivityBoxProps {
+  children: ReactNode;
+}
+
+function SpotifyActivityBox({ children }: SpotifyActivityBoxProps) {
+  return (
+    <WikiActivityBox
+      title="Recently played"
+      icon={<FaSpotify className="h-4 w-4" />}
+    >
+      {children}
+    </WikiActivityBox>
+  );
 }
 
 export default function SpotifyNowPlaying() {
@@ -63,7 +81,7 @@ export default function SpotifyNowPlaying() {
 
   if (loading) {
     return (
-      <WikiActivityBox title="Recently played">
+      <SpotifyActivityBox>
         <div className="flex items-center gap-3">
           <div className="h-14 w-14 animate-pulse border border-gray-300 bg-gray-200"></div>
           <div className="flex-1">
@@ -71,13 +89,13 @@ export default function SpotifyNowPlaying() {
             <div className="h-3 w-2/3 animate-pulse bg-gray-200"></div>
           </div>
         </div>
-      </WikiActivityBox>
+      </SpotifyActivityBox>
     );
   }
 
   if (error) {
     return (
-      <WikiActivityBox title="Recently played">
+      <SpotifyActivityBox>
         <div className="flex items-center gap-3">
           <div className="flex h-14 w-14 items-center justify-center border border-gray-300 bg-gray-200 text-xs font-semibold text-gray-600">
             N/A
@@ -86,13 +104,13 @@ export default function SpotifyNowPlaying() {
             <p className="text-sm text-gray-600">Unable to load Spotify data</p>
           </div>
         </div>
-      </WikiActivityBox>
+      </SpotifyActivityBox>
     );
   }
 
   if (!track) {
     return (
-      <WikiActivityBox title="Recently played">
+      <SpotifyActivityBox>
         <div className="flex items-center gap-3">
           <div className="flex h-14 w-14 items-center justify-center border border-gray-300 bg-gray-200 text-xs font-semibold text-gray-600">
             N/A
@@ -101,7 +119,7 @@ export default function SpotifyNowPlaying() {
             <p className="text-sm text-gray-600">No recent tracks</p>
           </div>
         </div>
-      </WikiActivityBox>
+      </SpotifyActivityBox>
     );
   }
 
@@ -109,12 +127,15 @@ export default function SpotifyNowPlaying() {
   const artistNames = track.artists.map((artist) => artist.name).join(", ");
 
   return (
-    <WikiActivityBox title="Recently played">
+    <SpotifyActivityBox>
       <div className="flex items-center gap-3">
         {albumImage ? (
-          <img
+          <Image
             src={albumImage}
             alt={`${track.album.name} album cover`}
+            width={56}
+            height={56}
+            unoptimized
             className="h-14 w-14 flex-shrink-0 border border-gray-300 object-cover"
           />
         ) : (
@@ -142,6 +163,6 @@ export default function SpotifyNowPlaying() {
           </a>
         </div>
       </div>
-    </WikiActivityBox>
+    </SpotifyActivityBox>
   );
 }

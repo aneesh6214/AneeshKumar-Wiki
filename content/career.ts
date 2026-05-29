@@ -1,14 +1,11 @@
-import React from "react";
-import { ImagePosition, JSONContent } from "@/lib/json-content";
+import { ImagePosition, type JSONContent } from "@/lib/json-content";
 import { aneeshKumarInfobox } from "./profile-infobox";
 
-export const professionalWorkContent: JSONContent = {
-  title: "Professional Work",
-  subtitle: "Professional Experience",
-  description: "Professional experience and career highlights",
-  url: "/professional-work",
+export const careerContent: JSONContent = {
+  title: "Career",
+  url: "/career",
   disambiguation:
-    "This article covers the professional work of [Aneesh Kumar](/). For independent projects, see [Aneesh Kumar (Independent Work)](/independent-work).",
+    "This article covers the career of [Aneesh Kumar](/). For independent projects, see [Aneesh Kumar (Projects)](/projects).",
   infobox: aneeshKumarInfobox,
   infoboxTitle: "Aneesh Kumar",
   sections: [
@@ -20,12 +17,6 @@ export const professionalWorkContent: JSONContent = {
         {
           title: "Quantifind",
           date: "May 2025-Ongoing",
-          description: (
-            <>
-              Aneesh Kumar contributes to building and maintaining the core
-              infrastructure that underpins [Quantifind](https://en.wikipedia.org/wiki/Quantifind)'s AI systems.
-            </>
-          ),
           image: {
             src: "/quantifind-logo.png",
             alt: "Quantifind logo",
@@ -37,12 +28,8 @@ export const professionalWorkContent: JSONContent = {
             {
               title: "Associate Platform Engineer",
               date: "Current Position",
-              description: (
-                <>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </>
-              ),
+              description:
+                "Kumar works on data and security infrastructure for Quantifind's API platform. His work includes data pipelines for parallel ML inference; systems for ingestion, migration, and entity resolution; and observability infrastructure for monitoring model performance, resource utilization, and API traffic.",
               technologies: "Scala, Jenkins, Ansible, Azkaban",
             },
             {
@@ -54,13 +41,6 @@ export const professionalWorkContent: JSONContent = {
         {
           title: "Oracle",
           date: "May 2024 - August 2024",
-          description: (
-            <>
-              Oracle was Aneesh's first software engineering internship. He came
-              on as a back-end software engineering intern and transitioned into
-              a full-stack role across databases and cloud services.
-            </>
-          ),
           image: {
             src: "/oracle-logo.svg",
             alt: "Oracle software development",
@@ -72,12 +52,8 @@ export const professionalWorkContent: JSONContent = {
             {
               title: "Software Engineering Intern",
               date: "May 2024 - August 2024",
-              description: (
-                <>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </>
-              ),
+              description:
+                "In 2024, Kumar worked as a software engineering intern at Oracle, where he developed backend services for real-time natural-language database querying and a full-stack dashboard for customer support workflows. His work culminated in a proof-of-concept system integrating AI inference pipelines into a customer-facing application, and he was later described by his manager as a top performer in his intern cohort.",
               technologies:
                 "Python, GraphQL, FastAPI, TypeScript/JavaScript, React, OCI, Docker, Oracle Database",
             },
@@ -91,16 +67,11 @@ export const professionalWorkContent: JSONContent = {
       group: "publications",
       subsections: [
         {
-          title: "Exploring Sparse Feature Topology as a Predictor for Emergence",
-          navLabel: "Sparse Feature Topology",
+          title: "Predicting Emergent Capabilities Using Sparse Features",
           date: "2025",
           venue: "AAAI XAI4Science Workshop",
-          description: (
-            <>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </>
-          ),
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
           image: {
             src: "/predicting_emergence.png",
             alt: "Sparse feature visualization",

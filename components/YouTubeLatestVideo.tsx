@@ -1,6 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import Image from "next/image";
+import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
+import { FaYoutube } from "react-icons/fa";
 import WikiActivityBox from "./WikiActivityBox";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
@@ -21,6 +24,21 @@ interface YouTubeVideo {
   url: string;
   viewCount: string | null;
   duration: string | null;
+}
+
+interface YouTubeActivityBoxProps {
+  children: ReactNode;
+}
+
+function YouTubeActivityBox({ children }: YouTubeActivityBoxProps) {
+  return (
+    <WikiActivityBox
+      title="Latest video"
+      icon={<FaYoutube className="h-4 w-4" />}
+    >
+      {children}
+    </WikiActivityBox>
+  );
 }
 
 function formatViewCount(count: string | null): string {
@@ -47,7 +65,9 @@ function formatDuration(duration: string | null): string {
   const seconds = parseInt(match[3] || "0");
 
   if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   }
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
@@ -92,7 +112,7 @@ export default function YouTubeLatestVideo() {
           throw new Error("Failed to fetch video");
         }
 
-        const data: YouTubeVideo = await response.json();
+        const data = (await response.json()) as YouTubeVideo;
         setVideo(data);
         setError(null);
       } catch (err) {
@@ -110,21 +130,21 @@ export default function YouTubeLatestVideo() {
 
   if (loading) {
     return (
-      <WikiActivityBox title="Latest video">
+      <YouTubeActivityBox>
         <div className="flex items-center gap-3">
-          <div className="h-14 w-20 animate-pulse border border-gray-300 bg-gray-200"></div>
+          <div className="h-14 w-20 animate-pulse border border-gray-300 bg-gray-200" />
           <div className="flex-1">
-            <div className="mb-2 h-4 animate-pulse bg-gray-200"></div>
-            <div className="h-3 w-2/3 animate-pulse bg-gray-200"></div>
+            <div className="mb-2 h-4 animate-pulse bg-gray-200" />
+            <div className="h-3 w-2/3 animate-pulse bg-gray-200" />
           </div>
         </div>
-      </WikiActivityBox>
+      </YouTubeActivityBox>
     );
   }
 
   if (error) {
     return (
-      <WikiActivityBox title="Latest video">
+      <YouTubeActivityBox>
         <div className="flex items-center gap-3">
           <div className="flex h-14 w-20 items-center justify-center border border-gray-300 bg-gray-200 text-xs font-semibold text-gray-600">
             N/A
@@ -133,13 +153,13 @@ export default function YouTubeLatestVideo() {
             <p className="text-sm text-gray-600">Unable to load YouTube data</p>
           </div>
         </div>
-      </WikiActivityBox>
+      </YouTubeActivityBox>
     );
   }
 
   if (!video) {
     return (
-      <WikiActivityBox title="Latest video">
+      <YouTubeActivityBox>
         <div className="flex items-center gap-3">
           <div className="flex h-14 w-20 items-center justify-center border border-gray-300 bg-gray-200 text-xs font-semibold text-gray-600">
             N/A
@@ -148,17 +168,20 @@ export default function YouTubeLatestVideo() {
             <p className="text-sm text-gray-600">No recent videos</p>
           </div>
         </div>
-      </WikiActivityBox>
+      </YouTubeActivityBox>
     );
   }
 
   return (
-    <WikiActivityBox title="Latest video">
+    <YouTubeActivityBox>
       <div className="flex items-center gap-3">
-        <div className="flex-shrink-0 relative">
-          <img
+        <div className="relative flex-shrink-0">
+          <Image
             src={video.thumbnail}
             alt={`${video.title} thumbnail`}
+            width={80}
+            height={56}
+            unoptimized
             className="h-14 w-20 border border-gray-300 object-cover"
           />
           {video.duration && (
@@ -168,26 +191,24 @@ export default function YouTubeLatestVideo() {
           )}
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <a
             href={video.url}
             target="_blank"
             rel="noopener noreferrer"
             className="block hover:underline"
           >
-            <p className="font-medium text-sm text-gray-900 line-clamp-2 leading-tight">
+            <p className="line-clamp-2 text-sm font-medium leading-tight text-gray-900">
               {video.title}
             </p>
-            <div className="flex items-center gap-2 mt-1 text-xs text-gray-600">
-              {video.viewCount && (
-                <span>{formatViewCount(video.viewCount)}</span>
-              )}
+            <div className="mt-1 flex items-center gap-2 text-xs text-gray-600">
+              {video.viewCount && <span>{formatViewCount(video.viewCount)}</span>}
               <span aria-hidden="true">|</span>
               <span>{formatTimeAgo(video.publishedAt)}</span>
             </div>
           </a>
         </div>
       </div>
-    </WikiActivityBox>
+    </YouTubeActivityBox>
   );
 }

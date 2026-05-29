@@ -4,6 +4,7 @@ import {
   extractSections,
   JSONContent,
 } from "./json-content";
+import { siteContent } from "@/content/site";
 
 export interface SearchableContent {
   id: string;
@@ -11,6 +12,7 @@ export interface SearchableContent {
   url: string;
   content: string;
   section?: string;
+  sectionId?: string;
   preview: string;
 }
 
@@ -22,6 +24,13 @@ export interface SearchResult extends SearchableContent {
 
 let contentCache: Record<string, JSONContent> | null = null;
 
+function searchDisplayTitle(content: JSONContent): string {
+  return (
+    siteContent.navigation.find((item) => item.href === content.url)
+      ?.sidebarLabel || content.title
+  );
+}
+
 export async function getSearchableContent(): Promise<SearchableContent[]> {
   if (!contentCache) {
     contentCache = await getAllJSONContent();
@@ -31,10 +40,11 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
 
   for (const [slug, content] of Object.entries(contentCache)) {
     const searchableText = extractSearchableText(content);
+    const title = searchDisplayTitle(content);
 
     searchableItems.push({
       id: `${slug}-main`,
-      title: content.title,
+      title,
       url: content.url,
       content: searchableText,
       preview: createPreview(searchableText),
@@ -44,9 +54,10 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
     sections.forEach((section) => {
       searchableItems.push({
         id: `${slug}-${section.id}`,
-        title: section.title,
+        title,
         url: section.url,
         section: section.title,
+        sectionId: section.id,
         content: section.content,
         preview: createPreview(section.content),
       });
@@ -57,6 +68,7 @@ export async function getSearchableContent(): Promise<SearchableContent[]> {
 }
 
 const DEFAULT_PREVIEW_LENGTH = 150;
+const MATCH_PREVIEW_LENGTH = 190;
 const PREVIEW_WORD_BOUNDARY_SLACK = 30;
 const MAX_RESULTS = 8;
 const TITLE_MATCH_WEIGHT = 10;
@@ -65,6 +77,15 @@ const CONTENT_MATCH_WEIGHT = 2;
 
 function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function createPreview(
@@ -84,6 +105,118 @@ function createPreview(
     : truncated + "...";
 }
 
+function createMatchPreview(
+  content: string,
+  query: string,
+  matchedTerms: string[],
+): string {
+  const normalized = content.replace(/\s+/g, " ").trim();
+  if (normalized.length <= MATCH_PREVIEW_LENGTH) {
+    return normalized;
+  }
+
+  const lowerContent = normalized.toLowerCase();
+  const normalizedQuery = query.trim().replace(/\s+/g, " ");
+  const lowerQuery = normalizedQuery.toLowerCase();
+
+  let matchIndex = lowerQuery.length > 1 ? lowerContent.indexOf(lowerQuery) : -1;
+  let matchLength = normalizedQuery.length;
+
+  if (matchIndex < 0) {
+    for (const term of matchedTerms) {
+      const termIndex = lowerContent.indexOf(term.toLowerCase());
+      if (termIndex >= 0) {
+        matchIndex = termIndex;
+        matchLength = term.length;
+        break;
+      }
+    }
+  }
+
+  if (matchIndex < 0) {
+    return createPreview(normalized, MATCH_PREVIEW_LENGTH);
+  }
+
+  const contextBefore = Math.floor((MATCH_PREVIEW_LENGTH - matchLength) / 2);
+  let start = Math.max(0, matchIndex - contextBefore);
+  let end = Math.min(normalized.length, start + MATCH_PREVIEW_LENGTH);
+
+  if (end - start < MATCH_PREVIEW_LENGTH) {
+    start = Math.max(0, end - MATCH_PREVIEW_LENGTH);
+  }
+
+  if (start > 0) {
+    const nextSpace = normalized.indexOf(" ", start);
+    if (nextSpace > 0 && nextSpace < matchIndex) {
+      start = nextSpace + 1;
+    }
+  }
+
+  if (end < normalized.length) {
+    const previousSpace = normalized.lastIndexOf(" ", end);
+    if (previousSpace > matchIndex + matchLength) {
+      end = previousSpace;
+    }
+  }
+
+  const prefix = start > 0 ? "..." : "";
+  const suffix = end < normalized.length ? "..." : "";
+  return `${prefix}${normalized.slice(start, end)}${suffix}`;
+}
+
+function highlightPreview(
+  preview: string,
+  query: string,
+  matchedTerms: string[],
+): string {
+  const normalizedQuery = query.trim().replace(/\s+/g, " ");
+  const lowerPreview = preview.toLowerCase();
+  const phrases =
+    normalizedQuery.length > 1 &&
+    lowerPreview.includes(normalizedQuery.toLowerCase())
+      ? [normalizedQuery]
+      : [];
+  const patterns = [...phrases, ...matchedTerms].filter(
+    (pattern, index, allPatterns) =>
+      pattern.length > 1 &&
+      allPatterns.findIndex(
+        (candidate) => candidate.toLowerCase() === pattern.toLowerCase(),
+      ) === index,
+  );
+
+  if (patterns.length === 0) {
+    return escapeHtml(preview);
+  }
+
+  const regex = new RegExp(`(${patterns.map(escapeRegExp).join("|")})`, "gi");
+  let cursor = 0;
+  let html = "";
+
+  for (const match of preview.matchAll(regex)) {
+    const index = match.index ?? 0;
+    const value = match[0];
+    html += escapeHtml(preview.slice(cursor, index));
+    html += `<mark>${escapeHtml(value)}</mark>`;
+    cursor = index + value.length;
+  }
+
+  html += escapeHtml(preview.slice(cursor));
+  return html;
+}
+
+function preferredSearchResult(
+  current: SearchResult | undefined,
+  candidate: SearchResult,
+): SearchResult {
+  if (!current) return candidate;
+  if (candidate.score !== current.score) {
+    return candidate.score > current.score ? candidate : current;
+  }
+  if (candidate.section && !current.section) return candidate;
+  if (!candidate.section && current.section) return current;
+  return current;
+}
+
 export async function searchJSONContent(
   query: string,
 ): Promise<SearchResult[]> {
@@ -101,7 +234,7 @@ export async function searchJSONContent(
   }
 
   const searchableContent = await getSearchableContent();
-  const results: SearchResult[] = [];
+  const resultsByUrl = new Map<string, SearchResult>();
 
   searchableContent.forEach((item) => {
     let score = 0;
@@ -137,25 +270,26 @@ export async function searchJSONContent(
     }
 
     if (score > 0) {
-      let highlightedPreview = item.preview;
-      matchedTerms.forEach((term) => {
-        const regex = new RegExp(`(${escapeRegExp(term)})`, "gi");
-        highlightedPreview = highlightedPreview.replace(
-          regex,
-          "<mark>$1</mark>",
-        );
-      });
-
-      results.push({
+      const preview = createMatchPreview(item.content, query, matchedTerms);
+      const highlightedPreview = highlightPreview(preview, query, matchedTerms);
+      const result = {
         ...item,
+        preview,
         score,
         matchedTerms,
         highlightedPreview,
-      });
+      };
+
+      resultsByUrl.set(
+        item.url,
+        preferredSearchResult(resultsByUrl.get(item.url), result),
+      );
     }
   });
 
-  return results.sort((a, b) => b.score - a.score).slice(0, MAX_RESULTS);
+  return Array.from(resultsByUrl.values())
+    .sort((a, b) => b.score - a.score)
+    .slice(0, MAX_RESULTS);
 }
 
 const NAV_SUGGESTION_LIMIT = 6;

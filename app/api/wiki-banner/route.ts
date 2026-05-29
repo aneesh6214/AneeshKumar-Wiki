@@ -7,8 +7,8 @@ export const dynamic = "force-dynamic";
 
 function fallbackBanner(): WikiBannerPayload {
   return {
-    title: siteContent.source.name,
-    extract: siteContent.banner.text,
+    title: siteContent.articleOfDay.fallbackTitle,
+    extract: siteContent.articleOfDay.fallbackExtract,
     url: "/",
     sourceLabel: siteContent.source.name,
     fallback: true,

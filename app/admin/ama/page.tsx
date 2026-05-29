@@ -49,7 +49,7 @@ async function publishAnswer(formData: FormData) {
 
   await saveAmaAnswer(id, answer);
   revalidatePath("/admin/ama");
-  revalidatePath("/blog");
+  revalidatePath("/ama");
   redirect(`/admin/ama?question=${id}&saved=1`);
 }
 
@@ -63,7 +63,7 @@ async function archiveQuestion(formData: FormData) {
 
   await archiveAmaQuestion(id);
   revalidatePath("/admin/ama");
-  revalidatePath("/blog");
+  revalidatePath("/ama");
   redirect("/admin/ama?archived=1");
 }
 

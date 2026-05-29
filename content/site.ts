@@ -22,21 +22,21 @@ export interface SiteContent {
     triggerLabel: string;
     dialogTitle: string;
   };
-  banner: {
-    text: string;
-    separator: string;
-    repeatCount: number;
-  };
-  navigation: SiteNavigationItem[];
-  infobox: {
-    defaultTitle: string;
-  };
-  sidebar: {
+  articleOfDay: {
+    label: string;
+    selectionLabel: string;
+    fallbackTitle: string;
+    fallbackExtract: string;
     decorativeImage: {
       src: string;
       width: number;
       height: number;
+      alt: string;
     };
+  };
+  navigation: SiteNavigationItem[];
+  infobox: {
+    defaultTitle: string;
   };
 }
 
@@ -59,34 +59,34 @@ export const siteContent: SiteContent = {
     triggerLabel: "Search this site",
     dialogTitle: "Search Kumarpedia",
   },
-  banner: {
-    text: "Aneesh Kumar Rocks",
-    separator: "·",
-    repeatCount: 12,
+  articleOfDay: {
+    label: "Article of the Day",
+    selectionLabel: "Aneesh's pick",
+    fallbackTitle: "",
+    fallbackExtract: "",
+    decorativeImage: {
+      src: "/aang.png",
+      width: 912,
+      height: 912,
+      alt: "",
+    },
   },
   navigation: [
     { href: "/", label: "About", sidebarLabel: "Home" },
     {
-      href: "/professional-work",
-      label: "Professional Work",
-      sidebarLabel: "Professional Work",
+      href: "/career",
+      label: "Career",
+      sidebarLabel: "Career",
     },
     {
-      href: "/independent-work",
-      label: "Independent Work",
-      sidebarLabel: "Independent Work",
+      href: "/projects",
+      label: "Projects",
+      sidebarLabel: "Projects",
     },
     { href: "/media", label: "Media", sidebarLabel: "Media" },
-    { href: "/blog", label: "Ask Me Anything", sidebarLabel: "Ask Me Anything" },
+    { href: "/ama", label: "Ask Me Anything", sidebarLabel: "Ask Me Anything" },
   ],
   infobox: {
     defaultTitle: "Aneesh Kumar",
-  },
-  sidebar: {
-    decorativeImage: {
-      src: "/aang.jpg",
-      width: 333,
-      height: 250,
-    },
   },
 };

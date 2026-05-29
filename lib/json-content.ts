@@ -1,19 +1,27 @@
-import React from "react";
-
 export enum ImagePosition {
   LEFT = "left",
   RIGHT = "right",
 }
 
+export interface RoleFocusItem {
+  role: string;
+  statement: string;
+  seeAlso: {
+    href: string;
+    label: string;
+  };
+}
+
 export interface ContentSection {
   id?: string;
   title: string;
-  navLabel?: string;
   group?: string;
+  variant?: "home-role-focus" | "home-activity-grid";
   hideFromArticleNav?: boolean;
   date?: string;
   venue?: string;
-  description?: React.ReactNode;
+  description?: string;
+  roleFocusItems?: RoleFocusItem[];
   technologies?: string;
   githubUrl?: string;
   websiteUrl?: string;
@@ -49,8 +57,6 @@ export interface Infobox {
 
 export interface JSONContent {
   title: string;
-  subtitle?: string;
-  description: string;
   url: string;
   disambiguation?: string;
   infobox?: Infobox;
@@ -64,15 +70,17 @@ export interface ArticleNavItem {
   depth: number;
 }
 
+export interface SectionActionLink {
+  href: string;
+  label: string;
+}
+
 const CONTENT_LOADERS: Record<string, () => Promise<JSONContent>> = {
   home: () => import("../content/home").then((m) => m.homeContent),
-  "professional-work": () =>
-    import("../content/professional-work").then((m) => m.professionalWorkContent),
-  "independent-work": () =>
-    import("../content/independent-work").then((m) => m.independentWorkContent),
+  career: () => import("../content/career").then((m) => m.careerContent),
+  projects: () => import("../content/projects").then((m) => m.projectsContent),
   media: () => import("../content/media").then((m) => m.mediaContent),
-  blog: () => import("../content/blog").then((m) => m.blogContent),
-  contact: () => import("../content/contact").then((m) => m.contactContent),
+  ama: () => import("../content/ama").then((m) => m.amaContent),
 };
 
 export function slugify(value: string): string {
@@ -84,6 +92,36 @@ export function slugify(value: string): string {
 
 export function sectionId(section: ContentSection): string {
   return section.id || slugify(section.title);
+}
+
+export function splitCommaList(value?: string, limit?: number): string[] {
+  const items = (value ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return typeof limit === "number" ? items.slice(0, limit) : items;
+}
+
+export function sectionActionLinks(
+  section: ContentSection,
+  imageLinkLabel = "View",
+): SectionActionLink[] {
+  const links: SectionActionLink[] = [];
+
+  if (section.websiteUrl) {
+    links.push({ href: section.websiteUrl, label: "Website" });
+  }
+
+  if (section.githubUrl) {
+    links.push({ href: section.githubUrl, label: "GitHub" });
+  }
+
+  if (section.image?.link) {
+    links.push({ href: section.image.link, label: imageLinkLabel });
+  }
+
+  return links;
 }
 
 export function getArticleNavigation(
@@ -100,7 +138,7 @@ export function getArticleNavigation(
       if (!section.hideFromArticleNav && hasVisibleTitle) {
         links.push({
           href: `#${sectionId(section)}`,
-          label: section.navLabel || section.title,
+          label: section.title,
           depth,
         });
       }
@@ -133,40 +171,33 @@ export async function getAllJSONContent(): Promise<
   return allContent;
 }
 
-function reactNodeToText(node: React.ReactNode): string {
-  if (node == null || typeof node === "boolean") return "";
-  if (typeof node === "string" || typeof node === "number") return String(node);
-  if (Array.isArray(node)) return node.map(reactNodeToText).join(" ");
-  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
-    return reactNodeToText(node.props.children);
-  }
-  return "";
+export function stripMarkdownLinks(value: string): string {
+  return value.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+}
+
+function descriptionText(value?: string): string {
+  return stripMarkdownLinks(value ?? "");
+}
+
+function roleFocusText(items?: RoleFocusItem[]): string {
+  return (items ?? [])
+    .map((item) => `${item.role} ${item.statement} ${item.seeAlso.label}`)
+    .join(" ");
 }
 
 export function extractSearchableText(content: JSONContent): string {
-  let text =
-    content.title +
-    " " +
-    (content.subtitle || "") +
-    " " +
-    content.description +
-    " ";
+  let text = "";
 
   if (content.disambiguation) {
-    text += content.disambiguation + " ";
-  }
-
-  if (content.infobox) {
-    content.infobox.fields.forEach((field) => {
-      text += field.label + " " + field.value + " ";
-    });
+    text += stripMarkdownLinks(content.disambiguation) + " ";
   }
 
   function extractFromSections(sections: ContentSection[]): string {
     let sectionText = "";
     sections.forEach((section) => {
       sectionText += section.title + " ";
-      sectionText += reactNodeToText(section.description) + " ";
+      sectionText += descriptionText(section.description) + " ";
+      sectionText += roleFocusText(section.roleFocusItems) + " ";
       if (section.technologies) {
         sectionText += section.technologies + " ";
       }
@@ -209,7 +240,8 @@ export function extractSections(
 
       const id = sectionId(section);
 
-      let sectionContent = reactNodeToText(section.description) + " ";
+      let sectionContent = descriptionText(section.description) + " ";
+      sectionContent += roleFocusText(section.roleFocusItems) + " ";
       if (section.technologies) {
         sectionContent += section.technologies + " ";
       }

@@ -1,33 +1,36 @@
 import type { ReactNode } from "react";
 import DossierContent from "./DossierContent";
-import { InlineMarkdownText } from "./InlineContent";
+import { WikiArticleLayout } from "./WikiContent";
 import {
-  ArticleLayout,
+  WikiBadgeRow,
   WikiExternalLinkBadge,
   WikiSectionHeading,
-  WikiTag,
 } from "./WikiPrimitives";
-import {
-  ContentSection,
-  JSONContent,
-  sectionId,
-} from "@/lib/json-content";
+import type { ContentSection, JSONContent } from "@/lib/json-content";
+import { sectionId, splitCommaList } from "@/lib/json-content";
 
 interface ProfessionalWorkTabsProps {
   content: JSONContent;
-  sidePanel: ReactNode;
+}
+
+interface WikiSectionProps {
+  children: ReactNode;
+  isFlush?: boolean;
+  section: ContentSection;
+}
+
+interface PublicationsCatalogueProps {
+  publications: ContentSection[];
 }
 
 function WikiSection({
   children,
+  isFlush = false,
   section,
-}: {
-  children: ReactNode;
-  section: ContentSection;
-}) {
+}: WikiSectionProps) {
   return (
     <section className="mb-6 last:mb-0">
-      <WikiSectionHeading id={sectionId(section)}>
+      <WikiSectionHeading id={sectionId(section)} isFlush={isFlush}>
         {section.title}
       </WikiSectionHeading>
       {children}
@@ -35,27 +38,16 @@ function WikiSection({
   );
 }
 
-function splitTags(value?: string): string[] {
-  if (!value) return [];
-
-  return value
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
 function PublicationsCatalogue({
   publications,
-}: {
-  publications: ContentSection[];
-}) {
+}: PublicationsCatalogueProps) {
   return (
-    <section className="overflow-x-auto py-4">
+    <section className="overflow-x-auto pb-4">
       <table className="w-full min-w-[680px] border-collapse text-sm">
         <thead>
           <tr className="border-y border-gray-300 bg-gray-100 text-left">
             <th className="px-2 py-2 font-semibold">Year</th>
-            <th className="px-2 py-2 font-semibold">Publication</th>
+            <th className="px-2 py-2 font-semibold">Title</th>
             <th className="px-2 py-2 font-semibold">Venue</th>
             <th className="px-2 py-2 font-semibold">Topics</th>
             <th className="px-2 py-2 font-semibold">URL</th>
@@ -76,11 +68,10 @@ function PublicationsCatalogue({
               </td>
               <td className="px-2 py-2 text-gray-700">{publication.venue}</td>
               <td className="px-2 py-2">
-                <div className="flex flex-wrap gap-1.5">
-                  {splitTags(publication.technologies).map((tag) => (
-                    <WikiTag key={tag}>{tag}</WikiTag>
-                  ))}
-                </div>
+                <WikiBadgeRow
+                  className="mt-0"
+                  tags={splitCommaList(publication.technologies)}
+                />
               </td>
               <td className="px-2 py-2">
                 {publication.websiteUrl && (
@@ -100,7 +91,6 @@ function PublicationsCatalogue({
 
 export default function ProfessionalWorkTabs({
   content,
-  sidePanel,
 }: ProfessionalWorkTabsProps) {
   const employmentSection = content.sections.find(
     (section) => section.group === "employment" || section.id === "employment",
@@ -115,33 +105,20 @@ export default function ProfessionalWorkTabs({
   };
 
   return (
-    <ArticleLayout sidePanel={sidePanel}>
-      {content.disambiguation && (
-        <p className="mb-3 text-xs italic text-gray-600">
-          <InlineMarkdownText text={content.disambiguation} />
-        </p>
-      )}
-
+    <WikiArticleLayout content={content}>
       {employmentSection && (
         <WikiSection section={employmentSection}>
-          <DossierContent
-            embedded
-            content={employmentContent}
-            showDisambiguation={false}
-            showInfobox={false}
-            showMetaPanels={false}
-            technologyPlacement="inline-role"
-          />
+          <DossierContent content={employmentContent} />
         </WikiSection>
       )}
 
       {publicationsSection && (
-        <WikiSection section={publicationsSection}>
+        <WikiSection section={publicationsSection} isFlush>
           <PublicationsCatalogue
             publications={publicationsSection.subsections || []}
           />
         </WikiSection>
       )}
-    </ArticleLayout>
+    </WikiArticleLayout>
   );
 }

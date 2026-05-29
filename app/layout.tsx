@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import BeaconProvider from "@/components/BeaconProvider";
-import TopBanner from "@/components/TopBanner";
+import Header from "@/components/Header";
+import SearchHighlight from "@/components/SearchHighlight";
 import { siteContent } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -17,8 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="min-h-screen bg-white pt-8 font-sans">
-          <TopBanner />
+        <div className="min-h-screen bg-white pt-14 font-sans">
+          <Header />
+          <SearchHighlight />
           {children}
         </div>
         <BeaconProvider />

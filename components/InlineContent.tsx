@@ -1,11 +1,25 @@
 import Link from "next/link";
-import React from "react";
+import { Fragment } from "react";
+import type { ReactNode } from "react";
 
-function parseMarkupText(text: string, keyPrefix: string): React.ReactNode {
+interface InlineMarkdownTextProps {
+  text: string;
+}
+
+interface InlineMarkdownWithBreaksProps {
+  text: string;
+}
+
+interface MarkdownParagraphsProps {
+  text?: string;
+  className?: string;
+}
+
+function parseMarkupText(text: string, keyPrefix: string): ReactNode {
   if (!text) return text;
 
   const parts = text.split(/(<\/?(?:strong|em|br)\s*\/?>)/g);
-  const elements: React.ReactNode[] = [];
+  const elements: ReactNode[] = [];
   let currentIndex = 0;
 
   while (currentIndex < parts.length) {
@@ -53,7 +67,7 @@ function parseMarkupText(text: string, keyPrefix: string): React.ReactNode {
   return elements.length === 1 ? elements[0] : elements;
 }
 
-export function InlineMarkdownText({ text }: { text: string }) {
+export function InlineMarkdownText({ text }: InlineMarkdownTextProps) {
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts = text.split(linkRegex);
 
@@ -83,41 +97,44 @@ export function InlineMarkdownText({ text }: { text: string }) {
   );
 }
 
-export function InlineMarkdownWithBreaks({ text }: { text: string }) {
+export function InlineMarkdownWithBreaks({
+  text,
+}: InlineMarkdownWithBreaksProps) {
   const lines = text.split("\n");
 
   return (
     <>
       {lines.map((line, index) => (
-        <React.Fragment key={`${line}-${index}`}>
+        <Fragment key={`${line}-${index}`}>
           <InlineMarkdownText text={line} />
           {index < lines.length - 1 && <br />}
-        </React.Fragment>
+        </Fragment>
       ))}
     </>
   );
 }
 
-export function ParsedContent({ children }: { children: React.ReactNode }) {
-  const transformNode = (node: React.ReactNode): React.ReactNode => {
-    if (typeof node === "string") {
-      return <InlineMarkdownText text={node} />;
-    }
+export function MarkdownParagraphs({
+  text,
+  className = "",
+}: MarkdownParagraphsProps) {
+  const paragraphs = (text ?? "")
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
 
-    if (Array.isArray(node)) {
-      return node.map(transformNode);
-    }
+  if (paragraphs.length === 0) return null;
 
-    if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
-      return React.cloneElement(
-        node,
-        {},
-        React.Children.map(node.props.children, transformNode),
-      );
-    }
-
-    return node;
-  };
-
-  return transformNode(children);
+  return (
+    <>
+      {paragraphs.map((paragraph, index) => (
+        <p
+          key={`${paragraph}-${index}`}
+          className={`${index > 0 ? "mt-3" : ""} ${className}`.trim()}
+        >
+          <InlineMarkdownText text={paragraph} />
+        </p>
+      ))}
+    </>
+  );
 }

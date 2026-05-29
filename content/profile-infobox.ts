@@ -22,10 +22,6 @@ export const aneeshKumarInfobox: Infobox = {
     },
   ],
   fields: [
-    {
-      label: "Born",
-      value: "June 21, 2004 (age 21)\nSan Francisco, California, U.S.",
-    },
     { label: "Location", value: "San Francisco Bay Area" },
     {
       label: "Position",
@@ -35,7 +31,7 @@ export const aneeshKumarInfobox: Infobox = {
     {
       label: "Education",
       value:
-        "B.S. Computer Science, minor in Mathematics\nSan Francisco State University",
+        "B.S. Computer Science\nSan Francisco State University\nMinor in Mathematics",
     },
   ],
 };
