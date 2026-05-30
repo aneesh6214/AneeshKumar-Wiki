@@ -1,4 +1,4 @@
-import WorkCatalogueContent from "@/components/WorkCatalogueContent";
+import MediaContent from "@/components/MediaContent";
 import WikiArticlePage from "@/components/WikiArticlePage";
 import { getJSONContent } from "@/lib/json-content";
 
@@ -7,7 +7,7 @@ export default async function MediaPage() {
 
   return (
     <WikiArticlePage currentPath="/media" content={content}>
-      <WorkCatalogueContent content={content} />
+      <MediaContent content={content} />
     </WikiArticlePage>
   );
 }

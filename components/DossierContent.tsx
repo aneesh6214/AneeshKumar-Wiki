@@ -1,9 +1,5 @@
 import type { ContentSection, JSONContent } from "@/lib/json-content";
-import {
-  sectionActionLinks,
-  sectionId,
-  splitCommaList,
-} from "@/lib/json-content";
+import { sectionId, splitCommaList } from "@/lib/json-content";
 import { MarkdownParagraphs } from "./InlineContent";
 import { WikiBadgeRow, WikiEntryFigure } from "./WikiPrimitives";
 
@@ -11,9 +7,8 @@ interface DossierContentProps {
   content: JSONContent;
 }
 
-interface DossierRecordProps {
-  content: JSONContent;
-  record: ContentSection;
+interface CompanyEntryProps {
+  company: ContentSection;
 }
 
 interface RoleTimelineItemProps {
@@ -25,114 +20,44 @@ interface RoleTimelineProps {
   roles: ContentSection[];
 }
 
-interface DossierDescriptionProps {
-  className?: string;
+interface RoleDescriptionProps {
   description?: string;
-  textClassName: string;
-}
-
-function pageKind(content: JSONContent): string {
-  if (isProfessionalWork(content)) return "Professional";
-  if (content.url === "/projects") return "Project";
-  if (content.url === "/media") return "Media";
-  return "Entry";
-}
-
-function recordKind(content: JSONContent, section: ContentSection): string {
-  if (isProfessionalWork(content) && section.date) {
-    return section.date;
-  }
-
-  const prefix = section.title.split(":")[0];
-
-  if (["Paper", "Report"].includes(prefix)) {
-    return prefix;
-  }
-
-  return pageKind(content);
-}
-
-function isProfessionalWork(content: JSONContent): boolean {
-  return content.url === "/career";
 }
 
 function isCurrentRole(section: ContentSection): boolean {
   return /(current position|ongoing)/i.test(section.date || "");
 }
 
-function DossierRecordHeader({
-  content,
-  record,
-}: DossierRecordProps) {
-  return (
-    <>
-      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <h2 className="text-lg font-semibold leading-snug text-blue-700">
-          {record.title}
-        </h2>
-        {record.date && (
-          <span className="text-xs text-gray-600">{record.date}</span>
-        )}
-      </div>
-
-      <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-600">
-        <span>{recordKind(content, record)}</span>
-        {record.image?.caption && <span>{record.image.caption}</span>}
-      </div>
-    </>
-  );
-}
-
-function DossierDescription({
-  className = "",
+function RoleDescription({
   description,
-  textClassName,
-}: DossierDescriptionProps) {
+}: RoleDescriptionProps) {
   if (!description?.trim()) return null;
 
   return (
-    <div className={className}>
-      <MarkdownParagraphs text={description} className={textClassName} />
+    <div className="mt-1">
+      <MarkdownParagraphs
+        text={description}
+        className="max-w-3xl text-sm leading-relaxed text-gray-800"
+      />
     </div>
   );
 }
 
-function DossierRecordItem({
-  content,
-  record,
-}: DossierRecordProps) {
-  const links = sectionActionLinks(record, "Document");
-  const technologies = splitCommaList(record.technologies, 8);
-  const isProfessionalPage = isProfessionalWork(content);
-  const inlineRoles = isProfessionalPage ? record.subsections || [] : [];
-  const isProfessionalCompany = isProfessionalPage && inlineRoles.length > 0;
+function CompanyEntry({ company }: CompanyEntryProps) {
+  const roles = company.subsections || [];
 
   return (
     <section
-      id={sectionId(record)}
+      id={sectionId(company)}
       className={`grid gap-4 border-b border-gray-200 py-4 last:border-b-0 ${
-        record.image ? "sm:grid-cols-[minmax(0,1fr)_9rem]" : ""
+        company.image ? "sm:grid-cols-[minmax(0,1fr)_9rem]" : ""
       }`}
     >
       <div className="min-w-0">
-        {!isProfessionalCompany && (
-          <DossierRecordHeader content={content} record={record} />
-        )}
-
-        {!isProfessionalCompany && (
-          <DossierDescription
-            className="mt-2"
-            description={record.description}
-            textClassName="max-w-3xl text-sm leading-relaxed text-gray-900"
-          />
-        )}
-
-        {inlineRoles.length > 0 && <RoleTimeline roles={inlineRoles} />}
-
-        <WikiBadgeRow links={links} tags={technologies} />
+        {roles.length > 0 && <RoleTimeline roles={roles} />}
       </div>
 
-      <WikiEntryFigure image={record.image} isSquare={isProfessionalCompany} />
+      <WikiEntryFigure image={company.image} isSquare />
     </section>
   );
 }
@@ -185,11 +110,7 @@ function RoleTimelineItem({
           </div>
         )}
 
-        <DossierDescription
-          className="mt-1"
-          description={role.description}
-          textClassName="max-w-3xl text-sm leading-relaxed text-gray-800"
-        />
+        <RoleDescription description={role.description} />
 
         <WikiBadgeRow className="mt-2" tags={technologies} />
       </div>
@@ -200,11 +121,10 @@ function RoleTimelineItem({
 export default function DossierContent({ content }: DossierContentProps) {
   return (
     <div>
-      {content.sections.map((record) => (
-        <DossierRecordItem
-          key={sectionId(record)}
-          content={content}
-          record={record}
+      {content.sections.map((company) => (
+        <CompanyEntry
+          key={sectionId(company)}
+          company={company}
         />
       ))}
     </div>

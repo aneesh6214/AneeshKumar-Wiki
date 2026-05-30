@@ -18,7 +18,7 @@ export const careerContent: JSONContent = {
           title: "Quantifind",
           date: "May 2025-Ongoing",
           image: {
-            src: "/quantifind-logo.png",
+            src: "/images/career/quantifind-logo.png",
             alt: "Quantifind logo",
             caption: "Quantifind",
             captionUrl: "https://www.quantifind.com/",
@@ -42,7 +42,7 @@ export const careerContent: JSONContent = {
           title: "Oracle",
           date: "May 2024 - August 2024",
           image: {
-            src: "/oracle-logo.svg",
+            src: "/images/career/oracle-logo.svg",
             alt: "Oracle software development",
             caption: "Oracle",
             captionUrl: "https://www.oracle.com/",
@@ -73,7 +73,7 @@ export const careerContent: JSONContent = {
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
           image: {
-            src: "/predicting_emergence.png",
+            src: "/images/career/predicting-emergence.png",
             alt: "Sparse feature visualization",
             caption: "SAE-based graphs for emergence prediction",
             position: ImagePosition.RIGHT,

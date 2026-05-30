@@ -1,5 +1,5 @@
 import Sidebar from "./Sidebar";
-import { getArticleNavigation, JSONContent } from "@/lib/json-content";
+import { getArticleNavigation, type JSONContent } from "@/lib/json-content";
 
 interface PageLayoutProps {
   currentPath: string;

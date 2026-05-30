@@ -58,10 +58,15 @@ export function ArticleSourceLine({ className = "" }: ArticleSourceLineProps) {
   );
 }
 
-export function ArticleTabs({ activeLabel = "Article" }: ArticleTabsProps) {
+export function ArticleTabs({
+  activeLabel = "Article",
+}: ArticleTabsProps) {
   return (
-    <div className="flex items-center gap-6 border-b border-gray-300">
-      <button className="border-b-2 border-black pb-2 font-medium">
+    <div className="flex flex-wrap items-center gap-6 border-b border-gray-300">
+      <button
+        type="button"
+        className="border-b-2 border-black pb-2 font-medium text-black"
+      >
         {activeLabel}
       </button>
     </div>
@@ -151,9 +156,7 @@ export function WikiEntryFigure({
         alt={image.alt}
         width={160}
         height={isSquare ? 160 : 96}
-        className={`mb-1.5 w-full object-contain bg-white ${
-          isSquare ? "aspect-square" : "h-24"
-        }`}
+        className="mb-1.5 h-auto w-full bg-white object-contain"
       />
       {image.caption && (
         <figcaption className="leading-snug">

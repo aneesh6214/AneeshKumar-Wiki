@@ -1,7 +1,7 @@
 import type { Infobox } from "@/lib/json-content";
 
 export const aneeshKumarInfobox: Infobox = {
-  image: "/profile-photo.png",
+  image: "/images/profile/profile-photo.png",
   imageCaption: "Aneesh Kumar in 2025",
   email: "aneesh.kumar6214@gmail.com",
   socialLinks: [

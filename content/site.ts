@@ -65,7 +65,7 @@ export const siteContent: SiteContent = {
     fallbackTitle: "",
     fallbackExtract: "",
     decorativeImage: {
-      src: "/aang.png",
+      src: "/images/site/aang.png",
       width: 912,
       height: 912,
       alt: "",

@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { siteContent } from "@/content/site";
 import type { WikiBannerPayload } from "@/lib/wiki-banner/types";
 import LanguageSelector from "./LanguageSelector";
+import { useMobileSidebar } from "./MobileSidebarProvider";
 import SearchNavigation from "./SearchNavigation";
 
 function ArticleOfDaySummary() {
@@ -77,15 +79,38 @@ function ArticleOfDaySummary() {
   );
 }
 
+function MobileSidebarToggle() {
+  const { isSidebarOpen, toggleSidebar } = useMobileSidebar();
+  const Icon = isSidebarOpen ? X : Menu;
+
+  return (
+    <button
+      type="button"
+      onClick={toggleSidebar}
+      className="inline-flex h-9 w-9 items-center justify-center border border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50 active:scale-[0.97] sm:hidden"
+      aria-label={isSidebarOpen ? "Close navigation" : "Open navigation"}
+      aria-expanded={isSidebarOpen}
+      aria-controls="site-sidebar"
+    >
+      <Icon className="h-5 w-5" aria-hidden="true" />
+    </button>
+  );
+}
+
 export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 h-14 border-b border-gray-200 bg-white text-[#202122]">
-      <div className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 sm:grid-cols-[minmax(0,1fr)_minmax(16rem,34rem)_minmax(0,1fr)] md:gap-5 md:px-4">
-        <ArticleOfDaySummary />
-        <div className="min-w-0 sm:flex sm:justify-center">
+      <div className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-3 sm:grid-cols-[minmax(0,1fr)_minmax(16rem,34rem)_minmax(0,1fr)] md:gap-5 md:px-4">
+        <div className="flex min-w-0 items-center">
+          <MobileSidebarToggle />
+          <ArticleOfDaySummary />
+        </div>
+        <div className="flex min-w-0 justify-center sm:block">
           <SearchNavigation
-            className="w-full sm:max-w-md"
-            buttonClassName="flex h-9 w-full items-center gap-2 border border-gray-300 bg-white px-3 text-left text-sm text-gray-600 hover:border-gray-400 hover:bg-gray-50"
+            className="flex justify-center sm:w-full sm:max-w-md"
+            buttonClassName="flex h-9 w-9 items-center justify-center border border-gray-300 bg-white text-sm text-gray-600 hover:border-gray-400 hover:bg-gray-50 active:scale-[0.97] sm:w-full sm:justify-start sm:gap-2 sm:px-3 sm:text-left sm:active:scale-100"
+            labelClassName="hidden truncate sm:block"
+            shortcutClassName="hidden sm:ml-auto sm:inline-flex sm:shrink-0"
           />
         </div>
         <div className="flex justify-end">

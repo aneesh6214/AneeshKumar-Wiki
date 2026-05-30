@@ -1,9 +1,6 @@
 import { ImagePosition, type JSONContent } from "@/lib/json-content";
 import { aneeshKumarInfobox } from "./profile-infobox";
 
-const placeholderDescription =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
 export const projectsContent: JSONContent = {
   title: "Projects",
   url: "/projects",
@@ -15,53 +12,32 @@ export const projectsContent: JSONContent = {
     {
       title: "LitReviewer",
       date: "Full-stack platform",
-      description: placeholderDescription,
+      description:
+        "LitReviewer is an independently developed full-stack web platform for AI-assisted literature review and research-paper analysis.",
       technologies: "React, TypeScript, FastAPI, LLMs",
-      websiteUrl: "https://www.mypapergrader.com/",
+      websiteUrl: "http://litreviewer.net/",
       githubUrl: "https://github.com/aneesh6214/Paper-Reviewer",
       image: {
-        src: "/placeholder.jpg",
-        alt: "Placeholder preview for LitReviewer",
-        caption: "LitReviewer platform preview",
-        position: ImagePosition.RIGHT,
-      },
-    },
-    {
-      title: "CSC648 Showcase Team Lead",
-      date: "Project management",
-      description: placeholderDescription,
-      technologies: "Pull Requests, Tickets, Planning, Team Leadership",
-      image: {
-        src: "/placeholder.jpg",
-        alt: "Placeholder artifact for CSC648 showcase leadership",
-        caption: "Selected project artifact",
-        position: ImagePosition.RIGHT,
-      },
-    },
-    {
-      title: "SURI Concept Formation Model",
-      date: "Research repository",
-      description: placeholderDescription,
-      technologies: "Unsupervised Learning, Concept Formation, Python, PyTorch",
-      githubUrl: "https://github.com/aneesh6214",
-      image: {
-        src: "/placeholder.svg",
-        alt: "Placeholder diagram for concept formation model",
-        caption: "Model architecture placeholder",
+        src: "/images/projects/litreviewer-landing-page.png",
+        alt: "LitReviewer platform preview",
+        caption: "Platform Preview",
+        captionUrl: "http://litreviewer.net/",
         position: ImagePosition.RIGHT,
       },
     },
     {
       title: "Biological Timescale Synaptic Plasticity",
       date: "Independent writeup",
-      description: placeholderDescription,
+      description:
+        "Biological Timescale Synaptic Plasticity is an independent technical writeup on synaptic plasticity, memory formation, and learning over behavioral timescales.",
       technologies: "BTSP, Neuroscience, Memory, Learning Systems",
       image: {
-        src: "/btsp-preview.png",
+        src: "/images/projects/btsp-preview.png",
         alt: "BTSP writeup preview",
-        caption: "BTSP writeup preview",
+        caption: "PDF Writeup",
+        captionUrl:
+          "https://drive.google.com/file/d/1dOQOKhdXwFE195OMDPaQB8ppldkzHcSZ/view",
         position: ImagePosition.RIGHT,
-        link: "https://drive.google.com/file/d/1dOQOKhdXwFE195OMDPaQB8ppldkzHcSZ/view",
       },
     },
   ],

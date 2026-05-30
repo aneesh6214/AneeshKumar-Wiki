@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { navigationItems } from "@/lib/navigation";
-import { ArticleNavItem } from "@/lib/json-content";
+import type { ArticleNavItem } from "@/lib/json-content";
+import { useMobileSidebar } from "./MobileSidebarProvider";
 
 interface SidebarProps {
   currentPath: string;
@@ -8,11 +11,27 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
+  const { closeSidebar, isSidebarOpen } = useMobileSidebar();
+
   return (
-    <aside className="w-full border-b border-gray-200 bg-white md:fixed md:left-0 md:top-14 md:flex md:h-[calc(100vh-3.5rem)] md:min-h-[calc(100vh-3.5rem)] md:w-[15rem] md:min-w-[15rem] md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
+    <>
+      {isSidebarOpen && (
+        <button
+          type="button"
+          className="fixed inset-x-0 bottom-0 top-14 z-40 cursor-default bg-black/15 md:hidden"
+          aria-label="Close navigation"
+          onClick={closeSidebar}
+        />
+      )}
+      <aside
+        id="site-sidebar"
+        className={`fixed left-0 top-14 z-50 h-[calc(100vh-3.5rem)] w-[min(18rem,calc(100vw-2rem))] flex-col overflow-y-auto border-r border-gray-200 bg-white shadow-[8px_0_24px_rgba(0,0,0,0.12)] md:flex md:w-[15rem] md:min-w-[15rem] md:shadow-none ${
+          isSidebarOpen ? "flex" : "hidden"
+        }`}
+      >
       <div className="px-3 py-3">
         <nav
-          className="flex flex-wrap gap-x-1 gap-y-1 md:flex-col md:gap-0"
+          className="flex flex-col gap-0"
           aria-label="Pages"
         >
           <div className="mb-1 w-full px-2 text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
@@ -24,6 +43,7 @@ export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
               <div key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={closeSidebar}
                   className={`block border-l px-2 py-1.5 text-[17px] leading-snug hover:underline ${
                     isActive
                       ? "border-gray-500 font-medium text-[#202122] hover:no-underline"
@@ -47,6 +67,7 @@ export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={closeSidebar}
                   className={`block border-l border-gray-200 py-1 leading-snug text-blue-700 hover:underline ${
                     item.depth ? "pl-5 pr-2 text-sm" : "px-2 text-[15px]"
                   }`}
@@ -58,6 +79,7 @@ export default function Sidebar({ currentPath, articleLinks }: SidebarProps) {
           </nav>
         )}
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

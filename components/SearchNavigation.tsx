@@ -14,6 +14,9 @@ import {
 interface SearchNavigationProps {
   className?: string;
   buttonClassName?: string;
+  iconClassName?: string;
+  labelClassName?: string;
+  shortcutClassName?: string;
 }
 
 interface SearchShortcutHintProps {
@@ -49,6 +52,9 @@ function SearchShortcutHint({
 export default function SearchNavigation({
   className,
   buttonClassName,
+  iconClassName = "h-4 w-4 shrink-0 text-gray-500",
+  labelClassName = "truncate",
+  shortcutClassName = "ml-auto shrink-0",
 }: SearchNavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -354,16 +360,19 @@ export default function SearchNavigation({
         type="button"
         onClick={() => openSearch()}
         className={triggerClassName}
+        aria-label={siteContent.search.triggerLabel}
         aria-keyshortcuts={isMac ? "Meta+K" : "Control+K"}
       >
         <Search
-          className="h-4 w-4 shrink-0 text-gray-500"
+          className={iconClassName}
           aria-hidden="true"
         />
-        <span className="truncate">{siteContent.search.triggerLabel}</span>
+        <span className={labelClassName}>
+          {siteContent.search.triggerLabel}
+        </span>
         <SearchShortcutHint
           isMac={isMac}
-          className="ml-auto shrink-0"
+          className={shortcutClassName}
           keyClassName="text-[11px]"
           symbolClassName="text-sm"
         />
