@@ -28,7 +28,7 @@ interface WikipediaSummaryResponse {
 
 export interface CreateWikiBannerArticleResult {
   article: WikiBannerArticle | null;
-  status: "created" | "duplicate";
+  status: "created" | "duplicate" | "restored";
 }
 
 const PACIFIC_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
@@ -105,6 +105,7 @@ export async function getAdminWikiBannerArticles(): Promise<WikiBannerArticle[]>
   const { data, error } = await getSupabase()
     .from("wiki_banner_articles")
     .select("id, url, article_title, article_key, enabled, created_at")
+    .eq("enabled", true)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -127,7 +128,32 @@ export async function createWikiBannerArticle(
 
   if (error) {
     if (error.code === "23505") {
-      return { article: null, status: "duplicate" };
+      const { data: existing, error: findError } = await getSupabase()
+        .from("wiki_banner_articles")
+        .select("id, url, article_title, article_key, enabled, created_at")
+        .eq("article_key", article.articleKey)
+        .maybeSingle();
+
+      if (findError) throw findError;
+      if (!existing) return { article: null, status: "duplicate" };
+
+      const existingArticle = mapArticle(existing as WikiBannerArticleRow);
+      if (existingArticle.enabled) {
+        return { article: existingArticle, status: "duplicate" };
+      }
+
+      const { data: restored, error: restoreError } = await getSupabase()
+        .from("wiki_banner_articles")
+        .update({ enabled: true, updated_at: new Date().toISOString() })
+        .eq("id", existingArticle.id)
+        .select("id, url, article_title, article_key, enabled, created_at")
+        .maybeSingle();
+
+      if (restoreError) throw restoreError;
+      return {
+        article: restored ? mapArticle(restored as WikiBannerArticleRow) : null,
+        status: "restored",
+      };
     }
 
     throw error;
@@ -137,6 +163,50 @@ export async function createWikiBannerArticle(
     article: data ? mapArticle(data as WikiBannerArticleRow) : null,
     status: "created",
   };
+}
+
+export async function getTodayWikiBannerArticle(): Promise<WikiBannerArticle | null> {
+  return getPickArticle(pacificDisplayDate());
+}
+
+export async function removeWikiBannerArticle(id: string): Promise<void> {
+  const displayDate = pacificDisplayDate();
+  const { error: updateError } = await getSupabase()
+    .from("wiki_banner_articles")
+    .update({ enabled: false, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (updateError) throw updateError;
+
+  const { error: deleteError } = await getSupabase()
+    .from("wiki_banner_daily_picks")
+    .delete()
+    .eq("display_date", displayDate)
+    .eq("article_id", id);
+
+  if (deleteError) throw deleteError;
+}
+
+export async function setTodayWikiBannerArticle(id: string): Promise<void> {
+  const displayDate = pacificDisplayDate();
+  const { error: enableError } = await getSupabase()
+    .from("wiki_banner_articles")
+    .update({ enabled: true, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (enableError) throw enableError;
+
+  const { error: pickError } = await getSupabase()
+    .from("wiki_banner_daily_picks")
+    .upsert(
+      {
+        article_id: id,
+        display_date: displayDate,
+      },
+      { onConflict: "display_date" },
+    );
+
+  if (pickError) throw pickError;
 }
 
 async function getPickArticle(displayDate: string): Promise<WikiBannerArticle | null> {
@@ -156,7 +226,8 @@ async function getPickArticle(displayDate: string): Promise<WikiBannerArticle | 
     .maybeSingle();
 
   if (articleError) throw articleError;
-  return article ? mapArticle(article as WikiBannerArticleRow) : null;
+  const mappedArticle = article ? mapArticle(article as WikiBannerArticleRow) : null;
+  return mappedArticle?.enabled ? mappedArticle : null;
 }
 
 async function chooseDailyArticle(displayDate: string): Promise<WikiBannerArticle | null> {
@@ -191,10 +262,13 @@ async function chooseDailyArticle(displayDate: string): Promise<WikiBannerArticl
 
   const { error: insertError } = await getSupabase()
     .from("wiki_banner_daily_picks")
-    .insert({
-      article_id: selected.id,
-      display_date: displayDate,
-    });
+    .upsert(
+      {
+        article_id: selected.id,
+        display_date: displayDate,
+      },
+      { onConflict: "display_date" },
+    );
 
   if (insertError) {
     if (insertError.code === "23505") {
